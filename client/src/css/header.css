@@ -1,0 +1,118 @@
+.container {
+  margin: 0;
+}
+
+.logo-container {
+  /* margin-left: 16px; */
+  margin: 0;
+  padding: 20px;
+  /* background: radial-gradient(var(--uranian-blue), transparent 70%); */
+}
+.logoCLL {
+  width: 80px;
+}
+
+.navbar-container {
+  z-index: 1;
+  background-color: var(--dark-blue);
+
+  .navbar-nav {
+    align-items: center;
+    /* font-size: 1.2rem; */
+  }
+  .dropdown-toggle {
+    text-align: center;
+  }
+  .dropdown-menu {
+    border-color: transparent;
+    border-radius: 28px;
+    background-color: var(--indigo-dye);
+    width: 280px;
+    text-align: center;
+
+    .dropdown-item {
+      color: var(--platinum);
+      text-wrap: wrap;
+      &:hover {
+        background-color: transparent;
+        color: var(--jordy-blue);
+      }
+    }
+  }
+
+  .nav-link {
+    color: var(--platinum);
+  }
+  .navbar-nav .nav-link.active, 
+  .navbar-nav .nav-link.show,
+  .nav-link:focus, .nav-link:hover {
+      color: var(--silver-lake-blue);
+  }
+  /* .navbar-nav .nav-link.show {
+    background-color: var(--indigo-dye);
+  } */
+
+  .navbar-toggler {
+    color: var(--platinum);
+    border-color: transparent;
+
+    .navbar-toggler-icon {
+      padding-top: 5px;
+      font-size: 1.5rem;
+    }
+  }
+}
+
+.navbar-container-sec {
+  z-index: 0;
+  background-color: var(--indigo-dye);
+  .container-sec {
+    flex-direction: column;
+  }
+  .navbar-nav {
+    flex-wrap: wrap;
+    justify-content: center;
+    .nav-link {
+      border-radius: 10px;
+      padding: 5px 10px;
+      &:hover {
+        color: var(--uranian-blue);
+        background-color: var(--silver-lake-blue);
+      }
+    }
+    .link-todo {
+      color: var(--uranian-blue);
+      font-weight: 600;
+      border-radius: 10px;
+    }
+  }
+  .sec-navbar-title {
+    color: var(--silver-lake-blue);
+  }
+  .disabled {
+    color: var(--silver-lake-blue) !important;
+    border-bottom: 1px solid var(--silver-lake-blue);
+  }
+}
+
+/* MEDIA QUERIES */
+@media screen and (max-width: 768px) {
+  .navbar-container-sec {
+    .navbar-nav {
+      flex-direction: row;
+      .nav-link {
+        font-size: .9rem;
+      }
+    }
+  }
+}
+
+/* ANIMACIONES */
+@keyframes bajar {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(0%);
+  }
+}
