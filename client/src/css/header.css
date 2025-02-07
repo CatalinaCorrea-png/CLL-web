@@ -95,6 +95,22 @@
   }
 }
 
+.showNav {
+  transform: translateY(0%);
+  transition: transform 1s ease-out;
+  animation: slideDown 1s ease-out;
+}
+
+.hiddenNav {
+  position: absolute !important;  
+  top: 0;
+  transform: translateY(-100%);
+  /* transition: transform 1s ease-out; */
+  transition: position transform 1s ease-out;
+  animation: slideUp 1s ease-out;
+  /* display: none !important; */
+}
+
 /* MEDIA QUERIES */
 @media screen and (max-width: 768px) {
   .navbar-container-sec {
@@ -114,5 +130,24 @@
   }
   to {
     transform: translateY(0%);
+  }
+}
+
+/* ANIMACION DE APARICION y SALIDA */
+@keyframes slideDown {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-100%);
   }
 }

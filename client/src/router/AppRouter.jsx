@@ -1,6 +1,10 @@
 import { Route, Routes } from 'react-router-dom';
 import Header from '../components/Header';
 import Home from '../pages/Home';
+import Fabricacion from '../pages/Fabricacion';
+import Reparacion from '../pages/Reparacion';
+import Obras from '../pages/Obras';
+import Servicios from '../pages/Servicios';
 
 export const AppRouter = () => {
   return (
@@ -8,10 +12,10 @@ export const AppRouter = () => {
       <Routes>
         <Route path="/" element={ <Header /> }>
           <Route index element={ <Home /> } />
-          <Route  path="fabricacion" element={ <Home /> } />
-          <Route  path="reparacion" element={ <Home /> } />
-          <Route  path="obras" element={ <Home /> } />
-          <Route  path="servicios" element={ <Home /> } />
+          <Route  path="fabricacion" element={ <Fabricacion /> } />
+          <Route  path="reparacion" element={ <Reparacion /> } />
+          <Route  path="obras" element={ <Obras /> } />
+          <Route  path="servicios" element={ <Servicios /> } />
         </Route>
       </Routes>
     </>
