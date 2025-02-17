@@ -1,5 +1,6 @@
 import { Link, Outlet } from "react-router-dom";
 import { Navbar } from "./Navbar";
+import Footer from "./Footer";
 // import { CollapsibleExample } from "./CollapsibleHeader";
 
 const Header = () => {
@@ -8,6 +9,7 @@ const Header = () => {
       <Navbar />
       {/* <CollapsibleExample /> */}
       <Outlet />
+      <Footer />
     </>
   )
 }
