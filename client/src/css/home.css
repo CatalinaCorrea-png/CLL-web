@@ -1,3 +1,32 @@
-.home {
-  background-color: var(--platinum);
+.seccion-about {
+  background-color: var(--uranian-blue);
+  padding: 40px 20px;
+
+  .container-nosotros {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-evenly;
+    padding: 10px 0;
+  
+    .container-img {
+      width: 20rem;
+      .imagen-nosotros {
+        width: 100%;
+        border-radius: 100px;
+        /* object-fit: cover; */
+      }
+    }
+  
+    .texto-nosotros {
+      width: 30rem;
+      padding: 20px 0;
+      color: var(--dark-blue);
+    }
+  }
+}
+
+.titulo-nosotros {
+  color: var(--indigo-dye);
 }
