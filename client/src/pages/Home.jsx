@@ -1,5 +1,7 @@
 import CarouselFade from "../components/Carousel"
 import SecAbout from "../components/SecAbout"
+import SecTrabajos from "../components/SecTrabajos"
+import '../css/home.css';
 
 const Home = () => {
   return (
@@ -8,12 +10,8 @@ const Home = () => {
         <CarouselFade />
       </section>
       <SecAbout />
-      <section className="container-fluid">
-        <div>
-          Que realizamos / Servicios
-        </div>
-      </section>
-      <section className="container-fluid">
+      <SecTrabajos />
+      <section className="container-fluid seccion seccion-about">
         <div>
         Envianos tu consulta por email o a través del formulario de contacto
         </div>

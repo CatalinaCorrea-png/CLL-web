@@ -4,8 +4,8 @@ import img from '../assets/img-nosotros.jpg';
 const SecAbout = () => {
   return (
     <>
-    <section className="seccion-about container-fluid text-center">
-      <h1 className='titulo-nosotros'>ACERCA DE NOSOTROS</h1>
+    <section className="seccion seccion-about container-fluid text-center">
+      <h1 className='titulo-oscuro'>ACERCA DE NOSOTROS</h1>
       <div className='container-nosotros'>
         <div className='container-img'>
           <img src={img} alt="" className='imagen-nosotros' />
