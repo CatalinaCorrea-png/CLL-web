@@ -6,7 +6,7 @@ const SecAbout = () => {
     <>
     <section className="seccion seccion-about container-fluid text-center">
       <h1 className='titulo-oscuro'>ACERCA DE NOSOTROS</h1>
-      <div className='container-nosotros'>
+      <div className='columnas-2'>
         <div className='container-img'>
           <img src={img} alt="" className='imagen-nosotros' />
         </div>

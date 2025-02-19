@@ -1,5 +1,7 @@
 import CarouselFade from "../components/Carousel"
 import SecAbout from "../components/SecAbout"
+import SecContacto from "../components/SecContacto";
+import SecForm from "../components/SecForm";
 import SecTrabajos from "../components/SecTrabajos"
 import '../css/home.css';
 
@@ -11,16 +13,8 @@ const Home = () => {
       </section>
       <SecAbout />
       <SecTrabajos />
-      <section className="container-fluid seccion seccion-about">
-        <div>
-        Envianos tu consulta por email o a través del formulario de contacto
-        </div>
-      </section>
-      <section className="container-fluid">
-        <div>
-          Contanto
-        </div>
-      </section>
+      <SecForm />
+      <SecContacto />
     </>
   )
 }

@@ -23,8 +23,10 @@ const SecTrabajos = () => {
           <div id='trabajo' className="trabajo col">
             <div className={`link-trabajo ${animate ? "izqder" : ""}`}>
                 {/* <span>ICONO</span> */}
-                <i class="fa-solid fa-snowflake"></i>
-                <Link to='/fabricacion'><h5 className=''>FABRICACION</h5></Link>
+                <Link to='/fabricacion'>
+                  <i className="fa-solid fa-snowflake"></i>
+                  <h5 className=''>FABRICACION</h5>
+                </Link>
             </div>
 
             <div id='texto-trabajo' className='texto-trabajo'>
@@ -43,8 +45,10 @@ const SecTrabajos = () => {
           <div id='trabajo' className="trabajo col">
             <div className={`link-trabajo ${animate ? "izqder" : ""}`}>
                 {/* <span>ICONO</span> */}
-                <i class="fa-solid fa-screwdriver-wrench"></i>
-                <Link to='/reparacion'><h5 className=''>REPARACION</h5></Link>
+                <Link to='/reparacion'>
+                  <i className="fa-solid fa-screwdriver-wrench"></i>
+                  <h5 className=''>REPARACION</h5>
+                </Link>
             </div>
 
             <div id='texto-trabajo' className='texto-trabajo'>
@@ -60,8 +64,10 @@ const SecTrabajos = () => {
           <div id='trabajo' className="trabajo col">
             <div className={`link-trabajo ${animate ? "izqder" : ""}`}>
                 {/* <span>ICONO</span> */}
-                <i class="fa-solid fa-helmet-safety"></i>
-                <Link to='/obras'><h5 className=''>OBRAS</h5></Link>
+                <Link to='/obras'>
+                  <i className="fa-solid fa-helmet-safety"></i>
+                  <h5 className=''>OBRAS</h5>
+                </Link>
             </div>
 
             <div id='texto-trabajo' className='texto-trabajo'>
@@ -74,8 +80,10 @@ const SecTrabajos = () => {
           <div id='trabajo' className="trabajo col">
             <div className={`link-trabajo ${animate ? "izqder" : ""}`}>
                 {/* <span>ICONO</span> */}
-                <i class="fa-solid fa-gear"></i>
-                <Link to='/servicios'><h5 className=''>SERVICIOS</h5></Link>
+                <Link to='/servicios'>
+                  <i className="fa-solid fa-gear"></i>
+                  <h5 className=''>SERVICIOS</h5>
+                </Link>
             </div>
 
             <div id='texto-trabajo' className='texto-trabajo'>
