@@ -1,0 +1,80 @@
+[
+  {
+    "murales": {
+      "detallesTecnicos": [
+        "Exhibidoras MURALES para Media Temperatura Ensamblables.", 
+        "Exterior e interior en acero galvanizado electrolítico con pintura epoxi.",
+        "Bandejas, estantes, ménsulas y cremalleras en acero galvanizado.",
+        "Línea de iluminación superior LED.",
+        "Estantes superiores y/o canastos regulables e inclinables (según modelo) con portaprecios y espejos (según modelo)",
+        "Fondos perforados que aseguran óptima distribución del frío.",
+        "Aislación: Poliuterano inyectado 40 Kg/m3.",
+        "Evaporadores: Alto rendimiento. Frío Forzado.",
+        "Termómetro luminoso digital",
+        "Cortina protectora nocturna"
+      ],
+      "detallesDiferenciales": [
+        "Longitudes estándares: 0,90 - 1,20 - 1,50 - 1,80 - 2,00 - 2,40 - 3,00 - 3,60 (en mts.)",
+        "Interior y estantes en acero inoxidable (opcional).",
+        "Accesorios opcionales: divisores - barrales para blisters - bandejas escalonadas -  complementos de estantes - etc.",
+        {
+          "colores": {
+            "plata": "#DEDEDE",
+            "oro": "#C4B98A",
+            "amarillo": "#FFCC00",
+            "verdeTel": "#EAFF66",
+            "verdeRal": "#4EA300",
+            "naranja": "#FF8800",
+            "rojo": "#FF0000",
+            "rojoBermellon": "#B80000",
+            "rosa": "#FFCFEB",
+            "magenta": "#FF37CD",
+            "lila": "#F7CFFF",
+            "violeta": "#7F0098",
+            "celeste": "#DCFFFE",
+            "azul": "#0082DD"
+          }
+        },
+        "Opcional: Pintura bicapa metalizada."
+      ]
+    }
+  },
+  {
+    "bateas": {
+      "detallesTecnicos": [
+        "Exhibidoras horizontales para Media Temperatura Ensambables",
+        "Exterior e interior en acero galvanizado electrolítico.",
+        "Brazos y soportes de cúpula en acero inoxidable.",
+        "Cúpulas de vidrio curvo/recto <a id='dvh'>DVH</a>",
+        "Mesadas: Acero inoxidable/Mármol",
+        "Aislación: Poliuterano inyectado 40 Kg/m3",
+        "Evaporadores: Alto rendimiento. Frío Forzado./Frío Estático.",
+        "Iluminación LED",
+        "Bases galvanizadas con patas plásticas regulables."
+      ],
+      "detallesDiferenciales": [
+        "",
+        {
+          "colores": {
+            "plata": "#DEDEDE",
+            "oro": "#C4B98A",
+            "amarillo": "#FFCC00",
+            "verdeTel": "#EAFF66",
+            "verdeRal": "#4EA300",
+            "naranja": "#FF8800",
+            "rojo": "#FF0000",
+            "rojoBermellon": "#B80000",
+            "rosa": "#FFCFEB",
+            "magenta": "#FF37CD",
+            "lila": "#F7CFFF",
+            "violeta": "#7F0098",
+            "celeste": "#DCFFFE",
+            "azul": "#0082DD"
+          }
+        },
+        "Opcional: Pintura bicapa metalizada."
+      ]
+    }
+  }
+]
+

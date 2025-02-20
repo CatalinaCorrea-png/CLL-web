@@ -9,9 +9,9 @@ const SecContacto = () => {
             <div className='texto-contacto text-center'>
               <h5>Contactate con cualquiera de nosotros:</h5>
               <ul className='lista-telefonos container-fluid'>
-                <li>Walter Correa: 11-36618287</li>
-                <li>Gustavo Ledesma: 11-36618287</li>
-                <li>Claudio Ledesma: 11-36618287</li>
+                <li>Walter Correa: 11-2154-4111</li>
+                <li>Gustavo Ledesma: 11-5806-9162</li>
+                <li>Claudio Ledesma: 11-2756-5557</li>
               </ul>  
             </div>
             <div className='container-wpp'>

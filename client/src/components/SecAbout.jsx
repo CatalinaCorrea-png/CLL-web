@@ -1,5 +1,5 @@
 import '../css/home.css';
-import img from '../assets/img-nosotros.jpg';
+import img from '../assets/logo.png';
 
 const SecAbout = () => {
   return (

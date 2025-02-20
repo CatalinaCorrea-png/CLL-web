@@ -15,10 +15,10 @@ const Footer = () => {
           <h5>Enlaces</h5>
           <div className='container-fluid p-0 enlaces-container'>
             <Link className='nav-link footer-link' to='/'>INICIO</Link>
-            <Link className='nav-link footer-link' to='/'>FABRICACIÓN</Link>
-            <Link className='nav-link footer-link' to='/'>REPARACIÓN</Link>
-            <Link className='nav-link footer-link' to='/'>OBRAS</Link>
-            <Link className='nav-link footer-link' to='/'>SERVICIOS</Link>
+            <Link className='nav-link footer-link' to='/fabricacion'>FABRICACIÓN</Link>
+            <Link className='nav-link footer-link' to='/reparacion'>REPARACIÓN</Link>
+            <Link className='nav-link footer-link' to='/obras'>OBRAS</Link>
+            <Link className='nav-link footer-link' to='/servicios'>SERVICIOS</Link>
           </div>
         </div>
         <div className="col-sm mb-2">
@@ -27,9 +27,9 @@ const Footer = () => {
           <p className='mb-2'>walterdcorrea@gmail.com</p>
           <h6>Telefonos</h6>
           <ul className='lista-telefonos container-fluid'>
-            <li>Walter Correa: 11-36618287</li>
-            <li>Gustavo Ledesma: 11-36618287</li>
-            <li>Claudio Ledesma: 11-36618287</li>
+            <li>Walter Correa: 11-2154-4111</li>
+            <li>Gustavo Ledesma: 11-5806-9162</li>
+            <li>Claudio Ledesma: 11-2756-5557</li>
           </ul>
         </div>
       </div>

@@ -1,0 +1,50 @@
+[{
+  "_id": {
+    "$oid": "67b654c4336c89cf659e19c5"
+  },
+  "murales": {
+    "detallesTecnicos": [
+      "Exhibidoras MURALES para Media Temperatura Ensamblables.",
+      "Exterior e interior en acero galvanizado electrolítico con pintura epoxi.",
+      "Bandejas, estantes, ménsulas y cremalleras en acero galvanizado.",
+      "Línea de iluminación superior LED.",
+      "Estantes superiores y/o canastos regulables e inclinables (según modelo) con portaprecios y espejos (según modelo).",
+      "Fondos perforados que aseguran óptima distribución del frío.",
+      "Aislación: Poliuterano inyectado 40 Kg/m3.",
+      "Evaporadores: Alto rendimiento. Frío Forzado.",
+      "Termómetro luminoso digital",
+      "Cortina protectora nocturna"
+    ],
+    "detallesDiferenciales": [
+      "Longitudes estándares: 0,90 - 1,20 - 1,50 - 1,80 - 2,00 - 2,40 - 3,00 - 3,60 (en mts.)",
+      "Interior y estantes en acero inoxidable (opcional).",
+      "Accesorios opcionales: divisores - barrales para blisters - bandejas escalonadas -  complementos de estantes - etc."
+    ]
+  }
+},
+{
+  "_id": {
+    "$oid": "67b654c4336c89cf659e19c6"
+  },
+  "bateas": {
+    "detallesTecnicos": [
+      "Exhibidoras horizontales para Media Temperatura Ensambables",
+      "Exterior e interior en acero galvanizado electrolítico.",
+      "Brazos y soportes de cúpula en acero inoxidable.",
+      "Cúpulas de vidrio curvo/recto",
+      "Mesadas: Acero inoxidable/Mármol",
+      "Aislación: Poliuterano inyectado 40 Kg/m3",
+      "Evaporadores: Alto rendimiento. Frío Forzado./Frío Estático.",
+      "Iluminación LED",
+      "Bases galvanizadas con patas plásticas regulables."
+    ],
+    "detallesDiferenciales": [
+      "Longitudes estándares: 0,90 - 1,20 - 1,50 - 1,80 - 2,00 - 2,40 - 3,00 - 3,60 (en mts.)",
+      "En todos los modelos: Depósito refrigerado opcional.",
+      "En todos los modelos: Equipo remoto o incorporado.",
+      "En todos los modelos: Los rinconeros y esquineros son refrigerados.",
+      "Para todos los modelos: MUEBLES SIMILES (A MEDIDA) CON IDÉNTICA ESTÉTICA.",
+      "Exclusivo sistema de pintura epoxi con la más amplia gama de colores."
+    ]
+  }
+}]

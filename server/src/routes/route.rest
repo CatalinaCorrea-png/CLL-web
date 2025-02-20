@@ -1,0 +1,6 @@
+
+GET http://localhost:3001/fabricacion
+
+###
+
+GET http://localhost:3001/reparacion

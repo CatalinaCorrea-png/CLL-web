@@ -35,7 +35,7 @@ export const Navbar = () => {
     <>
       <nav className="navbar navbar-expand-md navbar-container poppins-regular">
         <div className="container-fluid">
-          <Link className="navbar-brand logo-container" to="#"><img src={logo} alt="Logo de CLL" className='logoCLL'/></Link>
+          <Link className="navbar-brand logo-container" to="/"><img src={logo} alt="Logo de CLL" className='logoCLL'/></Link>
           <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
             <i className="fa-solid fa-bars navbar-toggler-icon"></i>
           </button>
@@ -73,8 +73,8 @@ export const Navbar = () => {
             <Link className="nav-link col link-todo react-link" to="/fabricacion">TODO</Link>
             <Link className="nav-link col react-link" to="/fabricacion/murales">MURALES</Link>
             <Link className="nav-link col react-link" to="/fabricacion/bateas">BATEAS</Link>
-            <Link className="nav-link col react-link" to="/fabricacion/congelados">CONGELADOS</Link>
             <Link className="nav-link col react-link" to="/fabricacion/exhibidoras">EXHIBIDORAS</Link>
+            <Link className="nav-link col react-link" to="/fabricacion/congelados">CONGELADOS</Link>
             <Link className="nav-link col react-link" to="/fabricacion/camaras">CAMARAS Y WALK IN COOLER</Link>
             <Link className="nav-link col react-link" to="/fabricacion/vitrinas">VITRINAS</Link>
             <Link className="nav-link col react-link" to="/fabricacion/usadas">USADAS REACONDICIONADAS</Link>

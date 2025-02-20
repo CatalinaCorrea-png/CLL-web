@@ -1,20 +1,3 @@
-.seccion {
-  padding: 40px 20px;
-}
-.titulo-oscuro {
-  color: var(--indigo-dye);
-}
-.titulo-claro {
-  color: var(--jordy-blue);
-}
-.columnas-2 {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-evenly;
-  padding: 10px 0;
-}
 
 /*-- SECCION NOSOTROS --------------*/
 .seccion-about {
@@ -22,10 +5,13 @@
   
     .container-img {
       width: 20rem;
+      border-radius: 50%;
+      box-shadow: var(--indigo-dye) 1px 1px 10px 5px;
+      background: radial-gradient(var(--indigo-dye), var(--silver-lake-blue), var(--jordy-blue), var(--uranian-blue), var(--uranian-blue));
+      
       .imagen-nosotros {
         width: 100%;
-        border-radius: 100px;
-        /* object-fit: cover; */
+        /* padding: 20px; */
       }
     }
     .texto-nosotros {

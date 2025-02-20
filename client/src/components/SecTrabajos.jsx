@@ -23,7 +23,7 @@ const SecTrabajos = () => {
           <div id='trabajo' className="trabajo col">
             <div className={`link-trabajo ${animate ? "izqder" : ""}`}>
                 {/* <span>ICONO</span> */}
-                <Link to='/fabricacion'>
+                <Link to='/fabricacion#'>
                   <i className="fa-solid fa-snowflake"></i>
                   <h5 className=''>FABRICACION</h5>
                 </Link>
@@ -31,13 +31,13 @@ const SecTrabajos = () => {
 
             <div id='texto-trabajo' className='texto-trabajo'>
               <ul className='lista-links container-fluid m-0'>
-                <li><Link to='/fabricacion'>Murales</Link></li>
-                <li><Link to='/fabricacion'>Bateas</Link></li>
-                <li><Link to='/fabricacion'>Congelados</Link></li>
-                <li><Link to='/fabricacion'>Exhibidoras</Link></li>
-                <li><Link to='/fabricacion'>Camaras y WIK</Link></li>
-                <li><Link to='/fabricacion'>Vitrinas</Link></li>
-                <li><Link to='/fabricacion'>Usadas Reacondicionadas</Link></li>
+                <li><Link to='/fabricacion#murales'>Murales</Link></li>
+                <li><Link to='/fabricacion#bateas'>Bateas</Link></li>
+                <li><Link to='/fabricacion#exhibidoras'>Exhibidoras</Link></li>
+                <li><Link to='/fabricacion#congelados'>Congelados</Link></li>
+                <li><Link to='/fabricacion#camaras'>Camaras y WIK</Link></li>
+                <li><Link to='/fabricacion#vitrinas'>Vitrinas</Link></li>
+                <li><Link to='/fabricacion#usadas'>Usadas Reacondicionadas</Link></li>
               </ul>
             </div>
           </div>
@@ -54,7 +54,7 @@ const SecTrabajos = () => {
             <div id='texto-trabajo' className='texto-trabajo'>
               <ul className='lista-links container-fluid m-0'>
                 <li><Link to='/reparacion'>Antes y Después</Link></li>
-                <li><Link to='/reparacion'>Cerramientos con Puertas de Vidrio</Link></li>
+                <li><Link to='/reparacion'>Cambio de pintura</Link></li>
               </ul>
             </div>
           </div>
@@ -88,7 +88,9 @@ const SecTrabajos = () => {
 
             <div id='texto-trabajo' className='texto-trabajo'>
               <ul className='lista-links container-fluid m-0'>
-                <li><Link to='/servicios'>Mira nuestros servicios</Link></li>
+                <li><Link to='/servicios'>Cerramientos con Puertas de Vidrio</Link></li>
+                <li><Link to='/servicios'>Cerramientos de bateas con vidrio curvo</Link></li>
+                {/* <li><Link to='/servicios'>Mira nuestros servicios</Link></li> */}
               </ul>
             </div>
           </div>
