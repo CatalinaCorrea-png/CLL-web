@@ -8,8 +8,8 @@ const Footer = () => {
       <div className='footer container-fluid text-center row-sm p-3'>
         <div className="col-sm mb-2">
           <h5>Acerca de</h5>
-          <p className='mb-2'>		Nuestra empresa cuenta con mas de 30 años de experiencia en instalaciones para almacenes, supermercados y comercios. Brindamos también asesoramiento respaldado por proyectos de diseño exclusivos para cada necesidad.<br></br>
-          Nuestra mision es la de brindar soluciones integrales a las necesidades de equipamiento e instalación que nuestros clientes requieran ofreciendo un servicio de altqa calidad de producto, asesoramiento y logística.</p>
+          <p className='mb-2'>Nos dedicamos a la fabricación y reparación de heladeras y cámaras frigoríficas comerciales. Con experiencia en el rubro, trabajando con empresas líderes por más de 20 años. <br />
+          Nuestro objetivo es brindar soluciones integrales de equipamiento de calidad a bajo costo.</p>
         </div>
         <div className="col-sm mb-2">
           <h5>Enlaces</h5>
