@@ -6,6 +6,7 @@ import img from '../assets/logo.png'
 import { Link } from 'react-router-dom';
 import Productos from '../components/Productos';
 import BotonTrazo from '../components/BotonTrazo';
+import OffcanvasFabricacion from '../components/OffcanvasFabricacion';
 
 const Fabricacion = () => {
   
@@ -58,6 +59,7 @@ const Fabricacion = () => {
   return (
     <>
     <div className='seccion seccion-fabricacion'>
+      <OffcanvasFabricacion />
       <h1 className='titulo-oscuro'>FABRICACION</h1>
       <h3 className='titulo-seccion'>- Lo Que Hacemos -</h3>
 
