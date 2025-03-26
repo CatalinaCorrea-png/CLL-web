@@ -4,6 +4,9 @@ import '../css/modal.css';
 const DetallesModal = ({ isOpen, onClose, detalles, imagen }) => {
   if (!isOpen) return null;
 
+  console.log(detalles);
+  console.log(Object.keys(detalles)[0].toUpperCase());
+
   return ReactDOM.createPortal(
     <div className='modal-overlay' onClick={onClose}>
       <div className='modal-detalles' onClick={(e) => e.stopPropagation()}>

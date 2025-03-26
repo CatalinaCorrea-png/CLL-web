@@ -1,0 +1,69 @@
+#botonTrazo {
+  border: none;
+  display: block;
+  position: relative;
+  padding: 0.7em 2.4em;
+  font-size: 18px;
+  background: transparent;
+  cursor: pointer;
+  user-select: none;
+  overflow: hidden;
+  color: var(--indigo-dye);
+  z-index: 1;
+  font-family: inherit;
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+
+#botonTrazo span {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  z-index: -1;
+  border: 4px solid var(--indigo-dye);
+}
+
+#botonTrazo span::before {
+  content: "";
+  display: block;
+  position: absolute;
+  width: 8%;
+  height: 500%;
+  background: var(--uranian-blue);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-60deg);
+  transition: all 0.3s;
+}
+
+#botonTrazo:hover span::before {
+  transform: translate(-50%, -50%) rotate(-90deg);
+  width: 100%;
+  background: var(--indigo-dye);
+}
+
+#botonTrazo:hover {
+  color: white;
+  border-radius: 30px;
+  transition: border-radius 0.3s;
+}
+
+#botonTrazo:active span::before {
+  background: var(--indigo-dye);
+}
+
+
+#botonTrazo:hover span {
+  border-radius: 30px;
+  transition: border-radius 0.3s;
+}
+
+/*-- MEDIA QUERIES */
+@media screen and (max-width: 430px) {
+  #botonTrazo {
+    font-size: .8rem;
+  }
+}

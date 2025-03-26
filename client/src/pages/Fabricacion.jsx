@@ -3,9 +3,13 @@ import '../css/fabricacion.css'
 import axios from 'axios';
 import DetallesModal from '../components/DetallesModal';
 import img from '../assets/logo.png'
+import { Link } from 'react-router-dom';
+import Productos from '../components/Productos';
+import BotonTrazo from '../components/BotonTrazo';
 
 const Fabricacion = () => {
-  const [fabricacion, setFabricacion] = useState([]);
+  
+  /* DETALLES */
   const [murales, setMurales] = useState({});
   const [bateas, setBateas] = useState({});
   const [exhibidoras, setExhibidoras] = useState({});
@@ -13,7 +17,8 @@ const Fabricacion = () => {
   const [camaras, setCamaras] = useState({});
   const [vitrinas, setVitrinas] = useState({});
   const [usadas, setUsadas] = useState({});
-
+  
+  /* BOOLEANOS DE MODAL */
   const [muralesModal, setMuralesModal] = useState(false);
   const [bateasModal, setBateasModal] = useState(false);
   const [exhibidorasModal, setExhibidorasModal] = useState(false);
@@ -39,20 +44,9 @@ const Fabricacion = () => {
     }
   }
 
-    useEffect(() => {
-      getData()
-    }, []);
-
-  // useEffect(() => {
-  //   axios.get('http://localhost:3001/fabricacion/imagenes')
-  //   .then( (response) => {
-  //     // console.log(response.data);
-  //     setFabricacion(response.data);
-  //   })
-  //   .catch((error) => {
-  //     console.error("Error al obtener los datos:", error);
-  //   })
-  // }, []);
+  useEffect(() => {
+    getData()
+  }, []);
   
   // console.log(muralesModal);
   // console.log(bateasModal);
@@ -60,74 +54,57 @@ const Fabricacion = () => {
   // console.log("murales:",murales);
   // console.log("bateas:",bateas);
   
-  useEffect(() => window.scrollTo(0, 0),[]);
+  // useEffect(() => window.scrollTo(0, 0),[]);
   return (
     <>
     <div className='seccion seccion-fabricacion'>
       <h1 className='titulo-oscuro'>FABRICACION</h1>
+      <h3 className='titulo-seccion'>- Lo Que Hacemos -</h3>
 
       <section id="murales" className='container-fluid container-cat'>
         <h1 className="titulo-oscuro titulo-seccion">MURALES</h1>
-        <button className='btn-indigo' onClick={() => setMuralesModal(true)}>VER DETALLES DE MURALES</button>
+        <a id='detalles-murales' onClick={() => setMuralesModal(true)}><BotonTrazo texto={"DETALLES"}/></a>
         <DetallesModal isOpen={muralesModal} onClose={() => setMuralesModal(false)} detalles={murales} imagen={img}/>
-        {/* <ul className='productos'>
-        {murales.detallesTecnicos?.map((item, index) => (
-          <li key={index}>
-            {item}
-          </li>
-        ))}
-        </ul> */}
+        <Productos producto="murales" />
       </section>
 
       <section id="bateas" className='container-fluid container-cat'>
         <h1 className="titulo-oscuro titulo-seccion">BATEAS</h1>
-        <button className='btn-indigo' onClick={() => setBateasModal(true)}>VER DETALLES DE BATEAS</button>
+        <a id='detalles-bateas' onClick={() => setBateasModal(true)}><BotonTrazo texto={"DETALLES"}/></a>
         <DetallesModal isOpen={bateasModal} onClose={() => setBateasModal(false)} detalles={bateas} imagen={img}/>
-        {/* <ul className='productos'>
-        {bateas.detallesTecnicos?.map((item, index) => (
-          <li key={index}>
-            {item.includes("Cúpulas de vidrio") ? (
-              <>
-                {item} <a id="dvh" className=''>DVH</a>
-              </>
-            ) : (
-              item
-            )}
-          </li>
-        ))}
-        </ul> */}
+        {/* <Productos producto="bateas" /> */}
       </section>
 
       <section id="exhibidoras"  className='container-fluid container-cat'>
         <h1 className="titulo-oscuro titulo-seccion">EXHIBIDORAS</h1>
-        <button className='btn-indigo' onClick={() => setExhibidorasModal(true)}>VER DETALLES DE EXHIBIDORAS</button>
+        <a id='detalles-exhibidoras' onClick={() => setExhibidorasModal(true)}><BotonTrazo texto={"DETALLES"}/></a>
         <DetallesModal isOpen={exhibidorasModal} onClose={() => setExhibidorasModal(false)} detalles={exhibidoras} imagen={img}/>
 
       </section>
 
       <section id="congelados"  className='container-fluid container-cat'>
         <h1 className="titulo-oscuro titulo-seccion">CONGELADOS</h1>
-        <button className='btn-indigo' onClick={() => setCongeladosModal(true)}>VER DETALLES DE CONGELADOS</button>
+        <a id='detalles-exhibidoras' onClick={() => setExhibidorasModal(true)}><BotonTrazo texto={"DETALLES"}/></a>
         <DetallesModal isOpen={congeladosModal} onClose={() => setCongeladosModal(false)} detalles={congelados} imagen={img}/>
 
       </section>
 
       <section id="camaras"  className='container-fluid container-cat'>
         <h1 className="titulo-oscuro titulo-seccion">CAMARAS Y WALK IN COOLER</h1>
-        <button className='btn-indigo' onClick={() => setCamarasModal(true)}>VER DETALLES DE CAMARAS</button>
+        <a id='detalles-camaras' onClick={() => setCamarasModal(true)}><BotonTrazo texto={"DETALLES"}/></a>
         <DetallesModal isOpen={camarasModal} onClose={() => setCamarasModal(false)} detalles={camaras} imagen={img}/>
 
       </section>
       <section id="vitrinas"  className='container-fluid container-cat'>
         <h1 className="titulo-oscuro titulo-seccion">VITRINAS</h1>
-        <button className='btn-indigo' onClick={() => setVitrinasModal(true)}>VER DETALLES DE VITRINAS</button>
+        <a id='detalles-vitrinas' onClick={() => setVitrinasModal(true)}><BotonTrazo texto={"DETALLES"}/></a>
         <DetallesModal isOpen={vitrinasModal} onClose={() => setVitrinasModal(false)} detalles={vitrinas} imagen={img}/>
 
       </section>
 
       <section id="usadas"  className='container-fluid container-cat'>
         <h1 className="titulo-oscuro titulo-seccion">USADAS REACONDICIONADAS</h1>
-        <button className='btn-indigo' onClick={() => setUsadasModal(true)}>VER DETALLES DE USADAS</button>
+        <a id='detalles-usadas' onClick={() => setUsadasModal(true)}><BotonTrazo texto={"DETALLES"}/></a>
         <DetallesModal isOpen={usadasModal} onClose={() => setUsadasModal(false)} detalles={usadas} imagen={img}/>
 
       </section>

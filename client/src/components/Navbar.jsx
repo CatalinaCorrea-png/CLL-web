@@ -71,13 +71,13 @@ export const Navbar = () => {
           <Link className="nav-link disabled poppins-bold-italic" to="/fabricacion">FABRICACION :</Link>
           <div className="navbar-nav container-fluid row-cols-3">
             <Link className="nav-link col link-todo react-link" to="/fabricacion">TODO</Link>
-            <Link className="nav-link col react-link" to="/fabricacion/murales">MURALES</Link>
-            <Link className="nav-link col react-link" to="/fabricacion/bateas">BATEAS</Link>
-            <Link className="nav-link col react-link" to="/fabricacion/exhibidoras">EXHIBIDORAS</Link>
-            <Link className="nav-link col react-link" to="/fabricacion/congelados">CONGELADOS</Link>
-            <Link className="nav-link col react-link" to="/fabricacion/camaras">CAMARAS Y WALK IN COOLER</Link>
-            <Link className="nav-link col react-link" to="/fabricacion/vitrinas">VITRINAS</Link>
-            <Link className="nav-link col react-link" to="/fabricacion/usadas">USADAS REACONDICIONADAS</Link>
+            <Link className="nav-link col react-link" to="/fabricacion#murales">MURALES</Link>
+            <Link className="nav-link col react-link" to="/fabricacion#bateas">BATEAS</Link>
+            <Link className="nav-link col react-link" to="/fabricacion#exhibidoras">EXHIBIDORAS</Link>
+            <Link className="nav-link col react-link" to="/fabricacion#congelados">CONGELADOS</Link>
+            <Link className="nav-link col react-link" to="/fabricacion#camaras">CAMARAS Y WALK IN COOLER</Link>
+            <Link className="nav-link col react-link" to="/fabricacion#vitrinas">VITRINAS</Link>
+            <Link className="nav-link col react-link" to="/fabricacion#usadas">USADAS REACONDICIONADAS</Link>
           </div>
         </div>
       </div>

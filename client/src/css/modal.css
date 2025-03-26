@@ -182,3 +182,22 @@
     transition: visibility .5s ease-out;
   }
 }
+
+@media screen and (max-width: 430px) {
+  .btn-close-modal {
+    font-size: .6rem !important;
+  }
+  .titulo-detalle > h1 {
+    width: fit-content;
+    font-size: 1.4rem;
+    text-align: left;
+  }
+  .lista-detalles {
+    font-size: .8rem;
+    text-align: center;
+
+    li {
+      margin-bottom: 5px;
+    }
+  }
+}

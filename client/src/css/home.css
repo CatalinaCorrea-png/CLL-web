@@ -144,6 +144,8 @@
       box-shadow: var(--indigo-dye) 0 0 5px 2px;
       margin: 20px 0;
 
+      transition: padding .3s ease-out, margin .3s ease-out;
+
       .form-input {
         display: flex;
         flex-direction: column;
@@ -183,6 +185,11 @@
       }
 
     }
+    .form-contact:hover {
+      padding: 30px;
+      margin: 10px -10px;
+      transition: padding .3s ease-out, margin .3s ease-out;
+    }
 }
 
 /*-- SECCION CONTACTO --------------*/
@@ -193,7 +200,13 @@
 
   .fa-brands {
     font-size: 8rem;
+    height: 9rem;
     padding: 10px 0;
+    transition: font-size .3s ease-out, padding .3s ease-out;
+  }.fa-brands:hover {
+    font-size: 8.3rem;
+    padding: 0px 0;
+    transition: font-size .3s ease-out, padding .3s ease-out;
   }
 
   .texto-contacto {

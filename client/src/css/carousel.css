@@ -11,7 +11,7 @@
   height: 30rem;
   object-fit: cover;
   /* opacity: 50%; */
-  filter: brightness(40%); /* Aplica un filtro para oscurecer la imagen */
+  filter: brightness(50%); /* Aplica un filtro para oscurecer la imagen */
 }
 
 .carousel-caption {
@@ -32,4 +32,8 @@
     top: 10%;
     max-width: 500px;
   }
+}
+
+.container-text {
+  /* background: linear-gradient(to right, transparent, #224870aa, #224870aa, transparent); */
 }
