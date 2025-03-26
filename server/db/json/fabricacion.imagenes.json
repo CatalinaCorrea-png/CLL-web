@@ -1,0 +1,64 @@
+[
+  {
+  "murales": [
+    ["../../public/murales/arg/mural-1.jpg", "../../public/murales/arg/mural-1-1.jpg"],
+      ["../../public/murales/ch/mural-2.jpg", "../../public/murales/ch/mural-2-1.jpg"],
+    ["../../public/murales/arg/mural-2.jpg", "../../public/murales/arg/mural-2-2.jpg"],
+      ["../../public/murales/ch/mural-3.jpg", "../../public/murales/ch/mural-3-1.jpg"],
+    ["../../public/murales/arg/mural-3-4.jpg", "../../public/murales/arg/mural-3-2.jpg"],
+      ["../../public/murales/ch/mural-5.jpg", "../../public/murales/ch/mural-5-1.jpg"],
+    ["../../public/murales/arg/mural-4.jpg", "../../public/murales/arg/mural-4-1.jpg"],
+      ["../../public/murales/ch/mural-7.jpg", "../../public/murales/ch/mural-7-1.jpg"],
+    ["../../public/murales/arg/mural-5.jpg", "../../public/murales/arg/mural-5-1.jpg"],
+      "../../public/murales/ch/mural-8.jpg",
+    ["../../public/murales/arg/mural-6.jpg", "../../public/murales/arg/mural-6-1.jpg"],
+      ["../../public/murales/ch/mural-9.jpg", "../../public/murales/ch/mural-9-1.jpg"],
+    ["../../public/murales/arg/mural-7.jpg", "../../public/murales/arg/mural-7-1.jpg"],
+      "../../public/murales/ch/mural-10.jpg",
+    ["../../public/murales/arg/mural-8.jpg", "../../public/murales/arg/mural-8-1.jpg"],
+      "../../public/murales/ch/mural-11.jpg",
+    "../../public/murales/arg/mural-9.jpg",
+    ["../../public/murales/arg/mural-10.jpg", "../../public/murales/arg/mural-10-2.jpg"],
+      ["../../public/murales/ch/mural-12.jpg", "../../public/murales/ch/mural-12-1.jpg"],
+    ["../../public/murales/arg/mural-11.jpg", "../../public/murales/arg/mural-11-1.jpg"],
+      ["../../public/murales/ch/mural-13.jpg", "../../public/murales/ch/mural-13-1.jpg"],
+      "../../public/murales/ch/mural-14.jpg",
+      "../../public/murales/ch/mural-15.jpg",
+    ["../../public/murales/arg/mural-14.jpg", "../../public/murales/arg/mural-14-1.jpg"],
+      ["../../public/murales/ch/mural-16.jpg", "../../public/murales/ch/mural-16-1.jpg"],
+    "../../public/murales/arg/mural-15.jpg",
+      "../../public/murales/ch/mural-1.jpg",
+    "../../public/murales/arg/mural-16.jpg",
+      "../../public/murales/ch/mural-17.jpg",
+    "../../public/murales/arg/mural-17.jpg",
+      ["../../public/murales/ch/mural-18.jpg", "../../public/murales/ch/mural-18-1.jpg"],
+      ["../../public/murales/ch/mural-19.jpg", "../../public/murales/ch/mural-19-1.jpg"],
+    "../../public/murales/arg/mural-18.jpg",
+      ["../../public/murales/ch/mural-25.jpg", "../../public/murales/ch/mural-25-1.jpg"],
+    "../../public/murales/arg/mural-19.jpg",
+      "../../public/murales/ch/mural-20.jpg",
+      ["../../public/murales/ch/mural-21.jpg", "../../public/murales/ch/mural-21-1.jpg"],
+      "../../public/murales/ch/mural-22.jpg",
+      ["../../public/murales/ch/mural-23.jpg", "../../public/murales/ch/mural-23-1.jpg"],
+      "../../public/murales/ch/mural-24.jpg"
+  ],
+  "bateas": [
+  ""
+  ],
+  "exhibidoras": [
+  ""
+  ],
+  "congelados": [
+  ""
+  ],
+  "camaras": [
+  ""
+  ],
+  "vitrinas": [
+  ""
+  ],
+  "usadas": [
+  ""
+  ]
+}
+]

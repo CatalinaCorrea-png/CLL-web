@@ -1,33 +1,33 @@
-const mongoose = require('mongoose');
+// const db = require('../../db/mongodb'); // importo la database
+const db = require('../../db/db'); // importo la database
+const fabricacionJson = require('../../db/json/cll.fabricacion.json')
 
-const coloresSchema = new mongoose.Schema({
-  plata: String,
-  oro: String,
-  amarillo: String,
-  verdeTel: String,
-  verdeRal: String,
-  naranja: String,
-  rojo: String,
-  rojoBermellon: String,
-  rosa: String,
-  magenta: String,
-  lila: String,
-  violeta: String,
-  celeste: String,
-  azul: String
-});
+const fabricacionModel = {
 
-const detallesSchema = new mongoose.Schema({
-  detallesTecnicos: [String], 
-  detallesDiferenciales: [mongoose.Schema.Types.Mixed] // Puede ser string o un objeto (colores)
-});
+  // Funcion que devuelve un json de los DETALLES TECNICOS
+  getDetalles: () => {
+    try {
+      return fabricacionJson;
+    } catch (error) {
+      console.error("Error en la consulta:", error.message);
+      throw error;  // Relanza el error para manejarlo otro nivel (en el controlador)
+    }
+  },
 
-const fabricacionSchema = new mongoose.Schema({
-  nombre: String, // "murales" o "bateas"
-  detalles: detallesSchema
-});
+  // Función que devuelve las imagenes de un producto
+  getProductImages: async (producto) => {
+    const sqlQuery = "SELECT * FROM imagenesFabricacion WHERE producto = ?;"; // Consulta/Sentencia de SQL
+    try {
+      const [rows] = await db.query(sqlQuery, [producto]);
+      return rows;
+    } catch (error) {
+      console.error("Error en la consulta:", error);
+      throw error;  // Relanza el error para manejarlo otro nivel (en el controlador)
+    }
+  },
 
-// Crear el modelo
-const Fabricacion = mongoose.model('Fabricacion', fabricacionSchema, 'fabricacion');
+}
 
-module.exports = Fabricacion;
+
+
+module.exports = fabricacionModel;

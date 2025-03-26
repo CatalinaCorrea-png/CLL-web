@@ -3,4 +3,12 @@ GET http://localhost:3001/fabricacion
 
 ###
 
+GET http://localhost:3001/fabricacion/imagenes/murales
+
+###
+
+GET http://localhost:3001/fabricacion/imagenes/bateas
+
+###
+
 GET http://localhost:3001/reparacion

@@ -1,24 +1,23 @@
-const db = require('../../db/mongodb'); // importo la database
-// const Fabricacion = require('../models/fabricacion')
-const fabricacionJson = require('../../db/cll.fabricacion.json')
+const fabricacionModel = require('../models/fabricacion');
 
-const fabricacion = (req, res) => {
+const getDetalles = async (req, res) => {
   try {
-    // const fabricacion = await Fabricacion.find();
-    res.status(200).json(fabricacionJson);
+    const detalles = fabricacionModel.getDetalles();
+    res.json(detalles);
   } catch (error) {
-    res.status(500).json({message: error.message });
+    res.status(500).json({ message: "Error al obtener los detalles" });
+  }
+};
+
+const getProductImages = async (req, res) => {
+  const { producto } = req.params
+  try {
+    const imagenes = await fabricacionModel.getProductImages(producto);
+    res.json(imagenes);
+  } catch (error) {
+    res.status(500).json({ message: "Error al obtener las imagenes" });
   }
 }
 
-const fabricacionCategoria = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const fabricacion = await Fabricacion.findById(id);
-    res.status(200).json(fabricacion);
-  } catch (error) {
-    res.status(500).json({message: error.message });
-  }
-}
 
-module.exports = { fabricacion, fabricacionCategoria };
+module.exports = { getDetalles, getProductImages }
