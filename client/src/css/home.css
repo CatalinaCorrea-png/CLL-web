@@ -7,7 +7,8 @@
       width: 20rem;
       border-radius: 50%;
       box-shadow: var(--indigo-dye) 1px 1px 10px 5px;
-      background: radial-gradient(var(--indigo-dye), var(--silver-lake-blue), var(--jordy-blue), var(--uranian-blue), var(--uranian-blue));
+      background-color: var(--pastel-light-blue);
+      background: radial-gradient(var(--indigo-dye), var(--silver-lake-blue), var(--jordy-blue), var(--uranian-blue), var(--pastel-light-blue), var(--pastel-light-blue));
       
       .imagen-nosotros {
         width: 100%;

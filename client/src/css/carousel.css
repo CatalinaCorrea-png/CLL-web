@@ -37,3 +37,11 @@
 .container-text {
   /* background: linear-gradient(to right, transparent, #224870aa, #224870aa, transparent); */
 }
+/*-- MEDIA QUERIES */
+
+@media screen and (max-width: 575px) {
+  .carousel-h1 {
+    font-size: 2rem !important;
+  }
+
+}
