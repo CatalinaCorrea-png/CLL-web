@@ -1,0 +1,48 @@
+USE CLL;
+-- DELETE FROM imagenesFabricacion WHERE ID > 17;
+
+insert into imagenesFabricacion(producto,imageUrl,imageUrl2) values ('bateas','../../public/bateas/arg/batea-1.JPG','../../public/bateas/arg/batea-1-1.JPG');
+insert into imagenesFabricacion(producto,imageUrl,imageUrl2) values ('bateas','../../public/bateas/ch/batea-3.jpg','../../public/bateas/ch/batea-3-1.jpg');
+insert into imagenesFabricacion(producto,imageUrl,imageUrl2) values ('bateas','../../public/bateas/arg/batea-isla-1.jpg',null);
+insert into imagenesFabricacion(producto,imageUrl,imageUrl2) values ('bateas','../../public/bateas/arg/batea-3.jpg','../../public/bateas/arg/batea-3-1.jpg');
+insert into imagenesFabricacion(producto,imageUrl,imageUrl2) values ('bateas','../../public/bateas/ch/batea-8.JPG','../../public/bateas/ch/batea-8-1.JPG');
+insert into imagenesFabricacion(producto,imageUrl,imageUrl2) values ('bateas','../../public/bateas/arg/batea-isla-3.jpg','../../public/bateas/arg/batea-isla-3-2.jpg');
+insert into imagenesFabricacion(producto,imageUrl,imageUrl2) values ('bateas','../../public/bateas/arg/batea-5.JPG','../../public/bateas/arg/batea-5-1.JPG');
+insert into imagenesFabricacion(producto,imageUrl,imageUrl2) values ('bateas','../../public/bateas/arg/batea-6.JPG','../../public/bateas/arg/batea-6-1.JPG');
+insert into imagenesFabricacion(producto,imageUrl,imageUrl2) values ('bateas','../../public/bateas/ch/batea-isla-2.JPG','../../public/bateas/ch/batea-isla-2-1.JPG');
+insert into imagenesFabricacion(producto,imageUrl,imageUrl2) values ('bateas','../../public/bateas/arg/batea-isla-7.jpg','../../public/bateas/arg/batea-isla-7-1.jpg');
+insert into imagenesFabricacion(producto,imageUrl,imageUrl2) values ('bateas','../../public/bateas/ch/batea-12.JPG','../../public/bateas/ch/batea-12-3.JPG');
+insert into imagenesFabricacion(producto,imageUrl,imageUrl2) values ('bateas','../../public/bateas/ch/batea-recta-1.jpg','../../public/bateas/ch/batea-recta-1-3.jpg');
+insert into imagenesFabricacion(producto,imageUrl,imageUrl2) values ('bateas','../../public/bateas/arg/batea-8.JPG','../../public/bateas/arg/batea-8-1.JPG');
+insert into imagenesFabricacion(producto,imageUrl,imageUrl2) values ('bateas','../../public/bateas/arg/batea-9.JPG',null);
+insert into imagenesFabricacion(producto,imageUrl,imageUrl2) values ('bateas','../../public/bateas/ch/batea-18.JPG',null);
+insert into imagenesFabricacion(producto,imageUrl,imageUrl2) values ('bateas','../../public/bateas/arg/batea-10.jpg','../../public/bateas/arg/batea-10-1.jpg');
+insert into imagenesFabricacion(producto,imageUrl,imageUrl2) values ('bateas','../../public/bateas/arg/batea-11.JPG',null);
+insert into imagenesFabricacion(producto,imageUrl,imageUrl2) values ('bateas','../../public/bateas/arg/batea-recta-1.jpg','../../public/bateas/arg/batea-recta-2.jpg');
+
+SELECT * FROM cll.imagenesfabricacion;
+
+-- insert into imagenesFabricacion(producto,imageUrl,imageUrl2) values ('bateas','../../public/bateas/arg/batea-2.JPG','../../public/bateas/arg/batea-2-1.JPG');
+-- insert into imagenesFabricacion(producto,imageUrl,imageUrl2) values ('bateas','../../public/bateas/ch/batea-5.jpg',null);
+-- insert into imagenesFabricacion(producto,imageUrl,imageUrl2) values ('bateas','../../public/bateas/ch/batea-2.JPG','../../public/bateas/ch/batea-2-1.JPG');
+-- insert into imagenesFabricacion(producto,imageUrl,imageUrl2) values ('bateas','../../public/bateas/arg/batea-14.JPG',null);
+-- insert into imagenesFabricacion(producto,imageUrl,imageUrl2) values ('bateas','../../public/bateas/arg/batea-7.JPG',null);
+-- insert into imagenesFabricacion(producto,imageUrl,imageUrl2) values ('bateas','../../public/bateas/arg/batea-recta-4.JPG',null);
+-- insert into imagenesFabricacion(producto,imageUrl,imageUrl2) values ('bateas','../../public/bateas/ch/batea-isla-1-1.jpg','../../public/bateas/ch/batea-isla-1-2.jpg');
+-- insert into imagenesFabricacion(producto,imageUrl,imageUrl2) values ('bateas','../../public/bateas/arg/batea-17.JPG',null);
+-- insert into imagenesFabricacion(producto,imageUrl,imageUrl2) values ('bateas','../../public/bateas/ch/batea-16-1.JPG','../../public/bateas/ch/batea-16.jpg');
+-- insert into imagenesFabricacion(producto,imageUrl,imageUrl2) values ('bateas','../../public/bateas/ch/batea-6.JPG','../../public/bateas/ch/batea-6-1.JPG');
+-- insert into imagenesFabricacion(producto,imageUrl,imageUrl2) values ('bateas','../../public/bateas/ch/batea-7.JPG',null);
+-- insert into imagenesFabricacion(producto,imageUrl,imageUrl2) values ('bateas','../../public/bateas/arg/batea-4.jpg',null);
+-- insert into imagenesFabricacion(producto,imageUrl,imageUrl2) values ('bateas','../../public/bateas/ch/batea-11-1.jpg','../../public/bateas/ch/batea-10.jpg');
+-- insert into imagenesFabricacion(producto,imageUrl,imageUrl2) values ('bateas','../../public/bateas/ch/batea-14.JPG','../../public/bateas/ch/batea-14-1.JPG');
+-- insert into imagenesFabricacion(producto,imageUrl,imageUrl2) values ('bateas','../../public/bateas/ch/batea-14.JPG','../../public/bateas/ch/batea-14-1.JPG');
+-- insert into imagenesFabricacion(producto,imageUrl,imageUrl2) values ('bateas','../../public/bateas/ch/batea-13.JPG','../../public/bateas/ch/batea-13-1.JPG');
+-- insert into imagenesFabricacion(producto,imageUrl,imageUrl2) values ('bateas','../../public/bateas/arg/batea-12.jpg',null);
+-- insert into imagenesFabricacion(producto,imageUrl,imageUrl2) values ('bateas','../../public/bateas/arg/batea-13.JPG',null);
+-- insert into imagenesFabricacion(producto,imageUrl,imageUrl2) values ('bateas','../../public/bateas/arg/batea-15.jpg','../../public/bateas/arg/batea-15-1.jpg');
+-- insert into imagenesFabricacion(producto,imageUrl,imageUrl2) values ('bateas','../../public/bateas/ch/batea-19.jpg','../../public/bateas/ch/batea-19-1.JPG');
+-- insert into imagenesFabricacion(producto,imageUrl,imageUrl2) values ('bateas','../../public/bateas/arg/batea-16.JPG',null);
+-- insert into imagenesFabricacion(producto,imageUrl,imageUrl2) values ('bateas','../../public/bateas/ch/batea-recta-2-1.jpg','../../public/bateas/ch/batea-recta-2.jpg');
+-- insert into imagenesFabricacion(producto,imageUrl,imageUrl2) values ('bateas','../../public/bateas/arg/batea-18.JPG',null);
+-- insert into imagenesFabricacion(producto,imageUrl,imageUrl2) values ('bateas','../../public/bateas/arg/batea-18.JPG',null);

@@ -41,7 +41,7 @@
 
 .imagen-producto-a {
   display: block;
-  border: 2px solid var(--silver-lake-blue);
+  /* border: 2px solid var(--silver-lake-blue); */
   border-radius: 10px;
 
 }
@@ -54,9 +54,10 @@
   box-shadow: 0px 0px 10px 3px  var(--indigo-dye);
 }.imagen-producto-img:hover {
   /* height: 10.2rem; */
-  transform: scale(1.03);
+  background: var(--silver-lake-blue);
+  transform: scale(1.02);
   box-shadow: 0px 0px 10px 3px  var(--indigo-dye);
-  transition: .3s ease-in-out;
+  transition: all 0.3s ease-in-out;
 }
 
 /*-- MEDIA QUERIES */
@@ -67,6 +68,6 @@
 
   .imagen-producto-img {
     /* max-width: 90vw; */
-    height: 11rem;
+    height: 7rem;
   }
 }

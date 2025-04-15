@@ -63,7 +63,7 @@ const Fabricacion = () => {
       <h1 className='titulo-oscuro'>FABRICACION</h1>
       <h3 className='titulo-seccion'>- Lo Que Hacemos -</h3>
 
-      <section id="murales" className='container-fluid container-cat'>
+      <section id="murales" className='container-fluid container-cat p-0'>
         <h1 className="titulo-oscuro titulo-seccion">MURALES</h1>
         <a id='detalles-murales' onClick={() => setMuralesModal(true)}><BotonTrazo texto={"DETALLES"}/></a>
         <DetallesModal isOpen={muralesModal} onClose={() => setMuralesModal(false)} detalles={murales} imagen={img}/>
@@ -74,7 +74,7 @@ const Fabricacion = () => {
         <h1 className="titulo-oscuro titulo-seccion">BATEAS</h1>
         <a id='detalles-bateas' onClick={() => setBateasModal(true)}><BotonTrazo texto={"DETALLES"}/></a>
         <DetallesModal isOpen={bateasModal} onClose={() => setBateasModal(false)} detalles={bateas} imagen={img}/>
-        {/* <Productos producto="bateas" /> */}
+        <Productos producto="bateas" />
       </section>
 
       <section id="exhibidoras"  className='container-fluid container-cat'>

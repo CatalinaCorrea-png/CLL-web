@@ -1,8 +1,8 @@
 import '../css/cardDouble.css'
 
-const CardDouble = ({image1, image2}) => {
+const CardDouble = ({id, image1, image2}) => {
   return (
-    <div className="card-double">
+    <div id={id} className="card-double">
       <div className="first-content">
         <span><img className='imagen-producto-img' src={image1} alt="" /></span>
       </div>

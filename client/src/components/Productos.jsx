@@ -10,15 +10,15 @@ const Productos = ({ producto }) => {
 
     // MODAL BOOL
   const [modalBool,setModalBool] = useState(false);
-  const [modalImg1,setModalImg1] = useState("");
-  const [modalImg2,setModalImg2] = useState("");
+  const [id, setId] = useState(0);
+  // const [modalImg2,setModalImg2] = useState("");
 
     useEffect(() => {
       console.log(producto);
 
       axios.get(`http://localhost:3001/fabricacion/imagenes/${producto}`)
       .then( (response) => {
-        console.log(response.data);
+        // console.log(response.data);
         setImagenes(response.data);
       })
       .catch((error) => {
@@ -33,16 +33,16 @@ const Productos = ({ producto }) => {
             <li key={index}>
               {item.imageUrl2 ? (
                 <>
-                  <a className='imagen-producto-a' onClick={() => { setModalImg1(item.imageUrl); setModalImg2(item.imageUrl2); setModalBool(true)}}>
-                    <CardDouble image1={item.imageUrl} image2={item.imageUrl2} />
+                  <a className='imagen-producto-a' onClick={() => { setId(index); setModalBool(true)}}>
+                    <CardDouble id={index} image1={item.imageUrl} image2={item.imageUrl2} />
                     {/* <img className='imagen-producto-img' src={item.imageUrl} alt="" />
                     <img className='imagen-producto-img' src={item.imageUrl2} alt="" /> */}
                   </a>
                 </>
               ) : (
                 <>
-                  <a className='imagen-producto-a' onClick={() => {setModalImg1(item.imageUrl); setModalImg2(null); setModalBool(true)}}>
-                    <img className='imagen-producto-img' src={item.imageUrl} alt="" />
+                  <a className='imagen-producto-a' onClick={() => {setId(index); setModalBool(true)}}>
+                    <img id={index} className='imagen-producto-img' src={item.imageUrl} alt="" />
                   </a>
                 </>
               )}
@@ -50,7 +50,7 @@ const Productos = ({ producto }) => {
           ))}
           </ul>
 
-          <ModalGalery isOpen={modalBool} onClose={() => setModalBool(false)} imagen={modalImg1} imagen2={modalImg2}/>
+          <ModalGalery isOpen={modalBool} onClose={() => setModalBool(false)} imagenes={imagenes} id={id}/>
     </>
   )
 }
