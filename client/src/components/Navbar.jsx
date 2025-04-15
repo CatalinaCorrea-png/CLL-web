@@ -44,7 +44,7 @@ export const Navbar = () => {
             <div className="navbar-nav">
               <Link className="nav-link react-link" aria-current="page" to='/'>INICIO</Link>
 
-              <a className="nav-link dropdown-toggle" 
+              {/* <a className="nav-link dropdown-toggle" 
               href="#" role="button"  
               onClick={toggleFabric}
               >
@@ -56,8 +56,10 @@ export const Navbar = () => {
               onClick={toggleRep}
               >
                 REPARACION
-              </a>
+              </a> */}
 
+              <Link className="nav-link react-link" to="/fabricacion">FABRICACION</Link>
+              <Link className="nav-link react-link" to="/reparacion">REPARACION</Link>
               <Link className="nav-link react-link" to="/obras">OBRAS</Link>
               <Link className="nav-link react-link" to="/servicios">SERVICIOS</Link>
             </div>
@@ -66,7 +68,7 @@ export const Navbar = () => {
         </div>
       </nav>
 
-      <div className={`navbar navbar-expand-sm navbar-container navbar-container-sec poppins-regular ${fabricbool ? "showNav" : "hiddenNav"}`} id='fabricacionnav'>
+      {/* <div className={`navbar navbar-expand-sm navbar-container navbar-container-sec poppins-regular ${fabricbool ? "showNav" : "hiddenNav"}`} id='fabricacionnav'>
         <div className="container-fluid container-sec text-center">
           <Link className="nav-link disabled poppins-bold-italic" to="/fabricacion">FABRICACION :</Link>
           <div className="navbar-nav container-fluid row-cols-3">
@@ -91,7 +93,7 @@ export const Navbar = () => {
             <Link className="nav-link col react-link" to="/reparacion/cerramientos">CERRAMIENTOS CON PUERTAS DE VIDRIO</Link>
           </div>
         </div>
-      </div>
+      </div> */}
 
   </>
   )
