@@ -36,7 +36,7 @@ const SecTrabajos = () => {
                 <li><Link to='/fabricacion#exhibidoras'>Exhibidoras</Link></li>
                 <li><Link to='/fabricacion#congelados'>Congelados</Link></li>
                 <li><Link to='/fabricacion#camaras'>Camaras y WIK</Link></li>
-                <li><Link to='/fabricacion#vitrinas'>Vitrinas</Link></li>
+                {/* <li><Link to='/fabricacion#vitrinas'>Vitrinas</Link></li> */}
                 <li><Link to='/fabricacion#usadas'>Usadas Reacondicionadas</Link></li>
               </ul>
             </div>
@@ -61,9 +61,8 @@ const SecTrabajos = () => {
         </div>
 
         <div className="row m-4">
-          <div id='trabajo' className="trabajo col">
+        {/*   <div id='trabajo' className="trabajo col">
             <div className={`link-trabajo ${animate ? "izqder" : ""}`}>
-                {/* <span>ICONO</span> */}
                 <Link to='/obras'>
                   <i className="fa-solid fa-helmet-safety"></i>
                   <h5 className=''>OBRAS</h5>
@@ -75,7 +74,7 @@ const SecTrabajos = () => {
                 <li><Link to='/obras'>Mira nuestras obras</Link></li>
               </ul>
             </div>
-          </div>
+          </div> */}
 
           <div id='trabajo' className="trabajo col">
             <div className={`link-trabajo ${animate ? "izqder" : ""}`}>

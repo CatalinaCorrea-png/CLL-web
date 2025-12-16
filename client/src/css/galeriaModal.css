@@ -9,7 +9,10 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
   z-index: 1000; 
+  inset: 0;  /* top:0 right:0 bottom:0 left:0 */
+  pointer-events: auto;
 }
 
 .modal-galery {
@@ -31,7 +34,9 @@
   width: 60vw;
   max-height: 90%;
   max-width: 90%;
+
   overflow-y: auto;
+  overscroll-behavior: contain;
 }
 
 .btn-close-modal-galery {
@@ -89,8 +94,19 @@
 }
 
 @media screen and (max-height: 800px) {
-    .imagen-galery-detalle {
-    width: 80vw;
+  .imagen-galery-detalle {
+    width: auto;
+    height: 80vh;
+  }
+}
+
+@media screen and (max-width: 430px)  {
+  .modal-galery {
+    max-width: 100%;
+  }
+
+  .imagen-galery-detalle {
     height: auto;
+    width: 90vw;
   }
 }

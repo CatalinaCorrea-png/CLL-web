@@ -23,6 +23,7 @@
 }
 .offcanvas-body {
   padding: 0 !important;
+  width: max-content;
 }
 
 .btn-offcanvas {
@@ -41,14 +42,15 @@
   -moz-animation: izqder 2s ease-out 1s 1;
   -webkit-animation: izqder 2s ease-out 1s 1;
 
-  display: flex;
+  display: flex !important;
   align-items: flex-start;
   justify-content: flex-start;
   text-align: left;
-
+  
   .fa-solid {
     text-align: left;
     justify-self: flex-start;
+    width: fit-content;
   }
 }
 

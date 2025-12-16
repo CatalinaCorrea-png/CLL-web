@@ -1,35 +1,42 @@
 import { useEffect, useState } from 'react';
-import '../css/fabricacion.css'
+import '../css/pages/fabricacion.css'
 import axios from 'axios';
 import CardDouble from './CardDouble';
 import ModalGalery from './ModalGalery';
+import Loader from './Loader';
 
 const Productos = ({ producto }) => {
     /* IMAGENES */
     const [imagenes, setImagenes] = useState([]);
+      /* LOADING */
+    const [loading, setLoading] = useState(true);
+    const [mensajeError, setMensajeError] = useState(null);
 
     // MODAL BOOL
   const [modalBool,setModalBool] = useState(false);
   const [id, setId] = useState(0);
   // const [modalImg2,setModalImg2] = useState("");
 
-    useEffect(() => {
-      console.log(producto);
+  async function getData() {
+      setLoading(true)
+    try {
+      const response = await axios.get(`http://localhost:3001/fabricacion/imagenes/${producto}`)
+      // console.log(response.data);
+      setLoading(false)
+      setImagenes(response.data);
+    } catch (error) {
+      setMensajeError("Error al obtener los datos:", error);
+    }
+  }
 
-      axios.get(`http://localhost:3001/fabricacion/imagenes/${producto}`)
-      .then( (response) => {
-        // console.log(response.data);
-        setImagenes(response.data);
-      })
-      .catch((error) => {
-        console.error("Error al obtener los datos:", error);
-      })
-    }, []);
+  useEffect(() => {
+    getData()
+  }, []);
 
   return (
     <>
       <ul className='productos'>
-          {imagenes?.map((item, index) => (
+          {!loading && imagenes?.map((item, index) => (
             <li key={index}>
               {item.imageUrl2 ? (
                 <>
@@ -49,6 +56,7 @@ const Productos = ({ producto }) => {
             </li>
           ))}
           </ul>
+          {loading && <Loader />}
 
           <ModalGalery isOpen={modalBool} onClose={() => setModalBool(false)} imagenes={imagenes} id={id}/>
     </>

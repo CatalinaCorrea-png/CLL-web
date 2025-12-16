@@ -1,5 +1,5 @@
-import { Route, Routes } from 'react-router-dom';
-import Header from '../components/Header';
+import { Navigate, Route, Routes } from 'react-router-dom';
+import Layout from './Layout';
 import Home from '../pages/Home';
 import Fabricacion from '../pages/Fabricacion';
 import Reparacion from '../pages/Reparacion';
@@ -10,12 +10,14 @@ export const AppRouter = () => {
   return (
     <>
       <Routes>
-        <Route path="/" element={ <Header /> }>
+        <Route path="/" element={ <Layout /> }>
           <Route index element={ <Home /> } />
           <Route  path="fabricacion" element={ <Fabricacion /> } />
           <Route  path="reparacion" element={ <Reparacion /> } />
-          <Route  path="obras" element={ <Obras /> } />
+          {/* <Route  path="obras" element={ <Obras /> } /> */}
           <Route  path="servicios" element={ <Servicios /> } />
+          {/* fallback */}
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Route>
       </Routes>
     </>

@@ -89,6 +89,10 @@ body {
   padding: 20px 0;
 }
 
+.align-center {
+  align-self: center;
+}
+
 .btn-indigo {
   font-size: 1.2rem;
   padding: 5px 10px;
@@ -108,7 +112,7 @@ body {
 	width: 10px;
 }
 ::-webkit-scrollbar-track {
-  background: var(--platinum); /* Color del fondo del track */
+  background: var(--uranian-blue); /* Color del fondo del track */
 }
 ::-webkit-scrollbar-thumb {
 	background-color: var(--dark-blue); /* Color del scroll */

@@ -60,7 +60,7 @@ export const Navbar = () => {
 
               <Link className="nav-link react-link" to="/fabricacion">FABRICACION</Link>
               <Link className="nav-link react-link" to="/reparacion">REPARACION</Link>
-              <Link className="nav-link react-link" to="/obras">OBRAS</Link>
+              {/* <Link className="nav-link react-link" to="/obras">OBRAS</Link> */}
               <Link className="nav-link react-link" to="/servicios">SERVICIOS</Link>
             </div>
           </div>

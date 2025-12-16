@@ -1,0 +1,96 @@
+/* Frost highlight: hielo/escarcha elegante */
+.frost {
+  --ink: #0b2b45;                 /* azul tinta */
+  --ice: #7fd6ff;                 /* celeste hielo */
+  --ice2: rgba(127, 214, 255, .22);
+  --ice3: rgba(255, 255, 255, .55);
+
+  position: relative;
+  display: inline;
+  /* width: 80%; */
+  margin-bottom: 1rem;
+  color: var(--ink);
+  font-weight: 700;
+  padding: .5em .28em;
+  border-radius: .65em;
+  -webkit-font-smoothing: antialiased;
+
+  /* “escarcha” suave detrás */
+  background:
+    linear-gradient(180deg, #96c5f7aa, rgba(167, 227, 255, 0.272));
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.55),
+    0 10px 24px rgba(15, 70, 120, .10);
+
+  /* animación de entrada suave */
+  animation: frost-pop 1s ease-out both;
+}
+
+/* Brillo frío que “recorre” */
+.frost::before{
+  content:"";
+  position:absolute;
+  /* inset:-2px; */
+  inset:0;
+  border-radius: inherit;
+  pointer-events:none;
+
+  background: linear-gradient(
+    110deg,
+    transparent 0%,
+    rgba(255,255,255,0.00) 35%,
+    rgba(255,255,255,0.65) 48%,
+    rgba(127,214,255,0.30) 52%,
+    rgba(255,255,255,0.00) 65%,
+    transparent 100%
+  );
+
+  transform: translateX(-120%);
+  filter: blur(0.2px);
+  opacity: .75;
+  animation: frost-sweep 6s ease-in-out infinite;
+}
+
+/* Línea helada abajo tipo “capa de hielo” */
+.frost::after{
+  content:"";
+  position:absolute;
+  left:.22em;
+  right:.22em;
+  bottom:-.10em;
+  height: 3px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(127,214,255,.0), rgba(127,214,255,.75), rgba(255,255,255,.65), rgba(127,214,255,.75), rgba(127,214,255,.0));
+  box-shadow: 0 2px 10px rgba(127,214,255,.25);
+  transform-origin:left;
+  transform: scaleX(.65);
+  opacity: .9;
+}
+
+.frost:hover{
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.65),
+    0 14px 34px rgba(15, 70, 120, .16);
+  transform: translateY(-1px);
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+/* Entrada sutil */
+@keyframes frost-pop{
+  from { opacity: 0; transform: translateY(2px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Shimmer frío */
+@keyframes frost-sweep{
+  0%   { transform: translateX(-120%); }
+  45%  { transform: translateX(120%); }
+  100% { transform: translateX(120%); }
+}
+
+/* Reduce motion */
+@media (prefers-reduced-motion: reduce){
+  .frost, .frost::before { animation: none !important; }
+  .frost { transition: none !important; }
+}

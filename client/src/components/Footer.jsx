@@ -17,15 +17,16 @@ const Footer = () => {
             <Link className='nav-link footer-link' to='/'>INICIO</Link>
             <Link className='nav-link footer-link' to='/fabricacion'>FABRICACIÓN</Link>
             <Link className='nav-link footer-link' to='/reparacion'>REPARACIÓN</Link>
-            <Link className='nav-link footer-link' to='/obras'>OBRAS</Link>
+            {/* <Link className='nav-link footer-link' to='/obras'>OBRAS</Link> */}
             <Link className='nav-link footer-link' to='/servicios'>SERVICIOS</Link>
           </div>
         </div>
         <div className="col-sm mb-2">
           <h5>Contacto</h5>
+          <h6 className='mb-0'>Direccion</h6>
           <p className='mb-2'>Martín Rodríguez 2875 <br></br>(1644) Victoria, Buenos Aires</p>
           <p className='mb-2'>walterdcorrea@gmail.com</p>
-          <h6>Telefonos</h6>
+          <h6 className='mb-0'>Telefonos</h6>
           <ul className='lista-telefonos container-fluid'>
             <li>Walter Correa: 11-2154-4111</li>
             <li>Gustavo Ledesma: 11-5806-9162</li>

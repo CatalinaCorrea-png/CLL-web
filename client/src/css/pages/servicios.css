@@ -1,0 +1,16 @@
+.seccion-servicios {
+  background-color: var(--uranian-blue);
+  display: flex;
+  flex-direction: column;
+  /* justify-content: flex-start; */
+  /* align-items: flex-start; */
+  text-align: left;
+}
+
+.texto-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  /* gap: 1rem; */
+}

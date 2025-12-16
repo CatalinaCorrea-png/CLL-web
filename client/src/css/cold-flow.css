@@ -1,0 +1,128 @@
+/* Protección global contra scroll horizontal */
+html, body {
+  overflow-x: hidden;
+}
+
+/* Highlight ciclo de frío */
+.cold-flow {
+  --ink: #0b2b45;         /* azul oscuro */
+  --cold1: #9adfff;       /* celeste frío */
+  --cold2: #4fb6e8;       /* azul refrigeración */
+
+  position: relative;
+  display: inline-block; /* IMPORTANTE para contener animaciones */
+  max-width: 100%;
+  overflow: hidden;      /* no genera scroll-x */
+
+  color: var(--silver-lake-blue);
+  font-weight: 600;
+  font-size: 1.2rem;
+  padding: .3em .35em;
+  border-radius: .6em;
+  /* margin-bottom: 1.3rem; */
+  text-transform: capitalize;
+  /* text-transform: uppercase; */
+
+  background: linear-gradient(
+    180deg,
+    rgba(255,255,255,.55),
+    rgba(154,223,255,.18)
+  );
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.7),
+    0 8px 22px rgba(15,70,120,.12);
+
+  animation: cold-in 420ms ease-out both;
+}
+
+/* Flujo de aire frío */
+.cold-flow::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+
+  background: linear-gradient(
+    120deg,
+    transparent 0%,
+    rgba(255,255,255,0.0) 30%,
+    rgba(154,223,255,.55) 45%,
+    rgba(221, 244, 255, .85) 50%,
+    rgba(79,182,232,.45) 55%,
+    rgba(255,255,255,0.0) 70%,
+    transparent 100%
+  );
+
+  opacity: .65;
+
+  /* Movimiento interno, NO se sale */
+  animation: cold-flow 10s 5s ease-in-out infinite;
+}
+
+/* Línea inferior tipo “conducto frío” */
+/* .cold-flow::after {
+  content: "";
+  position: absolute;
+  left: .35em;
+  right: .35em;
+  bottom: .15em;
+  height: 2px;
+  border-radius: 999px;
+
+  background: linear-gradient(
+    90deg,
+    rgba(79,182,232,0),
+    rgba(154,223,255,.9),
+    rgba(221, 244, 255, 0.8),
+    rgba(154,223,255,.9),
+    rgba(79,182,232,0)
+  );
+
+  opacity: .85;
+} */
+
+/* Animaciones */
+/* @keyframes cold-flow {
+  0%   { transform: translateX(-40%); }
+  50%  { transform: translateX(40%); }
+  100% { transform: translateX(-40%); }
+} */
+@keyframes cold-flow {
+  /* ANIMACIÓN (0 → 58%) */
+  0%   { transform: translateX(-40%); opacity: 0; }
+  10%  { opacity: .65; }
+  50%  { transform: translateX(40%); opacity: .65; }
+  58%  { transform: translateX(40%); opacity: 0; }
+
+  /* PAUSA (58% → 100%) */
+  100% { transform: translateX(40%); opacity: 0; }
+}
+
+
+@keyframes cold-in {
+  from {
+    opacity: 0;
+    transform: translateY(2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Hover muy sutil */
+/* .cold-flow:hover {
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.85),
+    0 12px 32px rgba(15,70,120,.18);
+  transition: box-shadow 200ms ease;
+} */
+
+/* Accesibilidad */
+@media (prefers-reduced-motion: reduce) {
+  .cold-flow,
+  .cold-flow::before {
+    animation: none !important;
+  }
+}

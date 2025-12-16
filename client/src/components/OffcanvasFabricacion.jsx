@@ -12,8 +12,8 @@ const OffcanvasFabricacion = () => {
 
   return (
     <>
-    <Button variant="primary" onClick={toggleShow} className="btn-offcanvas">
-    <i className="fa-solid fa-angles-left"></i>
+      <Button variant="primary" onClick={toggleShow} className="btn-offcanvas">
+        <i className="fa-solid fa-angles-left"></i>
       </Button>
       <Offcanvas show={show} onHide={handleClose} placement={"end"} scroll>
         <Offcanvas.Header closeButton>
@@ -26,8 +26,9 @@ const OffcanvasFabricacion = () => {
               <li className='nav-item-cat'><a className='nav-link-cat' href="#murales">MURALES</a></li>
               <li className='nav-item-cat'><a className='nav-link-cat' href="#bateas">BATEAS</a></li>
               <li className='nav-item-cat'><a className='nav-link-cat' href="#exhibidoras">EXHIBIDORAS</a></li>
+              <li className='nav-item-cat'><a className='nav-link-cat' href="#congelados">CONGELADOS</a></li>
               <li className='nav-item-cat'><a className='nav-link-cat' href="#camaras">CAMARAS</a></li>
-              <li className='nav-item-cat'><a className='nav-link-cat' href="#vitrinas">VITRINAS</a></li>
+              {/* <li className='nav-item-cat'><a className='nav-link-cat' href="#vitrinas">VITRINAS</a></li> */}
               <li className='nav-item-cat'><a className='nav-link-cat' href="#usadas">USADAS</a></li>
             </ul>
           </nav>

@@ -1,9 +1,9 @@
 import { Link, Outlet } from "react-router-dom";
-import { Navbar } from "./Navbar";
-import Footer from "./Footer";
+import { Navbar } from "../components/Navbar";
+import Footer from "../components/Footer";
 // import { CollapsibleExample } from "./CollapsibleHeader";
 
-const Header = () => {
+const Layout = () => {
   return (
     <>
       <Navbar />
@@ -14,4 +14,4 @@ const Header = () => {
   )
 }
 
-export default Header
+export default Layout
