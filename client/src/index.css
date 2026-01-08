@@ -97,6 +97,7 @@ body {
   font-size: 1.2rem;
   padding: 5px 10px;
   background-color: var(--indigo-dye);
+  color: white;
   border: 0;
   border-radius: 5px;
   transition: border-radius .2s ease-in-out;
@@ -104,6 +105,18 @@ body {
 }.btn-indigo:hover {
   border-radius: 20px;
   transition: border-radius .2s ease-out;
+}
+
+.separator {
+  height: 2px;
+  width: 20%;
+  /* background-color: var(--silver-lake-blue); */
+  color: var(--silver-lake-blue);
+  /* opacity: 1; */
+
+  /* transition: .2s ease-in-out; */
+
+  animation: x-grow 10s 5s ease-in-out infinite;
 }
 
 /** SCROLL */
@@ -122,6 +135,18 @@ body {
 	background-color: #2b2d42dd; /* Color del scroll cuando el mousr se posa sobre él */
 }
 
+/** ANIMATIONS */
+@keyframes x-grow {
+  0% {
+    transform: scaleX(100%);
+  }
+  50% {
+    transform: scaleX(350%);
+  }
+  100% {
+    transform: scaleX(100%);
+  }
+}
 /* 
 h1 {
   font-size: 3.2em;

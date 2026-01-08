@@ -12,5 +12,47 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  text-align: center;
   /* gap: 1rem; */
+}
+
+.servicios-before-after {
+  width: 70%;
+  margin-bottom: 1rem;
+}
+
+.servicios-imagenes-container {
+  width: 70%;
+  display: flex;
+  justify-content: space-evenly;
+  gap: 1rem;
+}
+.servicio-img-container {
+  /* width: 50%; */
+  margin-bottom: 1rem;
+  /* display: flex; */
+  /* justify-content: center; */
+  
+  border-radius: 50%;
+  &:hover {
+    box-shadow: var(--silver-lake-blue) 0px 0px 5rem 10px;
+    transition: 0.3s ease-in-out;
+  }
+}
+
+.servicio-img {
+  border-radius: 25px;
+  /* width: 100%; */
+  height: 50vh;
+}
+
+@media screen and (max-width: 430px) {
+  .servicios-imagenes-container {
+    flex-direction: column;
+    align-items: center;
+  }
+  .servicio-img {
+    height: 30vh;
+  }
+
 }
