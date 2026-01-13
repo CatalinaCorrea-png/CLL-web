@@ -111,7 +111,7 @@ const Fabricacion = () => {
         <DetallesModal mensajeError={mensajeError} isOpen={usadasModal} onClose={() => setUsadasModal(false)} detalles={usadas} imagen={img}/>
 
       </section>
-
+      {/* <Productos producto="usadas" /> */}
     </div>
     
     </>

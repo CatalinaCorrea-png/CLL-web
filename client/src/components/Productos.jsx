@@ -6,6 +6,7 @@ import ModalGalery from './ModalGalery';
 import Loader from './Loader';
 
 const Productos = ({ producto }) => {
+  const API = import.meta.env.VITE_API_URL;
     /* IMAGENES */
     const [imagenes, setImagenes] = useState([]);
       /* LOADING */
@@ -20,7 +21,7 @@ const Productos = ({ producto }) => {
   async function getData() {
       setLoading(true)
     try {
-      const response = await axios.get(`http://localhost:3001/fabricacion/imagenes/${producto}`)
+      const response = await axios.get(`${API}/fabricacion/imagenes/${producto}`)
       // console.log(response.data);
       setLoading(false)
       setImagenes(response.data);
