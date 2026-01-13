@@ -16,6 +16,7 @@ services:
   api:
     build:
       context: ./server
+    restart: always
     environment:
       NODE_ENV: production
       PORT: 3001
@@ -24,6 +25,7 @@ services:
       DB_NAME: ${DB_NAME}
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
+      CORS_ORIGIN: ${CORS_ORIGIN}
     depends_on:
       - db
     expose:
@@ -32,8 +34,9 @@ services:
   web:
     build:
       context: ./client
-    # args:
-    #   VITE_API_URL: ${VITE_API_URL}
+      args:
+        VITE_API_URL: ${VITE_API_URL}
+    restart: always
     expose:
       - "80"
     depends_on:
