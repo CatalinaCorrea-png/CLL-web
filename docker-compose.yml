@@ -1,18 +1,44 @@
 services:
+  db:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    volumes:
+      - mysql_data:/var/lib/mysql
+    # Optional: only if you want to connect from outside VPS
+    # ports:
+    #   - "3306:3306"
+
   api:
     build:
       context: ./server
     environment:
-      - NODE_ENV=production
-      - PORT=3001
-      # add DB / JWT / etc envs here or in Dokploy UI
+      NODE_ENV: production
+      PORT: 3001
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+    depends_on:
+      - db
     expose:
       - "3001"
 
   web:
     build:
       context: ./client
+    # args:
+    #   VITE_API_URL: ${VITE_API_URL}
     expose:
       - "80"
     depends_on:
       - api
+
+volumes:
+  mysql_data:
+
