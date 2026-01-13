@@ -16,7 +16,7 @@ const fabricacionModel = {
 
   // Función que devuelve las imagenes de un producto
   getProductImages: async (producto) => {
-    const sqlQuery = "SELECT * FROM imagenesFabricacion WHERE producto = ?;"; // Consulta/Sentencia de SQL
+    const sqlQuery = "SELECT * FROM imagenesfabricacion WHERE producto = ?;"; // Consulta/Sentencia de SQL
     try {
       const [rows] = await db.query(sqlQuery, [producto]);
       return rows;
