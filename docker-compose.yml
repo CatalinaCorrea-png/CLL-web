@@ -9,6 +9,8 @@ services:
       MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
     volumes:
       - mysql_data:/var/lib/mysql
+    networks:
+      - appnet
     # Optional: only if you want to connect from outside VPS
     # ports:
     #   - "3306:3306"
@@ -30,6 +32,8 @@ services:
       - db
     expose:
       - "3001"
+    networks:
+      - appnet
 
   web:
     build:
@@ -41,7 +45,12 @@ services:
       - "80"
     depends_on:
       - api
+    networks:
+      - appnet
 
 volumes:
   mysql_data:
 
+networks:
+  appnet:
+    driver: bridge
