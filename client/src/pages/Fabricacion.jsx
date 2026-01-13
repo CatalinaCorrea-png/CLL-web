@@ -8,14 +8,16 @@ import Productos from '../components/Productos';
 import BotonTrazo from '../components/BotonTrazo';
 import OffcanvasFabricacion from '../components/OffcanvasFabricacion';
 
+
 const Fabricacion = () => {
+  const API = import.meta.env.VITE_API_URL;
   /* DETALLES */
   const [murales, setMurales] = useState(null);
   const [bateas, setBateas] = useState(null);
   const [exhibidoras, setExhibidoras] = useState(null);
   const [congelados, setCongelados] = useState(null);
   const [camaras, setCamaras] = useState(null);
-  const [vitrinas, setVitrinas] = useState(null);
+  // const [vitrinas, setVitrinas] = useState(null);
   const [usadas, setUsadas] = useState(null);
   const [mensajeError, setMensajeError] = useState(null);
   
@@ -25,12 +27,12 @@ const Fabricacion = () => {
   const [exhibidorasModal, setExhibidorasModal] = useState(false);
   const [congeladosModal, setCongeladosModal] = useState(false);
   const [camarasModal, setCamarasModal] = useState(false);
-  const [vitrinasModal, setVitrinasModal] = useState(false);
+  // const [vitrinasModal, setVitrinasModal] = useState(false);
   const [usadasModal, setUsadasModal] = useState(false);
 
   async function getData() {
     try {
-      const response = await axios.get('http://localhost:3001/fabricacion');
+      const response = await axios.get(`${API}/fabricacion`);
       // console.log(response.data);
       // setFabricacion(response.data);
       setMurales(response.data[0].murales);

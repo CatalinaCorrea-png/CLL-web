@@ -1,0 +1,18 @@
+services:
+  api:
+    build:
+      context: ./server
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+      # add DB / JWT / etc envs here or in Dokploy UI
+    expose:
+      - "3001"
+
+  web:
+    build:
+      context: ./client
+    expose:
+      - "80"
+    depends_on:
+      - api
