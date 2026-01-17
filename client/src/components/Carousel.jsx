@@ -9,8 +9,8 @@ import '../css/carousel.css';
 function Caption() {
   return (
     <div className='container-fluid container-text'>
-      <h1 className="carousel-h1">CLL</h1>
-      <h1 className="carousel-h1">HELADERAS COMERCIALES</h1>
+        {/* <h2 className="carousel-h1">CLL</h2> */}
+      <h1 className="carousel-h1"> CLL <br></br> HELADERAS COMERCIALES</h1>
       <p className="carousel-p">Más de 30 años de experiencia en instalaciones para almacenes, supermercados y comercios.</p>
     </div>
   )
