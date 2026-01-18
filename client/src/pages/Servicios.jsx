@@ -10,7 +10,7 @@ import BeforeAfter from '../components/BeforeAfter';
 const Servicios = () => {
 
   const img1 = '/IMG_20210701_110939128.jpg'
-  const img2 = '/camaras/wic-1-3.JPG'
+  const img2 = '/camaras/wic-1-3.jpg'
   const img3 = '/IMG-20190715-WA0042.jpg'
   const img4 = '/IMG_20190821_170029472.jpg'
     
@@ -31,8 +31,8 @@ const Servicios = () => {
         <BeforeAfter 
         img1={"/cerramiento/IMG-20190816-WA0048-1.jpg"} 
         img2={"/cerramiento/IMG-20190816-WA0050-1.jpg"}
-        alt1={"Heladera antes, sin puertas"}
-        alt2={"Heladera después, con puertas corredizas"}
+        alt1={"Heladera exhibidora antes, abierta, sin puertas"}
+        alt2={"Heladera exhibidora después, cerrada con puertas corredizas de vidrio"}
         aditionalClasses={"servicios-before-after"}
         />
 
@@ -43,8 +43,8 @@ const Servicios = () => {
         <BeforeAfter 
         img1={"/cerramiento/IMG_20190208_121118122.jpg"} 
         img2={"/cerramiento/IMG_20190311_113329402.jpg"}
-        alt1={"Batea recta antes, sin cupula de vidrio"}
-        alt2={"Batea recta despues, con cupula de vidrio recta"}
+        alt1={"Batea recta antes, abierta, sin cupula de vidrio"}
+        alt2={"Batea recta despues, cerrada con cupula de vidrio recta"}
         aditionalClasses={"servicios-before-after"}
         />
 
@@ -52,7 +52,7 @@ const Servicios = () => {
 
         <p>Provision y colocacion de cortinas nocturnas</p>
         <div className='servicio-img-container'>
-          <img className='servicio-img' src={img1} alt="" />
+          <img className='servicio-img' src={img1} alt="Heladera exhibidora baja, cerrada con cortina nocturna" />
         </div>
 
         <hr className='separator'/>
@@ -61,7 +61,7 @@ const Servicios = () => {
         <p>Cambio de herrajes, burletes, estanterías para cámaras, sellados de las mismas.</p>
 
         <div className='servicio-img-container'>
-          <img className='servicio-img' src={img2} alt="" />
+          <img className='servicio-img' src={img2} alt="Interior de camara walk in cooler con estanterias de acero con rejas plastificadas" />
         </div>
 
         <hr className='separator'/>
@@ -71,10 +71,10 @@ const Servicios = () => {
 
         <div className="servicios-imagenes-container">
           <div className='servicio-img-container'>
-            <img className='servicio-img' src={img3} alt="" />
+            <img className='servicio-img' src={img3} alt="frente exterior de heladera exhibidora con termostato controlador de temperatura" />
           </div>
           <div className='servicio-img-container'>
-            <img className='servicio-img' src={img4} alt="" />
+            <img className='servicio-img' src={img4} alt="frente exterior de camara frigrorifica con termostato controlador de temperatura" />
           </div>
         </div>
         
@@ -85,8 +85,8 @@ const Servicios = () => {
         <BeforeAfter 
         img1={"/cerramiento/IMG-20190423-WA0018.jpg"} 
         img2={"/cerramiento/IMG-20190423-WA0009.jpg"}
-        alt1={"Heladera antes, sin puertas"}
-        alt2={"Heladera después, con puertas corredizas"}
+        alt1={"Heladera exhibidora antes, abierta, sin puertas y sin iluminacion"}
+        alt2={"Heladera exhibidora después, cerrada con puertas corredizas de vidrio e iluminacion interior"}
         aditionalClasses={"servicios-before-after"}
         />
 

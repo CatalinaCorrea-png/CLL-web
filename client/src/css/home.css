@@ -141,6 +141,16 @@
     }
   }
 
+  .link-gmail {
+    color: var(--jordy-blue);
+    transition: .3s ease-in-out;
+
+    &:hover {
+      text-shadow: 1px 0px 5px var(--jordy-blue);
+      transition: .3s ease-in-out;
+    }
+  }
+
 
     .form-contact {
       padding: 20px;

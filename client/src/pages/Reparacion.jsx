@@ -29,6 +29,7 @@ const Reparacion = () => {
           <li className='reparacion-item cold-flow'>Provisión y colocación de cortinas nocturnas</li>
         </ul>
         <hr className='separator'/>
+        <h3 className='titulo-seccion'>- Mantenimiento y Prevención -</h3>
         <p>Ademas de la reparacion, tambien ofrecemos servicios de mantenimiento preventivo para ayudar a prevenir futuros problemas y asegurar el rendimiento optimo de sus equipos. Nuestros tecnicos realizaran inspecciones regulares, limpieza y ajustes necesarios para mantener sus equipos en las mejores condiciones.</p>
         <p>En CLL Equipamientos nos comprometemos a brindar un servicio rapido y confiable. Entendemos la importancia de contar con equipos de refrigeracion en buen estado para el funcionamiento de su negocio, por lo que:</p>
         <h5 className="texto-centrado frost">Nos esforzamos por minimizar los tiempos de inactividad y garantizar una reparacion eficiente.</h5>
@@ -38,8 +39,8 @@ const Reparacion = () => {
       <BeforeAfter 
         img1={"/cerramiento/cerramiento-1.jpg"} 
         img2={"/cerramiento/cerramiento-2.jpg"}
-        alt1={"Heladera antes, sin puertas"}
-        alt2={"Heladera después, con puertas corredizas"}
+        alt1={"Heladera exhibidora antes, abierta, sin puertas"}
+        alt2={"Heladera exhibidora después, cerrada con puertas corredizas de vidrio"}
         aditionalClasses={"reparacion-before-after"}
         />
       
