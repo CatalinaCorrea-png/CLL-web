@@ -142,7 +142,7 @@
   }
 
   .link-gmail {
-    color: var(--jordy-blue);
+    color: var(--uranian-blue);
     transition: .3s ease-in-out;
 
     &:hover {

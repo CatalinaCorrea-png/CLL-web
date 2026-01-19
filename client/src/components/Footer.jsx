@@ -25,6 +25,7 @@ const Footer = () => {
           <h5>Contacto</h5>
           <h6 className='mb-0'>Direccion</h6>
           <p className='mb-2'>Martín Rodríguez 2875 <br></br>(1644) Victoria, Buenos Aires</p>
+          <h6 className='mb-0'>Mail</h6>
           <p className='mb-2'>walterdcorrea@gmail.com</p>
           <h6 className='mb-0'>Telefonos</h6>
           <ul className='lista-telefonos container-fluid'>

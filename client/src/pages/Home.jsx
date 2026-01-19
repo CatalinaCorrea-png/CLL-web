@@ -16,7 +16,7 @@ const Home = () => {
       <SecAbout />
       <SecTrabajos />
       <SecForm />
-      <SecContacto />
+      {/* <SecContacto /> */}
     </>
   )
 }
