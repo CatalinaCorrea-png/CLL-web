@@ -13,6 +13,7 @@
       
       .imagen-nosotros {
         width: 100%;
+        border-radius: 50%;
         /* padding: 20px; */
       }
     }
