@@ -58,9 +58,9 @@ const Productos = ({ producto }) => {
                     <img id={index} 
                     className='imagen-producto-img' 
                     src={item.imageUrl} 
-                    srcSet={`
-                      ${item.imageUrl} 300w,
-                    `}
+                    // srcSet={`
+                    //   ${item.imageUrl} 300w,
+                    // `}
                     loading='lazy'
                     alt="" />
                   </a>
