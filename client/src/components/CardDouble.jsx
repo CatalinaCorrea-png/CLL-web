@@ -4,10 +4,20 @@ const CardDouble = ({id, image1, image2}) => {
   return (
     <div id={id} className="card-double">
       <div className="first-content">
-        <span><img className='imagen-producto-img' src={image1} alt="" /></span>
+        <span>
+          <img className='imagen-producto-img' 
+          src={image1} 
+          loading='lazy'
+          alt="" />
+          </span>
       </div>
       <div className="second-content">
-        <span><img className='imagen-producto-img' src={image2} alt="" /></span>
+        <span>
+          <img className='imagen-producto-img' 
+          src={image2}
+          loading='lazy'
+          alt="" />
+          </span>
       </div>
     </div>
   )

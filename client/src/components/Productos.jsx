@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import '../css/pages/fabricacion.css'
 import axios from 'axios';
 import CardDouble from './CardDouble';
@@ -10,6 +10,7 @@ const Productos = ({ producto }) => {
     /* IMAGENES */
     const [imagenes, setImagenes] = useState([]);
       /* LOADING */
+    const isInitializedRef = useRef(false);
     const [loading, setLoading] = useState(true);
     const [mensajeError, setMensajeError] = useState(null);
 
@@ -30,9 +31,13 @@ const Productos = ({ producto }) => {
     }
   }
 
-  useEffect(() => {
+  if (!isInitializedRef.current) {
     getData()
-  }, []);
+    isInitializedRef.current = true;
+  }
+  // useEffect(() => {
+  //   getData()
+  // }, []);
 
   return (
     <>
@@ -50,7 +55,14 @@ const Productos = ({ producto }) => {
               ) : (
                 <>
                   <a className='imagen-producto-a' onClick={() => {setId(index); setModalBool(true)}}>
-                    <img id={index} className='imagen-producto-img' src={item.imageUrl} alt="" />
+                    <img id={index} 
+                    className='imagen-producto-img' 
+                    src={item.imageUrl} 
+                    srcSet={`
+                      ${item.imageUrl} 300w,
+                    `}
+                    loading='lazy'
+                    alt="" />
                   </a>
                 </>
               )}

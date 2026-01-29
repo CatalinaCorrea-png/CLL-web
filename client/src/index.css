@@ -126,6 +126,7 @@ body {
 }
 ::-webkit-scrollbar-track {
   background: var(--uranian-blue); /* Color del fondo del track */
+  background: var(--jordy-blue); /* Color del fondo del track */
 }
 ::-webkit-scrollbar-thumb {
 	background-color: var(--dark-blue); /* Color del scroll */
