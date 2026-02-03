@@ -17,7 +17,7 @@ export const AppRouter = () => {
           {/* <Route  path="obras" element={ <Obras /> } /> */}
           <Route  path="servicios" element={ <Servicios /> } />
           {/* fallback */}
-          <Route path="*" element={<Navigate to="/" replace />} />
+          {/* <Route path="*" element={<Navigate to="/" replace />} /> */}
         </Route>
       </Routes>
     </>
