@@ -28,7 +28,7 @@ function ControlledCarousel({ imagenes, id }) {
   }
 
   useEffect(() => {
-    console.log("IDX:", id);
+    // console.log("IDX:", id);
     handleFindIndex(); // buscar indice de imagen seleccionada
   }, [])
 
