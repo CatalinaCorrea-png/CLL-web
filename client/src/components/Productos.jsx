@@ -7,27 +7,23 @@ import Loader from './Loader';
 
 const Productos = ({ producto }) => {
   const API = import.meta.env.VITE_API_URL;
-    /* IMAGENES */
-    const [imagenes, setImagenes] = useState([]);
-      /* LOADING */
-    const isInitializedRef = useRef(false);
-    const [loading, setLoading] = useState(true);
-    const [mensajeError, setMensajeError] = useState(null);
-
-    // MODAL BOOL
+  const [imagenes, setImagenes] = useState([]);
+  const isInitializedRef = useRef(false);
+  const [loading, setLoading] = useState(true);
+  const [mensajeError, setMensajeError] = useState(null);
   const [modalBool,setModalBool] = useState(false);
   const [id, setId] = useState(0);
-  // const [modalImg2,setModalImg2] = useState("");
 
   async function getData() {
-      setLoading(true)
+    setLoading(true)
     try {
       const response = await axios.get(`${API}/fabricacion/imagenes/${producto}`)
-      // console.log(response.data);
-      setLoading(false)
-      setImagenes(response.data);
+      setImagenes(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
-      setMensajeError("Error al obtener los datos:", error);
+      console.error("Error al obtener imagenes:", error.message);
+      setMensajeError("Error al obtener los datos");
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -35,43 +31,33 @@ const Productos = ({ producto }) => {
     getData()
     isInitializedRef.current = true;
   }
-  // useEffect(() => {
-  //   getData()
-  // }, []);
+
+  const imgUrl = (id) => `${API}/imagen/${id}`;
 
   return (
     <>
       <ul className='productos'>
-          {!loading && imagenes?.map((item, index) => (
-            <li key={index}>
-              {item.imageUrl2 ? (
-                <>
-                  <a className='imagen-producto-a' onClick={() => { setId(index); setModalBool(true)}}>
-                    <CardDouble id={index} image1={item.imageUrl} image2={item.imageUrl2} />
-                    {/* <img className='imagen-producto-img' src={item.imageUrl} alt="" />
-                    <img className='imagen-producto-img' src={item.imageUrl2} alt="" /> */}
-                  </a>
-                </>
-              ) : (
-                <>
-                  <a className='imagen-producto-a' onClick={() => {setId(index); setModalBool(true)}}>
-                    <img id={index} 
-                    className='imagen-producto-img' 
-                    src={item.imageUrl} 
-                    // srcSet={`
-                    //   ${item.imageUrl} 300w,
-                    // `}
-                    loading='lazy'
-                    alt="" />
-                  </a>
-                </>
-              )}
-            </li>
-          ))}
-          </ul>
-          {loading && <Loader />}
+        {!loading && imagenes?.map((item, index) => (
+          <li key={item._id}>
+            {item.imagen2 ? (
+              <a className='imagen-producto-a' onClick={() => { setId(index); setModalBool(true)}}>
+                <CardDouble id={index} image1={imgUrl(item.imagen1)} image2={imgUrl(item.imagen2)} />
+              </a>
+            ) : (
+              <a className='imagen-producto-a' onClick={() => {setId(index); setModalBool(true)}}>
+                <img id={index}
+                  className='imagen-producto-img'
+                  src={imgUrl(item.imagen1)}
+                  loading='lazy'
+                  alt="" />
+              </a>
+            )}
+          </li>
+        ))}
+      </ul>
+      {loading && <Loader />}
 
-          <ModalGalery isOpen={modalBool} onClose={() => setModalBool(false)} imagenes={imagenes} id={id}/>
+      <ModalGalery isOpen={modalBool} onClose={() => setModalBool(false)} imagenes={imagenes} id={id} imgUrl={imgUrl}/>
     </>
   )
 }

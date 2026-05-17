@@ -3,10 +3,12 @@ FROM node:20-alpine
 WORKDIR /app
 
 # Install deps first (better caching)
+# less changing layer
 COPY package*.json ./
 RUN npm ci --omit=dev
 
-# Copy source
+# then:
+# Copy source (code)
 COPY . .
 
 ENV NODE_ENV=production

@@ -33,14 +33,14 @@ const Fabricacion = () => {
   async function getData() {
     try {
       const response = await axios.get(`${API}/fabricacion`);
-      // console.log(response.data);
-      // setFabricacion(response.data);
-      setMurales(response.data[0].murales);
-      setBateas(response.data[1].bateas);
+      const productos = response.data;
+      if (!Array.isArray(productos)) throw new Error('Respuesta inesperada del servidor');
+      setMurales(productos.find(p => p.categoria === 'murales') || null);
+      setBateas(productos.find(p => p.categoria === 'bateas') || null);
       setMensajeError(null);
     } catch (error) {
       console.error("Error al obtener los datos:", error.message);
-      setMensajeError("Ocurrió un error al obtener los datos. Estamos trabajndo en ello.");
+      setMensajeError("Ocurrió un error al obtener los datos. Estamos trabajando en ello.");
     }
   }
 

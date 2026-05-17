@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');   // importa CORS
+require('../db/mongodb');
 const routes = require('./routes'); // importa las rutas
 
 const app = express(); // inicializar la app
