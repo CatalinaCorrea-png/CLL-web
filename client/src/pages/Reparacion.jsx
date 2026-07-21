@@ -6,7 +6,7 @@ import BeforeAfter from '../components/BeforeAfter'
 
 
 const Reparacion = () => {
-  useEffect(() => window.scrollTo(0, 0),[]);
+  useEffect(() => { window.scrollTo(0, 0); }, []);
   return (
     <div className='seccion seccion-reparacion'>
       <div className="texto-container">

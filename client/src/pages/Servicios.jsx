@@ -14,7 +14,7 @@ const Servicios = () => {
   const img3 = '/IMG-20190715-WA0042.jpg'
   const img4 = '/IMG_20190821_170029472.jpg'
     
-  useEffect(() => window.scrollTo(0, 0),[]);
+  useEffect(() => { window.scrollTo(0, 0); }, []);
   return (
     <div className='seccion seccion-servicios'>
       <div className="texto-container">
