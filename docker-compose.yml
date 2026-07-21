@@ -2,10 +2,13 @@ services:
   db:
     image: mysql:8.0
     restart: always
+    # lower_case_table_names=1: nombres de tabla insensibles a mayúsculas (como MySQL en Windows).
+    # Necesario porque el código consulta 'imagenesfabricacion' pero los .sql crean 'imagenesFabricacion'.
+    command: --lower-case-table-names=1
     environment:
       MYSQL_DATABASE: ${DB_NAME}
-      MYSQL_USER: ${DB_USER}
-      MYSQL_PASSWORD: ${DB_PASSWORD}
+      # OJO: la imagen mysql:8.0 rechaza MYSQL_USER=root. Como DB_USER=root, el usuario root
+      # se configura solo con MYSQL_ROOT_PASSWORD (no usar MYSQL_USER/MYSQL_PASSWORD aquí).
       MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
     volumes:
       - mysql_data:/var/lib/mysql
