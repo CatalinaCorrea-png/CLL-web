@@ -7,7 +7,7 @@ import SecTrabajos from "../components/SecTrabajos"
 import '../css/home.css';
 
 const Home = () => {
-  useEffect(() => window.scrollTo(0, 0),[]);
+  useEffect(() => { window.scrollTo(0, 0); }, []);
   return (
     <>
       <section className="carrusel container-fluid p-0">
