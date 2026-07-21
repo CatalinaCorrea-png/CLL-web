@@ -2,9 +2,9 @@ services:
   db:
     image: mysql:8.0
     restart: always
-    # lower_case_table_names=1: nombres de tabla insensibles a mayúsculas (como MySQL en Windows).
-    # Necesario porque el código consulta 'imagenesfabricacion' pero los .sql crean 'imagenesFabricacion'.
-    command: --lower-case-table-names=1
+    # NOTA: la tabla se llama 'imagenesfabricacion' (minúsculas) en los .sql y en el código,
+    # así funciona con lower_case_table_names=0 (default de Linux) sin necesidad de forzar nada
+    # ni borrar el volumen. NO agregar --lower-case-table-names sobre un volumen ya inicializado.
     environment:
       MYSQL_DATABASE: ${DB_NAME}
       # OJO: la imagen mysql:8.0 rechaza MYSQL_USER=root. Como DB_USER=root, el usuario root
