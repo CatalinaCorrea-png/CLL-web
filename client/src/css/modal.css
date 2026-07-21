@@ -16,7 +16,7 @@
 
 .modal-detalles {
   background: white;
-  padding: 20px;
+  padding: .5rem;
   border-radius: 10px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
   text-align: center;
@@ -35,8 +35,11 @@
   overscroll-behavior: contain;
 }
 
+.error-detalles {
+  padding: 1rem;
+}
+
 .btn-close-modal {
-  min-width: 10%;
   align-self: self-end;
   margin-bottom: .5rem;
 }

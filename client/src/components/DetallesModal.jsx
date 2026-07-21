@@ -11,7 +11,7 @@ const DetallesModal = ({ isOpen, onClose, detalles, imagen, mensajeError }) => {
   return ReactDOM.createPortal(
     <div className='modal-overlay' onClick={onClose}>
       <div className='modal-detalles' onClick={(e) => e.stopPropagation()}>
-      <button className="btn-indigo btn-close-modal poppins-semibold" onClick={onClose}>X</button>
+      <button className="btn-indigo btn-close-modal poppins-regular" onClick={onClose}>X</button>
         {!detalles ? (
           <div className="error-detalles poppins-semibold">
             <h4>Ups!</h4>

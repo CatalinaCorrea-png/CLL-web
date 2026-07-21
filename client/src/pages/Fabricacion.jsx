@@ -38,6 +38,10 @@ const Fabricacion = () => {
       setMurales(productos.find(p => p.categoria === 'murales') || null);
       setBateas(productos.find(p => p.categoria === 'bateas') || null);
       setMensajeError(null);
+
+      if (productos.length === 0) {
+        setMensajeError("No se encontraron detalles de productos. Estamos trabajando en ello.");
+      }
     } catch (error) {
       console.error("Error al obtener los datos:", error.message);
       setMensajeError("Ocurrió un error al obtener los datos. Estamos trabajando en ello.");
