@@ -2,10 +2,13 @@ services:
   db:
     image: mysql:8.0
     restart: always
+    # NOTA: la tabla se llama 'imagenesfabricacion' (minúsculas) en los .sql y en el código,
+    # así funciona con lower_case_table_names=0 (default de Linux) sin necesidad de forzar nada
+    # ni borrar el volumen. NO agregar --lower-case-table-names sobre un volumen ya inicializado.
     environment:
       MYSQL_DATABASE: ${DB_NAME}
-      MYSQL_USER: ${DB_USER}
-      MYSQL_PASSWORD: ${DB_PASSWORD}
+      # OJO: la imagen mysql:8.0 rechaza MYSQL_USER=root. Como DB_USER=root, el usuario root
+      # se configura solo con MYSQL_ROOT_PASSWORD (no usar MYSQL_USER/MYSQL_PASSWORD aquí).
       MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
     volumes:
       - mysql_data:/var/lib/mysql

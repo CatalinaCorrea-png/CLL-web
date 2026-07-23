@@ -1,0 +1,3 @@
+# Scripts de shell siempre con line endings LF, para que corran bien en el VPS (Linux).
+# Sin esto, en Windows git podría convertirlos a CRLF y romperían con "bad interpreter".
+*.sh text eol=lf

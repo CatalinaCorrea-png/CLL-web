@@ -10,7 +10,7 @@ import BeforeAfter from '../components/BeforeAfter';
 const Servicios = () => {
 
   const img1 = '/IMG_20210701_110939128.jpg'
-  const img2 = '/camaras/wic-1-3.jpg'
+  const img2 = '/camaras/wic-1-3.webp'
   const img3 = '/IMG-20190715-WA0042.jpg'
   const img4 = '/IMG_20190821_170029472.jpg'
     
