@@ -1,19 +1,26 @@
 services:
-  db:
-    image: mysql:8.0
-    restart: always
-    # NOTA: la tabla se llama 'imagenesfabricacion' (minúsculas) en los .sql y en el código,
-    # así funciona con lower_case_table_names=0 (default de Linux) sin necesidad de forzar nada
-    # ni borrar el volumen. NO agregar --lower-case-table-names sobre un volumen ya inicializado.
-    environment:
-      MYSQL_DATABASE: ${DB_NAME}
-      # OJO: la imagen mysql:8.0 rechaza MYSQL_USER=root. Como DB_USER=root, el usuario root
-      # se configura solo con MYSQL_ROOT_PASSWORD (no usar MYSQL_USER/MYSQL_PASSWORD aquí).
-      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
-    volumes:
-      - mysql_data:/var/lib/mysql
-    networks:
-      - appnet
+  # ─────────────────────────────────────────────────────────────────────────────
+  # MySQL: DESACTIVADO. La app migró a MongoDB (ver servicio 'mongo' y
+  # server/db/mongodb.js); las imágenes ahora se guardan como binario en Mongo.
+  # Se deja comentado, y no borrado, para poder volver atrás si hiciera falta.
+  # Para reactivarlo: descomentar este bloque + 'db' en api.depends_on +
+  # las DB_* de api.environment + el volumen 'mysql_data'.
+  # NOTA (si se reactiva): la tabla se llama 'imagenesfabricacion' (minúsculas) en
+  # los .sql y en el código, así funciona con lower_case_table_names=0 (default de
+  # Linux) sin borrar el volumen. NO agregar --lower-case-table-names sobre un
+  # volumen ya inicializado. Y la imagen mysql:8.0 rechaza MYSQL_USER=root: como
+  # DB_USER=root, root se configura solo con MYSQL_ROOT_PASSWORD.
+  # ─────────────────────────────────────────────────────────────────────────────
+  # db:
+  #   image: mysql:8.0
+  #   restart: always
+  #   environment:
+  #     MYSQL_DATABASE: ${DB_NAME}
+  #     MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+  #   volumes:
+  #     - mysql_data:/var/lib/mysql
+  #   networks:
+  #     - appnet
 
   mongo:
     image: mongo:7
@@ -35,15 +42,16 @@ services:
     environment:
       NODE_ENV: production
       PORT: 3001
-      DB_HOST: db
-      DB_PORT: 3306
-      DB_NAME: ${DB_NAME}
-      DB_USER: ${DB_USER}
-      DB_PASSWORD: ${DB_PASSWORD}
+      # DB_* (MySQL) comentadas: la app usa MongoDB, ningún módulo cargado las lee.
+      # DB_HOST: db
+      # DB_PORT: 3306
+      # DB_NAME: ${DB_NAME}
+      # DB_USER: ${DB_USER}
+      # DB_PASSWORD: ${DB_PASSWORD}
       MONGO_URL: mongodb://${MONGO_USER}:${MONGO_PASSWORD}@mongo:27017/cll?authSource=admin
       CORS_ORIGIN: ${CORS_ORIGIN}
     depends_on:
-      - db
+      # - db   # MySQL desactivado (ver bloque comentado arriba)
       - mongo
     expose:
       - "3001"
@@ -64,7 +72,7 @@ services:
       - appnet
 
 volumes:
-  mysql_data:
+  # mysql_data:   # MySQL desactivado (se usa MongoDB). Descomentar si se reactiva 'db'.
   mongo_data:
 
 networks:

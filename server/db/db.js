@@ -1,3 +1,9 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// EN DESUSO: pool de MySQL. La app migró a MongoDB — src/app.js ahora importa
+// ./mongodb.js y nadie hace require() de este archivo, así que el pool nunca se
+// crea. Se conserva (no se borra) por si hay que volver atrás.
+// Ver: server/db/mongodb.js, server/src/models/*.model.js
+// ─────────────────────────────────────────────────────────────────────────────
 require('dotenv').config(); // Cargar variables de entorno
 const mysql = require('mysql2/promise'); // version con promesas
 

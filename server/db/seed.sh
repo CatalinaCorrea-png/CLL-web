@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 # ---------------------------------------------------------------------------
+# EN DESUSO: este es el seed de MySQL. La app migró a MongoDB, donde las
+# imagenes se guardan como binario dentro de la base (no como rutas a /public).
+# El seed vigente es `npm run seed` -> server/scripts/seed-imagenes.js
+# Se conserva (no se borra) por si hay que volver atras a MySQL.
+# ---------------------------------------------------------------------------
 # Seed de la tabla `imagenesFabricacion` en MySQL (categorias de Fabricacion).
 #
 # Carga, EN ORDEN:
