@@ -1,110 +1,147 @@
+/* =====================================================================
+   Offcanvas · accesos rápidos a categorías (estilo frío / minimal)
+   ===================================================================== */
+
+/* --- Botón flotante tipo pestaña --- */
+.btn-offcanvas {
+  position: fixed;
+  top: 140px;
+  /* Sobresale 18px fuera de la vista a la derecha: buffer para que la
+     animación (translateX -10px) no deje un hueco recortado */
+  right: -18px;
+  z-index: 1045;
+  margin: 0;
+  padding: .9rem 1.8rem .9rem .8rem !important;
+  border-radius: 14px 0 0 14px !important;
+  background: rgba(255, 255, 255, .85) !important;
+  color: var(--brand) !important;
+  border: 1px solid var(--border) !important;
+  border-right: 0 !important;
+  box-shadow: -4px 6px 20px rgba(15, 60, 110, .14) !important;
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+
+  display: flex !important;
+  align-items: center;
+  gap: .4rem;
+  transition: background .2s ease, color .2s ease, padding-right .2s ease;
+  animation: oc-nudge 2s ease-out 1s 1;
+}
+.btn-offcanvas:hover {
+  background: var(--brand) !important;
+  color: #fff !important;
+  padding-right: 2.1rem !important;
+}
+.btn-offcanvas .fa-solid {
+  font-size: 1.1rem;
+  width: auto;
+}
+
+/* --- Panel --- */
 .offcanvas {
-  width: 150px !important;
+  width: 230px !important;
   height: fit-content;
-  top: 150px !important;
-  right: -1px !important;
-  background-color: var(--pastel-light-blue) !important;
-  box-shadow: 0px 0px 5px 0px var(--silver-lake-blue);
-  border: none !important;
-  border-radius: 20px 0 0 20px;
-  padding-bottom: 10px;
-  border: 1px solid var(--silver-lake-blue) !important;
+  top: 120px !important;
+  right: 0 !important;
+  background: var(--surface) !important;
+  box-shadow: -8px 10px 30px rgba(15, 60, 110, .18) !important;
+  border: 1px solid var(--border) !important;
+  border-right: 0 !important;
+  border-radius: 18px 0 0 18px;
+  padding: .4rem .2rem 1rem;
+  overflow: hidden;
+}
+.offcanvas::before {
+  content: "";
+  display: block;
+  height: 3px;
+  margin: 0 1rem .2rem;
+  border-radius: 3px;
+  background: linear-gradient(90deg, transparent, var(--ice), var(--accent), transparent);
 }
 
 .offcanvas-backdrop {
   background-color: transparent !important;
 }
 
-.offcanvas-title {
-  display: none;
-}
+.offcanvas-title { display: none; }
 .offcanvas-header {
-  padding-bottom: 0 !important;
+  padding: .4rem 1rem 0 !important;
 }
+.offcanvas-header .btn-close {
+  --bs-btn-close-color: var(--brand);
+  opacity: .55;
+  transition: opacity .2s ease;
+}
+.offcanvas-header .btn-close:hover { opacity: 1; }
+
 .offcanvas-body {
   padding: 0 !important;
-  width: max-content;
-}
-
-.btn-offcanvas {
-  position: fixed;
-  top: 150px;
-  right: -35px;
-  margin: 0;
-  border-radius: 20px 0 0 20px !important;
-  background-color: var(--pastel-light-blue) !important;
-  color: var(--dark-blue) !important;
-  border: 1px solid var(--silver-lake-blue) !important;
-  width: 5rem;
-  /* height: 3rem; */
-  /* align-self: flex-end; */
-  animation: izqder 2s ease-out 1s 1;
-  -moz-animation: izqder 2s ease-out 1s 1;
-  -webkit-animation: izqder 2s ease-out 1s 1;
-
-  display: flex !important;
-  align-items: flex-start;
-  justify-content: flex-start;
-  text-align: left;
-  
-  .fa-solid {
-    text-align: left;
-    justify-self: flex-start;
-    width: fit-content;
-  }
+  width: 100%;
 }
 
 .titulo-offcanvas {
-  color: var(--indigo-dye);
-  padding: 10px;
-  text-align: center;
+  color: var(--text-soft);
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  padding: .2rem 1rem .6rem;
+  margin: 0;
+  text-align: left;
 }
 
+/* --- Lista de links --- */
 .nav-container-cat {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-
   margin: 0;
-  padding: 0;
-  list-style: inside url('../assets/snowflake-regular-silver-lake-blue.svg');
+  padding: 0 .5rem;
+  list-style: none;
+  gap: 2px;
 }
-
 .nav-item-cat {
-  padding: 3px 15px;
-  margin-bottom: 3px;
   width: 100%;
-  
-  &:hover {
-    background-color: var(--uranian-blue);
-    border-bottom: 2px solid var(--silver-lake-blue);
-  }
+  border-radius: 10px;
+  transition: background .18s ease;
 }
+.nav-item-cat:hover { background: var(--surface-cold); }
+
 .nav-link-cat {
-  color: var(--silver-lake-blue);
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  padding: .55rem .8rem;
+  color: var(--text);
+  font-size: .92rem;
+  font-weight: 500;
   text-decoration: none;
+  border-radius: 10px;
+  transition: color .18s ease, gap .18s ease;
+}
+.nav-link-cat::before {
+  content: "\f2dc"; /* copo de nieve (Font Awesome) */
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
+  font-size: .7rem;
+  color: var(--accent);
+  transition: transform .2s ease;
+}
+.nav-item-cat:hover .nav-link-cat {
+  color: var(--brand);
+  gap: .8rem;
+}
+.nav-item-cat:hover .nav-link-cat::before {
+  transform: rotate(45deg) scale(1.1);
 }
 
-/* ANIMACIONES */
-  /* animation: izqder 2s ease-in-out 1; */
-  /* -moz-animation: izqder 2s ease-in-out 1; */
-  /* -webkit-animation: izqder 2s ease-in-out 1; */
-
-@keyframes izqder {
-  0% { transform: translateX(0); }
-  50% { transform: translateX(-30%); }
+/* ANIMACIÓN de aparición del botón */
+@keyframes oc-nudge {
+  0%   { transform: translateX(0); }
+  50%  { transform: translateX(-10px); }
   100% { transform: translateX(0); }
 }
 
-@-moz-keyframes izqder {
-  0% { transform: translateX(0); }
-  50% { transform: translateX(-30%); }
-  100% { transform: translateX(0); }
-}
-
-@-webkit-keyframes izqder {
-  0% { transform: translateX(0); }
-  50% { transform: translateX(-30%); }
-  100% { transform: translateX(0); }
+@media (prefers-reduced-motion: reduce) {
+  .btn-offcanvas { animation: none; }
 }

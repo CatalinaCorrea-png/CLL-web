@@ -1,103 +1,85 @@
-import { useEffect, useState } from 'react';
 import '../css/home.css';
 import { Link } from 'react-router-dom';
 
+const trabajos = [
+  {
+    icon: 'fa-snowflake',
+    titulo: 'Fabricación',
+    to: '/fabricacion',
+    descripcion: 'Equipos a medida para almacenes, supermercados y comercios.',
+    links: [
+      { label: 'Murales', to: '/fabricacion#murales' },
+      { label: 'Bateas', to: '/fabricacion#bateas' },
+      { label: 'Exhibidoras', to: '/fabricacion#exhibidoras' },
+      { label: 'Congelados', to: '/fabricacion#congelados' },
+      { label: 'Cámaras y WIK', to: '/fabricacion#camaras' },
+      { label: 'Usadas reacondicionadas', to: '/fabricacion#usadas' },
+    ],
+  },
+  {
+    icon: 'fa-screwdriver-wrench',
+    titulo: 'Reparación',
+    to: '/reparacion',
+    descripcion: 'Recuperamos tus equipos y los dejamos como nuevos.',
+    links: [
+      { label: 'Antes y después', to: '/reparacion' },
+      { label: 'Cambio de pintura', to: '/reparacion' },
+    ],
+  },
+  {
+    icon: 'fa-gear',
+    titulo: 'Servicios',
+    to: '/servicios',
+    descripcion: 'Cerramientos y mejoras para optimizar el consumo del frío.',
+    links: [
+      { label: 'Cerramientos con puertas de vidrio', to: '/servicios' },
+      { label: 'Cerramientos de bateas con vidrio curvo', to: '/servicios' },
+    ],
+  },
+];
+
 const SecTrabajos = () => {
-  const [animate, setAnimate] = useState(false);
-
-  const onScroll = () => {
-    window.scrollY > 700 ? setAnimate(true) : setAnimate(false);
-  }
-
-  useEffect(() => {
-    window.addEventListener("scroll", onScroll);
-  })
-
-
   return (
-    <section className="seccion seccion-trabajos container-fluid text-center">
-      <h1 className='titulo-claro'>LO QUE REALIZAMOS</h1>
-      <div className='container-fluid trabajos-container text-center'>
-        
-        <div className='row m-4'>
-          <div id='trabajo' className="trabajo col">
-            <div className={`link-trabajo ${animate ? "izqder" : ""}`}>
-                {/* <span>ICONO</span> */}
-                <Link to='/fabricacion#'>
-                  <i className="fa-solid fa-snowflake"></i>
-                  <h5 className=''>FABRICACION</h5>
-                </Link>
-            </div>
+    <section className="section-pad seccion-trabajos">
+      <div className="container-narrow">
+        <header className="sec-head">
+          <span className="eyebrow">Nuestro trabajo</span>
+          <h2 className="section-title on-deep">Lo que realizamos</h2>
+          <p className="section-lead on-deep">
+            Todo el ciclo del frío comercial, de la fabricación a medida al
+            mantenimiento de tus equipos.
+          </p>
+        </header>
 
-            <div id='texto-trabajo' className='texto-trabajo'>
-              <ul className='lista-links container-fluid m-0'>
-                <li><Link to='/fabricacion#murales'>Murales</Link></li>
-                <li><Link to='/fabricacion#bateas'>Bateas</Link></li>
-                <li><Link to='/fabricacion#exhibidoras'>Exhibidoras</Link></li>
-                <li><Link to='/fabricacion#congelados'>Congelados</Link></li>
-                <li><Link to='/fabricacion#camaras'>Camaras y WIK</Link></li>
-                {/* <li><Link to='/fabricacion#vitrinas'>Vitrinas</Link></li> */}
-                <li><Link to='/fabricacion#usadas'>Usadas Reacondicionadas</Link></li>
+        <div className="trabajos-grid">
+          {trabajos.map((t) => (
+            <article className="ice-card trabajo-card" key={t.titulo}>
+              <div className="trabajo-icon">
+                <i className={`fa-solid ${t.icon}`}></i>
+              </div>
+              <h3 className="trabajo-titulo">{t.titulo}</h3>
+              <p className="trabajo-desc">{t.descripcion}</p>
+
+              <ul className="trabajo-links">
+                {t.links.map((l, i) => (
+                  <li key={i}>
+                    <Link to={l.to}>
+                      <i className="fa-solid fa-angle-right"></i>
+                      {l.label}
+                    </Link>
+                  </li>
+                ))}
               </ul>
-            </div>
-          </div>
 
-          <div id='trabajo' className="trabajo col">
-            <div className={`link-trabajo ${animate ? "izqder" : ""}`}>
-                {/* <span>ICONO</span> */}
-                <Link to='/reparacion'>
-                  <i className="fa-solid fa-screwdriver-wrench"></i>
-                  <h5 className=''>REPARACION</h5>
-                </Link>
-            </div>
-
-            <div id='texto-trabajo' className='texto-trabajo'>
-              <ul className='lista-links container-fluid m-0'>
-                <li><Link to='/reparacion'>Antes y Después</Link></li>
-                <li><Link to='/reparacion'>Cambio de pintura</Link></li>
-              </ul>
-            </div>
-          </div>
+              <Link to={t.to} className="trabajo-cta">
+                Ver más <i className="fa-solid fa-arrow-right-long"></i>
+              </Link>
+            </article>
+          ))}
         </div>
-
-        <div className="row m-4">
-        {/*   <div id='trabajo' className="trabajo col">
-            <div className={`link-trabajo ${animate ? "izqder" : ""}`}>
-                <Link to='/obras'>
-                  <i className="fa-solid fa-helmet-safety"></i>
-                  <h5 className=''>OBRAS</h5>
-                </Link>
-            </div>
-
-            <div id='texto-trabajo' className='texto-trabajo'>
-              <ul className='lista-links container-fluid m-0'>
-                <li><Link to='/obras'>Mira nuestras obras</Link></li>
-              </ul>
-            </div>
-          </div> */}
-
-          <div id='trabajo' className="trabajo col">
-            <div className={`link-trabajo ${animate ? "izqder" : ""}`}>
-                {/* <span>ICONO</span> */}
-                <Link to='/servicios'>
-                  <i className="fa-solid fa-gear"></i>
-                  <h5 className=''>SERVICIOS</h5>
-                </Link>
-            </div>
-
-            <div id='texto-trabajo' className='texto-trabajo'>
-              <ul className='lista-links container-fluid m-0'>
-                <li><Link to='/servicios'>Cerramientos con Puertas de Vidrio</Link></li>
-                <li><Link to='/servicios'>Cerramientos de bateas con vidrio curvo</Link></li>
-                {/* <li><Link to='/servicios'>Mira nuestros servicios</Link></li> */}
-              </ul>
-            </div>
-          </div>
-        </div>
-
       </div>
     </section>
-  )
-}
+  );
+};
 
-export default SecTrabajos
+export default SecTrabajos;

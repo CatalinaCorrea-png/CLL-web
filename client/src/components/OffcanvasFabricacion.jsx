@@ -4,6 +4,15 @@ import Offcanvas from 'react-bootstrap/Offcanvas';
 
 import '../css/offcanvasFabricacion.css'
 
+const categorias = [
+  { href: '#murales', label: 'MURALES' },
+  { href: '#bateas', label: 'BATEAS' },
+  { href: '#exhibidoras', label: 'EXHIBIDORAS' },
+  { href: '#congelados', label: 'CONGELADOS' },
+  { href: '#camaras', label: 'CAMARAS' },
+  { href: '#usadas', label: 'USADAS' },
+];
+
 const OffcanvasFabricacion = () => {
   const [show, setShow] = useState(false);
 
@@ -23,13 +32,11 @@ const OffcanvasFabricacion = () => {
           <h6 className='titulo-offcanvas'>Ir a Categoría:</h6>
           <nav>
             <ul className='nav-container-cat poppins-regular'>
-              <li className='nav-item-cat'><a className='nav-link-cat' href="#murales">MURALES</a></li>
-              <li className='nav-item-cat'><a className='nav-link-cat' href="#bateas">BATEAS</a></li>
-              <li className='nav-item-cat'><a className='nav-link-cat' href="#exhibidoras">EXHIBIDORAS</a></li>
-              <li className='nav-item-cat'><a className='nav-link-cat' href="#congelados">CONGELADOS</a></li>
-              <li className='nav-item-cat'><a className='nav-link-cat' href="#camaras">CAMARAS</a></li>
-              {/* <li className='nav-item-cat'><a className='nav-link-cat' href="#vitrinas">VITRINAS</a></li> */}
-              <li className='nav-item-cat'><a className='nav-link-cat' href="#usadas">USADAS</a></li>
+              {categorias.map((c) => (
+                <li className='nav-item-cat' key={c.href}>
+                  <a className='nav-link-cat' href={c.href} onClick={handleClose}>{c.label}</a>
+                </li>
+              ))}
             </ul>
           </nav>
         </Offcanvas.Body>

@@ -1,7 +1,14 @@
 import ReactDOM from "react-dom";
+import { useEffect } from "react";
 import '../css/modal.css';
 
 const DetallesModal = ({ isOpen, onClose, detalles, imagen, mensajeError }) => {
+  useEffect(() => {
+    if (!isOpen) return;
+    document.documentElement.classList.add('modal-open');
+    return () => document.documentElement.classList.remove('modal-open');
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   // console.log(!detalles);
@@ -11,7 +18,10 @@ const DetallesModal = ({ isOpen, onClose, detalles, imagen, mensajeError }) => {
   return ReactDOM.createPortal(
     <div className='modal-overlay' onClick={onClose}>
       <div className='modal-detalles' onClick={(e) => e.stopPropagation()}>
-      <button className="btn-indigo btn-close-modal poppins-semibold" onClick={onClose}>X</button>
+      <button className="btn-close-modal" onClick={onClose} aria-label="Cerrar">
+        <i className="fa-solid fa-xmark"></i>
+      </button>
+      <div className="modal-body">
         {!detalles ? (
           <div className="error-detalles poppins-semibold">
             <h4>Ups!</h4>
@@ -77,7 +87,7 @@ const DetallesModal = ({ isOpen, onClose, detalles, imagen, mensajeError }) => {
             </div>
             </>
             )}
-
+      </div>
       </div>
     </div>,
     document.getElementById("modal-root") // Se renderiza fuera del root principal, en modal-root

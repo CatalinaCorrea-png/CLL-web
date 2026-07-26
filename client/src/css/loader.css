@@ -1,21 +1,20 @@
 /* From Uiverse.io by narmesh_sah */ 
 .preloader {
   position: relative;
-  /* width: 100%; */
   width: 5rem;
   height: 5rem;
-  /* height: 100%; */
+  margin: 2rem auto;
   display: flex;
   align-items: center;
   justify-content: center;
-  filter: drop-shadow(0 0 2px #fff);
+  filter: drop-shadow(0 2px 6px rgba(83, 135, 192, .35));
 }
 
 .crack {
   position: absolute;
   width: 70%;
   aspect-ratio: 1;
-  background-color: #fef3fc;
+  background-color: var(--indigo-dye);
   clip-path: polygon(
     50% 0%,
     61% 35%,
@@ -33,18 +32,22 @@
 
 .crack2 {
   width: 72%;
+  background-color: var(--silver-lake-blue);
   animation-delay: 1s;
 }
 .crack3 {
   width: 74%;
+  background-color: var(--silver-lake-blue);
   animation-delay: 1.5s;
 }
 .crack4 {
   width: 86%;
+  background-color: var(--jordy-blue);
   animation-delay: 2s;
 }
 .crack5 {
   width: 98%;
+  background-color: var(--uranian-blue);
   animation-delay: 2.5s;
 }
 

@@ -76,6 +76,12 @@ function ControlledCarousel({ imagenes, id }) {
 
 
 const ModalGalery = ({ isOpen, onClose, imagenes, id }) => {
+  useEffect(() => {
+    if (!isOpen) return;
+    document.documentElement.classList.add('modal-open');
+    return () => document.documentElement.classList.remove('modal-open');
+  }, [isOpen]);
+
   if (!isOpen) return null;
   // console.log({imagenes});
   // console.log(id);
@@ -83,7 +89,9 @@ const ModalGalery = ({ isOpen, onClose, imagenes, id }) => {
   return ReactDOM.createPortal(
     <div className='modal-galery-overlay' onClick={onClose}>
       <div className='modal-galery' onClick={(e) => e.stopPropagation()}>
-        <button className="btn-close-modal-galery poppins-semibold" onClick={onClose}>X</button>
+        <button className="btn-close-modal-galery" onClick={onClose} aria-label="Cerrar">
+          <i className="fa-solid fa-xmark"></i>
+        </button>
         <ControlledCarousel imagenes={imagenes} id={id} />
       </div>
     </div>,

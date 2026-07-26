@@ -1,75 +1,73 @@
-.seccion-reparacion {
-  background-color: var(--uranian-blue);
+/* =====================================================================
+   REPARACIÓN · estilo frío / minimal limpio (usa tokens de theme.css)
+   ===================================================================== */
+.reparacion {
+  background: var(--surface-soft);
+}
+
+.rep-sec {
+  padding-block: clamp(2.2rem, 5vw, 3.5rem);
+}
+.rep-sec-alt {
+  background: var(--surface);
+  border-block: 1px solid var(--border);
+}
+
+.rep-head {
+  margin-bottom: 1.6rem;
+}
+
+/* Bloques de texto */
+.rep-intro {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-  text-align: left;
+  gap: 1.1rem;
+}
+.rep-intro p {
+  margin: 0;
+  color: var(--text-soft);
+  font-size: 1.02rem;
+  line-height: 1.65;
 }
 
-.texto-container {
-  display: flex;
-  flex-direction: column;
-  /* gap: 1rem; */
-}
-
-.texto-centrado {
-  text-align: center;
-  text-transform: uppercase;
-  /* font-weight: 600; */
-  /* background: linear-gradient(90deg, transparent 30%, var(--jordy-blue) 50%, transparent 70%); */
-}
-
-.reparacion-before-after {
-  width: 100%;
-}
-
-.reparacion-list {
-  display: flex;
-  /* flex-direction: column; */
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: flex-start;
-  gap: 1em;
-
-  width: 90%;
+/* Grilla de piezas / partes */
+.rep-list {
+  list-style: none;
   margin: 0;
   padding: 0;
-
-  /* background-color: #e0f7ff; */
-  padding: 1rem;
-  border-radius: 1rem;
-  /* box-shadow: #e0f7ff 0 0 20px 0; */
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: .9rem;
 }
-
-.reparacion-item {
-  color: var(--indigo-dye);
-  background-color: var(--jordy-blue);
-  /* background: linear-gradient(
-    120deg,
-    var(--jordy-blue) 30%,
-    rgba(255,255,255, .2) 60%,
-    rgba(154,223,255,.55) 75%,
-    rgba(221, 244, 255, .85) 80%,
-    rgba(79,182,232,.45) 85%,
-    rgba(255,255,255,0.2) 95%,
-    var(--jordy-blue) 100%
-  ); */
-
-  box-shadow: var(--silver-lake-blue) 2px 2px 5px 0;
-  border-radius: 1rem;
-  padding: .8rem .8rem;
-  
+.rep-item {
   display: flex;
-  align-items: center;
-  font-weight: 600;
-  text-transform: capitalize;
-  
-  &:hover {
-    transform: translate(-5px, -5px);
-    /* box-shadow: var(--silver-lake-blue) 5px 5px 5px 0; */
-    color: var(--dark-blue);
-    box-shadow: var(--silver-lake-blue) 5px 5px 5px 0;
-    transition: 0.2s ease-in-out;
-  }
+  align-items: flex-start;
+  gap: .8rem;
+  padding: 1rem 1.2rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  box-shadow: var(--shadow-sm);
+  color: var(--text);
+  font-weight: 500;
+  line-height: 1.4;
+  transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease;
+}
+.rep-item:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow);
+  border-color: var(--accent);
+}
+.rep-item i {
+  color: var(--accent);
+  font-size: 1rem;
+  margin-top: .2rem;
+  flex: 0 0 auto;
+  transition: transform .3s ease;
+}
+.rep-item:hover i { transform: rotate(45deg); }
+
+/* Antes / Después */
+.reparacion-before-after {
+  width: 100%;
 }

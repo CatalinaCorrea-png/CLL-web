@@ -1,46 +1,137 @@
+/* =====================================================================
+   Footer · estilo frío / minimal limpio (usa tokens de theme.css)
+   ===================================================================== */
 .footer {
-  background-color: var(--dark-blue);
-  color: var(--platinum);
-  display: flex;
-  /* flex-direction: row; */
-  /* align-items: center; */
+  position: relative;
+  background: var(--brand-deep);
+  color: var(--text-onDeep-soft);
+}
+/* Filo helado superior */
+.footer::before {
+  content: "";
   position: absolute;
-  /* bottom: 0; */
-  p, li {
-    font-size: .8rem;
-  }
-  .nav-link {
-    padding: 0 5px !important;
-    text-decoration: underline;
-  }
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--ice), var(--accent), var(--ice), transparent);
 }
 
-.footer-link.active, .footer-link.show,
-.footer-link:focus, .footer-link:hover {
-    color: var(--silver-lake-blue) !important;
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr 1.6fr;
+  gap: clamp(1.5rem, 4vw, 3rem);
+  padding-block: clamp(2.5rem, 5vw, 3.5rem);
 }
 
-.enlaces-container {
-  height: 80%;
+.footer-col h5 {
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.footer-brand .footer-logo {
+  width: 64px;
+  margin-bottom: 1rem;
+}
+.footer-brand p {
+  font-size: .88rem;
+  line-height: 1.6;
+  margin: 0;
+  max-width: 42ch;
+}
+
+/* Enlaces */
+.footer-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
-  /* row-gap: 20px; */
+  gap: .55rem;
+}
+.footer-link {
+  color: var(--text-onDeep-soft);
+  text-decoration: none;
+  font-size: .9rem;
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  transition: color .2s ease, gap .2s ease;
+}
+.footer-link::before {
+  content: "\f2dc"; /* copo */
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
+  font-size: .6rem;
+  color: var(--accent);
+}
+.footer-link:hover {
+  color: #fff;
+  gap: .7rem;
 }
 
-.lista-telefonos {
+/* Contacto */
+.footer-line {
+  display: flex;
+  align-items: flex-start;
+  gap: .55rem;
+  font-size: .88rem;
+  line-height: 1.5;
+  margin: 0 0 .7rem;
+}
+.footer-line i { color: var(--accent); margin-top: .15rem; }
+
+.footer-tels {
   list-style: none;
+  padding: 0;
+  margin: .2rem 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
 }
+.footer-tels a {
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  color: var(--text-onDeep-soft);
+  text-decoration: none;
+  font-size: .88rem;
+  transition: color .2s ease;
+}
+.footer-tels a i { color: #25d366; font-size: 1rem; }
+.footer-tels a:hover { color: #fff; }
 
+/* Barra inferior */
+.footer-bottom {
+  border-top: 1px solid var(--border-onDeep);
+}
+.footer-bottom-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: .6rem;
+  padding-block: 1rem;
+  font-size: .82rem;
+  color: var(--text-onDeep-soft);
+}
+.footer-bottom-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+}
+.footer-bottom-tag i { color: var(--ice); }
 
-
-/* MEDIA QUERIES */
-@media screen and (max-width: 575px) {
-  .footer {
-    flex-direction: column;
+/* Responsive */
+@media screen and (max-width: 768px) {
+  .footer-grid {
+    grid-template-columns: 1fr 1fr;
   }
-  .enlaces-container {
-    flex-direction: row;
-    flex-wrap: wrap;
-  }
+  .footer-brand { grid-column: 1 / -1; }
+}
+@media screen and (max-width: 480px) {
+  .footer-grid { grid-template-columns: 1fr; }
+  .footer-bottom-inner { justify-content: center; text-align: center; }
 }

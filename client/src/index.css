@@ -1,4 +1,5 @@
 @import url('./css/fonts.css');
+@import url('./css/theme.css');
 
 :root {
   font-family: Poppins, Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
@@ -25,12 +26,8 @@
 }
 
 body {
-  background-color: var(--indigo-dye);
-  /* margin: 0; */
-  /* display: flex; */
-  /* place-items: center; */
-  /* min-width: 320px; */
-  /* min-height: 100vh; */
+  background-color: var(--surface);
+  color: var(--text);
 }
 .seccion {
   padding: 40px 20px;
@@ -173,16 +170,4 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 } */
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: var(--platinum);
-    background-color: var(--dark);
-  }
-  a:hover {
-    color: var(--silver-lake-blue);
-  }
-  button {
-    background-color: var(--jordy-blue);
-  }
-}
 

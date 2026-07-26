@@ -1,58 +1,64 @@
-.seccion-servicios {
-  background-color: var(--uranian-blue);
-  display: flex;
-  flex-direction: column;
-  /* justify-content: flex-start; */
-  /* align-items: flex-start; */
-  text-align: left;
+/* =====================================================================
+   SERVICIOS · estilo frío / minimal limpio (usa tokens de theme.css)
+   ===================================================================== */
+.servicios {
+  background: var(--surface-soft);
 }
 
-.texto-container {
+.srv-block {
+  padding-block: clamp(2.4rem, 5vw, 3.8rem);
+}
+.srv-block-alt {
+  background: var(--surface);
+  border-block: 1px solid var(--border);
+}
+
+.srv-head {
+  margin-bottom: 1.6rem;
+}
+.srv-desc {
+  margin: .7rem 0 0;
+  color: var(--text-soft);
+  font-size: 1.02rem;
+  line-height: 1.6;
+  max-width: 60ch;
+}
+
+/* Media (imagen simple o par) */
+.srv-media {
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
-  text-align: center;
-  /* gap: 1rem; */
+  gap: 1.4rem;
 }
-
-.servicios-before-after {
-  width: 70%;
-  margin-bottom: 1rem;
+.srv-media-2 {
+  flex-wrap: wrap;
 }
-
-.servicios-imagenes-container {
-  width: 70%;
-  display: flex;
-  justify-content: space-evenly;
-  gap: 1rem;
-}
-.servicio-img-container {
-  /* width: 50%; */
-  margin-bottom: 1rem;
-  /* display: flex; */
-  /* justify-content: center; */
-  
-  border-radius: 50%;
-  &:hover {
-    box-shadow: var(--silver-lake-blue) 0px 0px 5rem 10px;
-    transition: 0.3s ease-in-out;
-  }
-}
-
 .servicio-img {
-  border-radius: 25px;
-  /* width: 100%; */
-  height: 50vh;
+  width: 100%;
+  max-width: 520px;
+  height: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: var(--r);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  transition: transform .28s ease, box-shadow .28s ease, border-color .28s ease;
+}
+.srv-media-2 .servicio-img {
+  max-width: 420px;
+  flex: 1 1 320px;
+}
+.servicio-img:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow);
+  border-color: var(--accent);
 }
 
-@media screen and (max-width: 430px) {
-  .servicios-imagenes-container {
-    flex-direction: column;
-    align-items: center;
-  }
-  .servicio-img {
-    height: 30vh;
-  }
+/* Antes / Después dentro de servicios */
+.servicios-before-after {
+  width: 100%;
+}
 
+@media screen and (max-width: 575px) {
+  .servicio-img { aspect-ratio: 3 / 2; }
 }

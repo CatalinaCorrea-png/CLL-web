@@ -1,42 +1,82 @@
 import '../css/footer.css'
 import { Link } from "react-router-dom";
+import logo from '../assets/CLL.png';
 
+const enlaces = [
+  { to: '/', label: 'Inicio' },
+  { to: '/fabricacion', label: 'Fabricación' },
+  { to: '/reparacion', label: 'Reparación' },
+  { to: '/servicios', label: 'Servicios' },
+];
+
+const telefonos = [
+  { nombre: 'Walter Correa', tel: '11-2154-4111' },
+  { nombre: 'Gustavo Ledesma', tel: '11-5806-9162' },
+  { nombre: 'Claudio Ledesma', tel: '11-2756-5557' },
+];
 
 const Footer = () => {
   return (
-    <>
-      <div className='footer container-fluid text-center row-sm p-3'>
-        <div className="col-sm mb-2">
-          <h5>Acerca de</h5>
-          <p className='mb-2'>Nos dedicamos a la fabricación y reparación de heladeras y cámaras frigoríficas comerciales. Con experiencia en el rubro, trabajando con empresas líderes por más de 20 años. <br />
-          Nuestro objetivo es brindar soluciones integrales de equipamiento de calidad a bajo costo.</p>
+    <footer className='footer'>
+      <div className='container-narrow footer-grid'>
+
+        <div className='footer-col footer-brand'>
+          <img src={logo} alt="CLL" className='footer-logo' />
+          <p>
+            Fabricación y reparación de heladeras y cámaras frigoríficas
+            comerciales. Más de 30 años brindando soluciones integrales de
+            equipamiento de calidad.
+          </p>
         </div>
-        <div className="col-sm mb-2">
+
+        <div className='footer-col'>
           <h5>Enlaces</h5>
-          <div className='container-fluid p-0 enlaces-container'>
-            <Link className='nav-link footer-link' to='/'>INICIO</Link>
-            <Link className='nav-link footer-link' to='/fabricacion'>FABRICACIÓN</Link>
-            <Link className='nav-link footer-link' to='/reparacion'>REPARACIÓN</Link>
-            {/* <Link className='nav-link footer-link' to='/obras'>OBRAS</Link> */}
-            <Link className='nav-link footer-link' to='/servicios'>SERVICIOS</Link>
-          </div>
+          <ul className='footer-links'>
+            {enlaces.map((e) => (
+              <li key={e.to}>
+                <Link className='footer-link' to={e.to}>{e.label}</Link>
+              </li>
+            ))}
+          </ul>
         </div>
-        <div className="col-sm mb-2">
+
+        <div className='footer-col'>
           <h5>Contacto</h5>
-          <h6 className='mb-0'>Direccion</h6>
-          <p className='mb-2'>Martín Rodríguez 2875 <br></br>(1644) Victoria, Buenos Aires</p>
-          <h6 className='mb-0'>Mail</h6>
-          <p className='mb-2'>walterdcorrea@gmail.com</p>
-          <h6 className='mb-0'>Telefonos</h6>
-          <ul className='lista-telefonos container-fluid'>
-            <li>Walter Correa: 11-2154-4111</li>
-            <li>Gustavo Ledesma: 11-5806-9162</li>
-            <li>Claudio Ledesma: 11-2756-5557</li>
+          <p className='footer-line'>
+            <i className="fa-solid fa-location-dot"></i>
+            Martín Rodríguez 2875 · (1644) Victoria, Buenos Aires
+          </p>
+          <p className='footer-line'>
+            <i className="fa-regular fa-envelope"></i>
+            walterdcorrea@gmail.com
+          </p>
+          <ul className='footer-tels'>
+            {telefonos.map((t) => (
+              <li key={t.tel}>
+                <a
+                  href={`https://wa.me/54911${t.tel.replace(/\D/g, '').slice(2)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <i className="fa-brands fa-whatsapp"></i>
+                  <span>{t.nombre}: {t.tel}</span>
+                </a>
+              </li>
+            ))}
           </ul>
         </div>
       </div>
-    </>
-  )
-}
 
-export default Footer
+      <div className='footer-bottom'>
+        <div className='container-narrow footer-bottom-inner'>
+          <span>© {new Date().getFullYear()} CLL Equipamientos</span>
+          <span className='footer-bottom-tag'>
+            <i className="fa-solid fa-snowflake"></i> Heladeras comerciales
+          </span>
+        </div>
+      </div>
+    </footer>
+  );
+};
+
+export default Footer;

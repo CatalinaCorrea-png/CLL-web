@@ -1,112 +1,155 @@
+/* =====================================================================
+   Modal de galería (lightbox) · estilo frío / minimal (tokens de theme.css)
+   ===================================================================== */
 .modal-galery-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
+  inset: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(11, 30, 52, .70);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-
-  z-index: 1000; 
-  inset: 0;  /* top:0 right:0 bottom:0 left:0 */
+  z-index: 1200; /* por encima del offcanvas (1045) */
   pointer-events: auto;
+  padding: 1rem;
+  animation: galery-fade .25s ease-out both;
 }
 
 .modal-galery {
-  background: var(--dark);
-  background-color: rgba(36, 36, 36, .9);
-  background-color:  rgba(24, 40, 58, .9);
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  position: relative;
+  background: rgba(24, 40, 58, .92);
+  padding: 1rem 1rem 1.4rem;
+  border-radius: var(--r-lg);
+  border: 1px solid var(--border-onDeep);
+  box-shadow: var(--shadow-lg);
   text-align: center;
-  z-index: 1001; /* Asegurar que esté encima de todo */
-  
+  z-index: 1201;
+
   display: flex;
   flex-direction: column;
-  /* justify-content: center; */
   align-items: center;
-  /* align-items: flex-start; */
-  
-  width: 60vw;
-  max-height: 90%;
-  max-width: 90%;
 
-  overflow-y: auto;
-  overscroll-behavior: contain;
+  /* Ancho FIJO (no salta entre fotos); la altura se acomoda a cada imagen */
+  width: min(92vw, 820px);
+  max-height: 92%;
+  overflow: hidden;
+
+  animation: galery-pop .3s cubic-bezier(.2, .8, .2, 1) both;
+}
+/* Filo helado superior */
+.modal-galery::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  border-radius: var(--r-lg) var(--r-lg) 0 0;
+  background: linear-gradient(90deg, transparent, var(--ice), var(--accent), var(--ice), transparent);
 }
 
+/* Botón cerrar circular */
 .btn-close-modal-galery {
-  min-width: 5%;
-  align-self: self-end;
-  background-color: transparent;
-  border: 1px solid ghostwhite;
-  border-radius: 20px;
-  margin-bottom: .5rem;
-  margin-top: -0.5rem;
-  transition: all 0.3s ease-in-out;
-} .btn-close-modal-galery:hover {
-  font-weight: 900;
-  background-color: ghostwhite;
-  color: var(--indigo-dye);
-  border: none;
-  transition: all 0.3s ease-in-out;
+  align-self: flex-end;
+  width: 2.3rem;
+  height: 2.3rem;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  font-size: 1.1rem;
+  color: var(--text-onDeep);
+  background: rgba(255, 255, 255, .08);
+  border: 1px solid var(--border-onDeep);
+  border-radius: 50%;
+  cursor: pointer;
+  margin-bottom: .6rem;
+  transition: background .2s ease, color .2s ease, transform .2s ease;
+}
+.btn-close-modal-galery:hover {
+  background: #fff;
+  color: var(--brand);
+  transform: rotate(90deg);
 }
 
+/* Imagen: llena el ancho; la altura es automática hasta un tope (contain evita deformar) */
 .imagen-galery-detalle {
-  width: auto;
-  /* max-width: 60vw; */
-  height: 80vh;
-  /* width: 50vw; */
-  /* height: auto; */
-  max-height: 80%;
-  border-radius: 20px;
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 78vh;
+  border-radius: var(--r);
+  object-fit: contain;
 }
 
+/* --- Controles del carrusel react-bootstrap --- */
+.modal-galery .carousel { width: 100%; }
+.modal-galery .carousel-item { text-align: center; }
+
+.modal-galery .carousel-control-prev,
+.modal-galery .carousel-control-next {
+  width: 12%;
+  opacity: 1;
+}
+.modal-galery .carousel-control-prev-icon,
+.modal-galery .carousel-control-next-icon {
+  width: 2.6rem;
+  height: 2.6rem;
+  border-radius: 50%;
+  background-color: rgba(24, 40, 58, .55);
+  border: 1px solid var(--border-onDeep);
+  background-size: 45%;
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  transition: background-color .2s ease, transform .2s ease;
+}
+.modal-galery .carousel-control-prev:hover .carousel-control-prev-icon,
+.modal-galery .carousel-control-next:hover .carousel-control-next-icon {
+  background-color: var(--accent);
+  transform: scale(1.08);
+}
+
+/* Indicadores */
+.modal-galery .carousel-indicators {
+  margin-bottom: -.2rem;
+}
+.modal-galery .carousel-indicators [data-bs-target] {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 0;
+  background-color: rgba(255, 255, 255, .4);
+  transition: background-color .2s ease, transform .2s ease;
+}
+.modal-galery .carousel-indicators .active {
+  background-color: var(--ice);
+  transform: scale(1.25);
+}
+
+/* Caption vacío: no ocupa espacio */
+.modal-galery .carousel-caption { display: none; }
+
+/* Animaciones */
+@keyframes galery-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes galery-pop {
+  from { opacity: 0; transform: scale(.98); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .modal-galery-overlay, .modal-galery { animation: none; }
+  .btn-close-modal-galery:hover { transform: none; }
+}
 
 /*-- MEDIA QUERIES */
-/* @media screen and (max-width: 1500px) {
-  .modal-galery {
-    width: auto;
-    overflow-x: hidden;
-  }
-  .imagen-galery-detalle {
-    height: 80vh;
-    width: auto;
-  }
-  .btn-close-modal-galery {
-    font-size: .8rem;
-  }
-} */
-
-@media screen and (max-width: 2300px) {
-  .modal-galery {
-    width: auto;
-    overflow-x: hidden;
-  }
-
-  .btn-close-modal-galery {
-    font-size: .8rem;
-  }
-}
-
-@media screen and (max-height: 800px) {
-  .imagen-galery-detalle {
-    width: auto;
-    height: 80vh;
-  }
-}
-
-@media screen and (max-width: 430px)  {
-  .modal-galery {
-    max-width: 100%;
-  }
-
-  .imagen-galery-detalle {
-    height: auto;
-    width: 90vw;
-  }
+@media screen and (max-width: 575px) {
+  .imagen-galery-detalle { max-height: 68vh; }
+  .modal-galery .carousel-control-prev,
+  .modal-galery .carousel-control-next { width: 16%; }
 }

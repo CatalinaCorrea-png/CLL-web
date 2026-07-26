@@ -1,0 +1,276 @@
+/* =====================================================================
+   CLL · Sistema de diseño  (estilo "frío / refrigeración" · minimal limpio)
+   Tokens semánticos + utilidades reutilizables en todas las páginas.
+   Se apoya en la paleta ya definida en index.css (:root).
+   ===================================================================== */
+
+/* Protección global contra scroll horizontal */
+html, body {
+  overflow-x: hidden;
+}
+
+/* Bloqueo del scroll de fondo cuando hay un modal abierto */
+html.modal-open,
+html.modal-open body {
+  overflow: hidden;
+  touch-action: none;
+}
+
+:root {
+  /* --- Superficies --- */
+  --surface: #ffffff;
+  --surface-soft: #f4f9ff;          /* fondo de sección alterno, muy frío */
+  --surface-cold: var(--pastel-light-blue); /* #e9f4ff */
+  --surface-deep: var(--dark-blue);         /* #18283a */
+
+  /* --- Texto --- */
+  --text: #16202e;                  /* casi dark-blue, alto contraste */
+  --text-soft: #4a5c72;             /* apagado, para párrafos */
+  --text-onDeep: #eaf3ff;           /* sobre fondos oscuros */
+  --text-onDeep-soft: #a9c4e0;
+
+  /* --- Marca / acentos --- */
+  --brand: var(--indigo-dye);       /* #224870 */
+  --brand-deep: var(--dark-blue);   /* #18283a */
+  --accent: var(--silver-lake-blue);/* #5387c0 */
+  --ice: var(--jordy-blue);         /* #96c5f7 */
+
+  /* --- Bordes finos "escarcha" --- */
+  --border: rgba(83, 135, 192, .20);
+  --border-strong: rgba(34, 72, 112, .30);
+  --border-onDeep: rgba(150, 197, 247, .22);
+
+  /* --- Sombras frías (suaves) --- */
+  --shadow-sm: 0 1px 2px rgba(15, 40, 70, .06);
+  --shadow: 0 6px 22px rgba(15, 60, 110, .08);
+  --shadow-lg: 0 16px 40px rgba(15, 60, 110, .12);
+
+  /* --- Radios --- */
+  --r-sm: 10px;
+  --r: 16px;
+  --r-lg: 22px;
+  --r-pill: 999px;
+
+  /* --- Ritmo / layout --- */
+  --maxw: 1140px;
+  --gap: clamp(1rem, 2.5vw, 2rem);
+}
+
+/* =========================== Layout helpers =========================== */
+.container-narrow {
+  width: 100%;
+  max-width: var(--maxw);
+  margin-inline: auto;
+  padding-inline: clamp(1rem, 4vw, 2rem);
+}
+
+/* Ritmo vertical de secciones (no pisa a la .seccion existente) */
+.section-pad {
+  padding-block: clamp(3rem, 7vw, 5.5rem);
+}
+
+/* =========================== Tipografía ============================== */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: .5em;
+  font-size: .78rem;
+  font-weight: 600;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.eyebrow::before {
+  content: "";
+  width: 1.6em;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, transparent, var(--ice), var(--accent));
+}
+
+.section-title {
+  font-weight: 700;
+  letter-spacing: -.01em;
+  color: var(--brand);
+  font-size: clamp(1.7rem, 3.4vw, 2.5rem);
+  line-height: 1.15;
+  margin: .35rem 0 0;
+}
+.section-title.on-deep { color: var(--text-onDeep); }
+
+.section-lead {
+  color: var(--text-soft);
+  font-size: 1.02rem;
+  max-width: 46ch;
+  margin: .9rem auto 0;
+}
+.section-lead.on-deep { color: var(--text-onDeep-soft); }
+
+/* =========================== Tarjetas frost ========================== */
+.ice-card {
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  box-shadow: var(--shadow-sm);
+  transition: transform .28s ease, box-shadow .28s ease, border-color .28s ease;
+}
+.ice-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow);
+  border-color: var(--accent);
+}
+/* Filo helado superior, muy sutil */
+.ice-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 3px;
+  border-radius: var(--r) var(--r) 0 0;
+  background: linear-gradient(90deg, transparent, var(--ice), var(--accent), transparent);
+  opacity: 0;
+  transition: opacity .28s ease;
+}
+.ice-card:hover::before { opacity: .9; }
+
+/* =========================== Botones ================================= */
+.btn-ice {
+  --_bg: var(--brand);
+  --_fg: #fff;
+  display: inline-flex;
+  align-items: center;
+  gap: .55em;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1;
+  padding: .8em 1.4em;
+  border-radius: var(--r-pill);
+  border: 1px solid transparent;
+  background: var(--_bg);
+  color: var(--_fg);
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform .2s ease, box-shadow .2s ease, background .2s ease, color .2s ease;
+}
+.btn-ice:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(34, 72, 112, .28);
+  color: #fff;
+}
+.btn-ice.ghost {
+  --_bg: transparent;
+  --_fg: var(--brand);
+  border-color: var(--border-strong);
+}
+.btn-ice.ghost:hover {
+  --_fg: var(--brand);
+  background: var(--surface-cold);
+  box-shadow: var(--shadow-sm);
+}
+.btn-ice.on-deep {
+  --_bg: rgba(255, 255, 255, .10);
+  --_fg: #fff;
+  border-color: var(--border-onDeep);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+}
+.btn-ice.on-deep:hover { --_bg: rgba(255, 255, 255, .18); }
+.btn-ice.solid-light {
+  --_bg: #fff;
+  --_fg: var(--brand);
+}
+.btn-ice.solid-light:hover {
+  --_bg: var(--surface-cold);
+  color: var(--brand);
+}
+
+/* Chips / píldoras de dato */
+.ice-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: .5em;
+  padding: .45em .9em;
+  border-radius: var(--r-pill);
+  background: var(--surface-cold);
+  border: 1px solid var(--border);
+  color: var(--brand);
+  font-size: .85rem;
+  font-weight: 600;
+}
+
+/* =========================== Hero de página interna ================= */
+.page-hero {
+  position: relative;
+  padding-block: clamp(3rem, 8vw, 5.5rem);
+  background:
+    radial-gradient(1100px 520px at 80% -20%, rgba(83, 135, 192, .40), transparent 60%),
+    linear-gradient(180deg, var(--brand-deep) 0%, var(--indigo-dye) 100%);
+}
+.page-hero .eyebrow { color: var(--ice); }
+.page-hero .eyebrow::before {
+  background: linear-gradient(90deg, transparent, var(--ice));
+}
+.page-hero .section-lead { margin-inline: 0; }
+
+/* =========================== Callout / frase destacada ============== */
+.callout {
+  display: flex;
+  gap: .9rem;
+  align-items: flex-start;
+  padding: 1.1rem 1.4rem;
+  background: linear-gradient(180deg, var(--surface), var(--surface-cold));
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+  border-radius: var(--r);
+  color: var(--brand);
+  font-weight: 600;
+  text-align: left;
+}
+.callout i {
+  color: var(--accent);
+  font-size: 1.2rem;
+  margin-top: .1rem;
+  flex: 0 0 auto;
+}
+
+/* =========================== Encabezado de sección con acento ======= */
+.sec-title-accent {
+  position: relative;
+  font-size: clamp(1.35rem, 3vw, 1.9rem);
+  font-weight: 700;
+  color: var(--brand);
+  padding-left: 1rem;
+  margin: 0;
+}
+.sec-title-accent::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: .15em;
+  bottom: .15em;
+  width: 4px;
+  border-radius: 4px;
+  background: linear-gradient(180deg, var(--ice), var(--accent));
+}
+
+/* =========================== Acento copo de nieve ==================== */
+.snow-accent {
+  color: var(--ice);
+  opacity: .5;
+}
+
+/* =========================== Reveal on scroll ======================= */
+.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity .6s ease, transform .6s ease;
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ice-card, .btn-ice, .reveal { transition: none !important; }
+  .reveal { opacity: 1; transform: none; }
+}

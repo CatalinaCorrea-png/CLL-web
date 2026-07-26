@@ -1,59 +1,122 @@
 import '../css/pages/reparacion.css'
-import '../css/highlight.css'
-import '../css/cold-flow.css'
 import { useEffect } from 'react'
 import BeforeAfter from '../components/BeforeAfter'
 
+const trabajos = [
+  'Bases',
+  'Brazos cúpula',
+  'Cajas de aire con forzadores',
+  'Rejillas de succión',
+  'Bandejas en acero inoxidable, chapa prepintada o galvanizada con pintura epoxi',
+  'Zócalos, faldones y laterales de cierre',
+  'Pintado de bachas con antióxido, esmalte sintético, epoxi, etc.',
+  'Fabricación y colocación de cúpulas de vidrio curvos y rectos',
+  'Provisión y colocación de cortinas nocturnas',
+];
 
 const Reparacion = () => {
   useEffect(() => { window.scrollTo(0, 0); }, []);
+
   return (
-    <div className='seccion seccion-reparacion'>
-      <div className="texto-container">
-        <h1 className='titulo-oscuro'>REPARACION</h1>
-        <h3 className='titulo-seccion'>- Cómo te ayudamos -</h3>
-        <p>En CLL Equipamientos contamos con un equipo de tecnicos especializados en la reparacion y mantenimiento de equipos de refrigeracion comercial e industrial. Nos encargamos de diagnosticar y solucionar cualquier problema que pueda surgir en sus equipos, asegurando su correcto funcionamiento y prolongando su vida util.</p>
-        <p>Ofrecemos servicios de reparacion para una amplia gama de equipos, incluyendo camaras frigorificas, vitrinas refrigeradas, exhibidoras, sistemas de aire acondicionado y mas. </p>
-        <h5 className="texto-centrado frost">Nos encargamos de la fabricación, cambio y colocación de piezas y partes de heladeras, cámaras y gabinetes.</h5>
-        {/* <h6 className="danger-text">Nuestro equipo esta capacitado para trabajar con diferentes marcas y modelos, garantizando una reparacion eficiente y de calidad.</h6> */}
-        <hr className='separator'/>
-        <ul className="mb-2 reparacion-list ">
-          <li className='reparacion-item cold-flow'>Bases</li>
-          <li className='reparacion-item cold-flow'>Brazos cúpula</li>
-          <li className='reparacion-item cold-flow'>Cajas de aire con forzadores</li>
-          <li className='reparacion-item cold-flow'>Rejillas de succión</li>
-          <li className='reparacion-item cold-flow'>Bandejas en acero inoxidable, en chapa prepintada, en chapa galvanizadas con pintura epoxi</li>
-          <li className='reparacion-item cold-flow cold-flow'>Zócalos, Faldones y Laterales de cierre</li>
-          <li className='reparacion-item cold-flow'>Pintado de bachas con antioxido, esmalte sintético, epoxi, etc.</li>
-          <li className='reparacion-item cold-flow'>Fabricación y colocación de cúpulas de vidrio curvos y rectos</li>
-          <li className='reparacion-item cold-flow'>Provisión y colocación de cortinas nocturnas</li>
-        </ul>
-        <hr className='separator'/>
-        <h3 className='titulo-seccion'>- Mantenimiento y Prevención -</h3>
-        <p>Ademas de la reparacion, tambien ofrecemos servicios de mantenimiento preventivo para ayudar a prevenir futuros problemas y asegurar el rendimiento optimo de sus equipos. Nuestros tecnicos realizaran inspecciones regulares, limpieza y ajustes necesarios para mantener sus equipos en las mejores condiciones.</p>
-        <p>En CLL Equipamientos nos comprometemos a brindar un servicio rapido y confiable. Entendemos la importancia de contar con equipos de refrigeracion en buen estado para el funcionamiento de su negocio, por lo que:</p>
-        <h5 className="texto-centrado frost">Nos esforzamos por minimizar los tiempos de inactividad y garantizar una reparacion eficiente.</h5>
-        <p>Confie en CLL Equipamientos para todas sus necesidades de reparacion y mantenimiento de equipos de refrigeracion. Nuestro equipo de tecnicos especializados esta listo para ayudarlo a mantener sus equipos en las mejores condiciones y asegurar el correcto funcionamiento de su negocio.</p>
-      </div>
-
-      <BeforeAfter 
-        img1={"/cerramiento/cerramiento-1.jpg"} 
-        img2={"/cerramiento/cerramiento-2.jpg"}
-        alt1={"Heladera exhibidora antes, abierta, sin puertas"}
-        alt2={"Heladera exhibidora después, cerrada con puertas corredizas de vidrio"}
-        aditionalClasses={"reparacion-before-after"}
-        />
-      
-      {/* <div className="imagenes-container">
-        <div className="imagen-container">
-          <img src="/cerramiento/cerramiento-1.jpg" alt="Reparacion de Equipos de Refrigeracion" className="cerramiento-img"/>
+    <div className='reparacion'>
+      {/* --- Encabezado --- */}
+      <header className='page-hero'>
+        <div className='container-narrow'>
+          <span className='eyebrow'>Reparación</span>
+          <h1 className='section-title on-deep'>Reparación y mantenimiento</h1>
+          <p className='section-lead on-deep'>
+            Técnicos especializados en refrigeración comercial e industrial.
+            Diagnosticamos y solucionamos fallas para prolongar la vida útil de
+            tus equipos.
+          </p>
         </div>
-        <i className="fa-solid fa-angles-right"></i>
-        <div className='imagen-container'>
-          <img src="/cerramiento/cerramiento-2.jpg" alt="Reparacion de Equipos de Refrigeracion" className="cerramiento-img"/>
-        </div>
-      </div> */}
+      </header>
 
+      {/* --- Intro --- */}
+      <section className='rep-sec'>
+        <div className='container-narrow rep-intro'>
+          <p>
+            En CLL Equipamientos contamos con un equipo de técnicos
+            especializados en la reparación y mantenimiento de equipos de
+            refrigeración comercial e industrial. Nos encargamos de diagnosticar
+            y solucionar cualquier problema, asegurando su correcto
+            funcionamiento y prolongando su vida útil.
+          </p>
+          <p>
+            Ofrecemos servicios de reparación para una amplia gama de equipos:
+            cámaras frigoríficas, vitrinas refrigeradas, exhibidoras, sistemas de
+            aire acondicionado y más.
+          </p>
+          <div className='callout'>
+            <i className="fa-solid fa-snowflake"></i>
+            <span>
+              Nos encargamos de la fabricación, cambio y colocación de piezas y
+              partes de heladeras, cámaras y gabinetes.
+            </span>
+          </div>
+        </div>
+      </section>
+
+      {/* --- Qué reparamos / fabricamos --- */}
+      <section className='rep-sec rep-sec-alt'>
+        <div className='container-narrow'>
+          <header className='rep-head'>
+            <h2 className='sec-title-accent'>Piezas y partes que trabajamos</h2>
+          </header>
+          <ul className='rep-list'>
+            {trabajos.map((t, i) => (
+              <li className='rep-item' key={i}>
+                <i className="fa-solid fa-snowflake"></i>
+                <span>{t}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      {/* --- Antes / Después --- */}
+      <section className='rep-sec'>
+        <div className='container-narrow'>
+          <header className='rep-head'>
+            <h2 className='sec-title-accent'>Un antes y un después</h2>
+          </header>
+          <BeforeAfter
+            img1={"/cerramiento/cerramiento-1.jpg"}
+            img2={"/cerramiento/cerramiento-2.jpg"}
+            alt1={"Heladera exhibidora antes, abierta, sin puertas"}
+            alt2={"Heladera exhibidora después, cerrada con puertas corredizas de vidrio"}
+            aditionalClasses={"reparacion-before-after"}
+          />
+        </div>
+      </section>
+
+      {/* --- Mantenimiento y prevención --- */}
+      <section className='rep-sec rep-sec-alt'>
+        <div className='container-narrow rep-intro'>
+          <header className='rep-head'>
+            <h2 className='sec-title-accent'>Mantenimiento y prevención</h2>
+          </header>
+          <p>
+            Además de la reparación, ofrecemos mantenimiento preventivo para
+            evitar futuros problemas y asegurar el rendimiento óptimo de tus
+            equipos. Realizamos inspecciones regulares, limpieza y ajustes
+            necesarios para mantenerlos en las mejores condiciones.
+          </p>
+          <div className='callout'>
+            <i className="fa-solid fa-bolt"></i>
+            <span>
+              Minimizamos los tiempos de inactividad y garantizamos una
+              reparación eficiente.
+            </span>
+          </div>
+          <p>
+            Confiá en CLL Equipamientos para todas tus necesidades de reparación
+            y mantenimiento. Nuestro equipo está listo para mantener tus equipos
+            en las mejores condiciones y asegurar el correcto funcionamiento de
+            tu negocio.
+          </p>
+        </div>
+      </section>
     </div>
   )
 }

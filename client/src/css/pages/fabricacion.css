@@ -1,73 +1,170 @@
-.seccion-fabricacion {
-  background-color: var(--uranian-blue);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+/* =====================================================================
+   FABRICACIÓN · estilo frío / minimal limpio (usa tokens de theme.css)
+   ===================================================================== */
+.fabricacion {
+  background: var(--surface-soft);
 }
 
-.container-cat {
+/* --------------------------- Encabegado ---------------------------- */
+.fab-hero {
+  position: relative;
+  padding-block: clamp(3rem, 8vw, 5.5rem);
+  background:
+    radial-gradient(1100px 520px at 80% -20%, rgba(83, 135, 192, .40), transparent 60%),
+    linear-gradient(180deg, var(--brand-deep) 0%, var(--indigo-dye) 100%);
+}
+.fab-hero .eyebrow { color: var(--ice); }
+.fab-hero .eyebrow::before {
+  background: linear-gradient(90deg, transparent, var(--ice));
+}
+.fab-hero .section-lead { margin-inline: 0; }
+
+/* Chips de navegación por categoría */
+.fab-catnav {
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
+  gap: .6rem;
+  margin-top: 1.8rem;
+}
+.fab-chip {
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  row-gap: 10px;
-  margin-bottom: 20px;
+  padding: .5em 1.1em;
+  border-radius: var(--r-pill);
+  font-size: .9rem;
+  font-weight: 600;
+  color: var(--text-onDeep);
+  text-decoration: none;
+  background: rgba(255, 255, 255, .08);
+  border: 1px solid var(--border-onDeep);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  transition: background .2s ease, color .2s ease, transform .2s ease;
+}
+.fab-chip:hover {
+  background: #fff;
+  color: var(--brand);
+  transform: translateY(-2px);
 }
 
-.titulo-seccion {
-  font-size: 2rem;
-  max-width: 90%;
-  text-align: center;
-  width: fit-content;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  margin: 0 auto;
-  margin-bottom: 1rem;
-  color: var(--indigo-dye);
+/* --------------------------- Categorías ---------------------------- */
+.fab-cat {
+  padding-block: clamp(2.2rem, 5vw, 3.5rem);
+  scroll-margin-top: 80px; /* para que el ancla no quede tapada */
 }
+.fab-cat:nth-child(even) { background: var(--surface); }
+
+.fab-cat-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.8rem;
+}
+.fab-detalles {
+  display: inline-flex;
+  align-items: center;
+  gap: .5em;
+  font-size: .92rem;
+  font-weight: 600;
+  color: var(--brand);
+  background: #fff;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-pill);
+  padding: .55em 1.25em;
+  cursor: pointer;
+  text-decoration: none;
+  box-shadow: var(--shadow-sm);
+  transition: background .22s ease, color .22s ease, border-color .22s ease,
+              transform .22s ease, box-shadow .22s ease;
+}
+.fab-detalles i {
+  font-size: 1em;
+  color: var(--accent);
+  transition: color .22s ease;
+}
+.fab-detalles:hover {
+  background: var(--brand);
+  color: #fff;
+  border-color: var(--brand);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(34, 72, 112, .28);
+}
+.fab-detalles:hover i { color: #fff; }
+.fab-detalles:active { transform: translateY(0); }
+.fab-cat-title {
+  position: relative;
+  margin: 0;
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  font-weight: 700;
+  color: var(--brand);
+  padding-left: 1rem;
+}
+/* Barra fría a la izquierda del título */
+.fab-cat-title::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: .15em;
+  bottom: .15em;
+  width: 4px;
+  border-radius: 4px;
+  background: linear-gradient(180deg, var(--ice), var(--accent));
+}
+.fab-detalles { cursor: pointer; }
+
+/* Nota (sección sin galería) */
+.fab-nota {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  color: var(--text-soft);
+  font-size: .95rem;
+  padding: 1.2rem 1.4rem;
+  background: var(--surface-cold);
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--r);
+  margin: 0;
+}
+.fab-nota i { color: var(--accent); }
+
+/* --------------------------- Grilla de productos ------------------- */
 .productos {
   display: flex;
   flex-wrap: wrap;
-  column-gap: 20px;
-  row-gap: 20px;
+  gap: 20px;
   justify-content: center;
-  align-items: center;
+  align-items: stretch;
   width: 100%;
-
   list-style: none;
   padding: 0;
+  margin: 0;
 }
 
 .imagen-producto-a {
   display: block;
-  /* border: 2px solid var(--silver-lake-blue); */
-  border-radius: 10px;
-
+  border-radius: var(--r-sm);
+  cursor: pointer;
 }
 
 .imagen-producto-img {
-  /* max-width: 90vw; */
+  display: block;
   height: 12rem;
-  border-radius: 10px;
-  /* box-shadow: var(--dark-blue) 1px 1px 5px; */
-  box-shadow: 0px 0px 10px 3px  var(--indigo-dye);
-}.imagen-producto-img:hover {
-  /* height: 10.2rem; */
-  background: var(--silver-lake-blue);
-  transform: scale(1.02);
-  box-shadow: 0px 0px 10px 3px  var(--indigo-dye);
-  transition: all 0.3s ease-in-out;
+  border-radius: var(--r-sm);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  background: #fff;
+  transition: transform .28s ease, box-shadow .28s ease, border-color .28s ease;
+}
+.imagen-producto-img:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: var(--shadow);
+  border-color: var(--accent);
 }
 
 /*-- MEDIA QUERIES */
 @media screen and (max-width: 430px) {
-  .titulo-seccion {
-    font-size: 1.2rem;
-  }
-
-  .imagen-producto-img {
-    /* max-width: 90vw; */
-    height: 7rem;
-  }
+  .fab-cat-title { font-size: 1.3rem; }
+  .imagen-producto-img { height: 8rem; }
 }
