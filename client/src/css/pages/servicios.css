@@ -59,6 +59,23 @@
   width: 100%;
 }
 
+/* Varios ejemplos del mismo servicio, uno debajo del otro */
+.srv-ejemplos {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.8rem, 4vw, 2.6rem);
+}
+.srv-ejemplo {
+  margin: 0;
+}
+.srv-ejemplo figcaption {
+  margin-top: .9rem;
+  text-align: center;
+  font-size: .88rem;
+  line-height: 1.5;
+  color: var(--text-soft);
+}
+
 @media screen and (max-width: 575px) {
   .servicio-img { aspect-ratio: 3 / 2; }
 }

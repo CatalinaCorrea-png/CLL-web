@@ -31,13 +31,32 @@ const Servicios = () => {
             <h2 className='sec-title-accent'>Cerramientos con puertas de vidrio</h2>
             <p className='srv-desc'>Puertas de vidrio DVH corredizas o batientes.</p>
           </header>
-          <BeforeAfter
-            img1={"/cerramiento/IMG-20190816-WA0048-1.jpg"}
-            img2={"/cerramiento/IMG-20190816-WA0050-1.jpg"}
-            alt1={"Heladera exhibidora antes, abierta, sin puertas"}
-            alt2={"Heladera exhibidora después, cerrada con puertas corredizas de vidrio"}
-            aditionalClasses={"servicios-before-after"}
-          />
+          <div className='srv-ejemplos'>
+            <figure className='srv-ejemplo'>
+              <BeforeAfter
+                img1={"/cerramiento/IMG-20190816-WA0048-1.jpg"}
+                img2={"/cerramiento/IMG-20190816-WA0050-1.jpg"}
+                alt1={"Heladera exhibidora antes, abierta, sin puertas"}
+                alt2={"Heladera exhibidora después, cerrada con puertas corredizas de vidrio"}
+                aditionalClasses={"servicios-before-after"}
+              />
+              <figcaption>Exhibidora mural cerrada con puertas corredizas de vidrio.</figcaption>
+            </figure>
+
+            <figure className='srv-ejemplo'>
+              <BeforeAfter
+                img1={"/cerramiento2.jpeg"}
+                img2={"/cerramiento4.jpeg"}
+                alt1={"Isla de lácteos abierta, sin cerramiento, antes de la intervención"}
+                alt2={"La misma isla de lácteos cerrada con puertas corredizas de vidrio"}
+                aditionalClasses={"servicios-before-after"}
+              />
+              <figcaption>
+                Isla de lácteos: puertas corredizas y cerramiento superior con
+                vidrio laminado de 4+4 fijo.
+              </figcaption>
+            </figure>
+          </div>
         </div>
       </section>
 
