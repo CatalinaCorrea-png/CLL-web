@@ -1,4 +1,3 @@
-// const db = require('../../db/mongodb'); // importo la database
 const db = require('../../db/db'); // importo la database
 const fabricacionJson = require('../../db/json/cll.fabricacion.json')
 
