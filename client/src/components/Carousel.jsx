@@ -5,6 +5,7 @@ import img2 from '../assets/IMG-20190802-WA0045.jpg';
 import img3 from '../assets/IMG-20230515-WA0020.jpg';
 import img4 from '/DSC_7088_th.jpg';
 import img5 from '/DSC_7116_th.jpg';
+import { linkGmail } from '../constants';
 import '../css/carousel.css';
 
 const slides = [img1, img2, img3, img4, img5];
@@ -39,7 +40,7 @@ function CarouselFade() {
             Ver fabricación
           </Link>
           <a
-            href="https://mail.google.com/mail/?view=cm&fs=1&to=walterdcorrea@gmail.com&su=Consulta%20desde%20la%20web"
+            href={linkGmail('Consulta desde la web')}
             target="_blank"
             rel="noopener noreferrer"
             className="btn-ice on-deep"

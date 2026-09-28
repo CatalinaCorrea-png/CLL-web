@@ -1,19 +1,7 @@
 import '../css/footer.css'
 import { Link } from "react-router-dom";
 import logo from '../assets/CLL.png';
-
-const enlaces = [
-  { to: '/', label: 'Inicio' },
-  { to: '/fabricacion', label: 'Fabricación' },
-  { to: '/reparacion', label: 'Reparación' },
-  { to: '/servicios', label: 'Servicios' },
-];
-
-const telefonos = [
-  { nombre: 'Walter Correa', tel: '11-2154-4111' },
-  { nombre: 'Gustavo Ledesma', tel: '11-5806-9162' },
-  { nombre: 'Claudio Ledesma', tel: '11-2756-5557' },
-];
+import { LINKS_NAVEGACION, MAIL_CONTACTO, DIRECCION, TELEFONOS, linkWhatsApp } from '../constants';
 
 const Footer = () => {
   return (
@@ -32,7 +20,7 @@ const Footer = () => {
         <div className='footer-col'>
           <h5>Enlaces</h5>
           <ul className='footer-links'>
-            {enlaces.map((e) => (
+            {LINKS_NAVEGACION.map((e) => (
               <li key={e.to}>
                 <Link className='footer-link' to={e.to}>{e.label}</Link>
               </li>
@@ -44,17 +32,17 @@ const Footer = () => {
           <h5>Contacto</h5>
           <p className='footer-line'>
             <i className="fa-solid fa-location-dot"></i>
-            Martín Rodríguez 2875 · (1644) Victoria, Buenos Aires
+            {DIRECCION}
           </p>
           <p className='footer-line'>
             <i className="fa-regular fa-envelope"></i>
-            walterdcorrea@gmail.com
+            {MAIL_CONTACTO}
           </p>
           <ul className='footer-tels'>
-            {telefonos.map((t) => (
+            {TELEFONOS.map((t) => (
               <li key={t.tel}>
                 <a
-                  href={`https://wa.me/54911${t.tel.replace(/\D/g, '').slice(2)}`}
+                  href={linkWhatsApp(t.tel)}
                   target="_blank"
                   rel="noopener noreferrer"
                 >

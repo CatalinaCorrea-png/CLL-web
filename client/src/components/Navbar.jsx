@@ -2,14 +2,8 @@ import { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { Navbar as BSNavbar, Nav, Container } from 'react-bootstrap';
 import logo from '../assets/CLL.png';
+import { LINKS_NAVEGACION } from '../constants';
 import '../css/header.css';
-
-const links = [
-  { to: '/', label: 'Inicio', end: true },
-  { to: '/fabricacion', label: 'Fabricación' },
-  { to: '/reparacion', label: 'Reparación' },
-  { to: '/servicios', label: 'Servicios' },
-];
 
 export const Navbar = () => {
   const [expanded, setExpanded] = useState(false);
@@ -34,7 +28,7 @@ export const Navbar = () => {
 
         <BSNavbar.Collapse id="main-nav">
           <Nav className="ms-auto navbar-links">
-            {links.map((l) => (
+            {LINKS_NAVEGACION.map((l) => (
               <Nav.Link
                 key={l.to}
                 as={NavLink}

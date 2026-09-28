@@ -1,18 +1,11 @@
 import '../css/home.css';
+import { MAIL_CONTACTO, DIRECCION, TELEFONOS, linkWhatsApp, linkGmail } from '../constants';
 
 const SecForm = () => {
-  const to = 'walterdcorrea@gmail.com';
-  const subject = encodeURIComponent('Consulta desde la web');
-  const body = encodeURIComponent(
+  const gmail = linkGmail(
+    'Consulta desde la web',
     'Hola CLL,\n\nQuiero consultar por equipamientos de refrigeración.\n\nGracias.'
   );
-  const gmail = `https://mail.google.com/mail/?view=cm&fs=1&to=${to}&su=${subject}&body=${body}`;
-
-  const telefonos = [
-    { nombre: 'Walter Correa', tel: '11-2154-4111' },
-    { nombre: 'Gustavo Ledesma', tel: '11-5806-9162' },
-    { nombre: 'Claudio Ledesma', tel: '11-2756-5557' },
-  ];
 
   return (
     <section className="section-pad seccion-form">
@@ -31,7 +24,7 @@ const SecForm = () => {
             </a>
 
             <p className="contacto-mail">
-              <i className="fa-regular fa-envelope"></i> {to}
+              <i className="fa-regular fa-envelope"></i> {MAIL_CONTACTO}
             </p>
           </div>
 
@@ -40,10 +33,10 @@ const SecForm = () => {
               <i className="fa-solid fa-phone"></i> Teléfonos
             </h3>
             <ul>
-              {telefonos.map((t) => (
+              {TELEFONOS.map((t) => (
                 <li key={t.tel}>
                   <span className="contacto-tel-nombre">{t.nombre}</span>
-                  <a href={`https://wa.me/54911${t.tel.replace(/\D/g, '').slice(2)}`}
+                  <a href={linkWhatsApp(t.tel)}
                      target="_blank" rel="noopener noreferrer" className="contacto-tel-num">
                     <i className="fa-brands fa-whatsapp"></i> {t.tel}
                   </a>
@@ -52,7 +45,7 @@ const SecForm = () => {
             </ul>
             <p className="contacto-dir">
               <i className="fa-solid fa-location-dot"></i>
-              Martín Rodríguez 2875 · (1644) Victoria, Buenos Aires
+              {DIRECCION}
             </p>
           </div>
         </div>
