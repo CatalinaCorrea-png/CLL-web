@@ -1,17 +1,39 @@
 // Serialización compacta de una configuración de línea para la URL (links compartibles).
 // JS puro (sin React ni three). Solo lo usa el client; no se copia al server.
 //
-// Formato:  ?producto=bateas&v=1&l=000001000&m=r0.b2200.r0
+// Formato:  ?producto=bateas&v=2&l=000010100&m=r0.b22-00.r0
 //   v  versión del catálogo.
 //   l  un carácter por opción general, en el orden del catálogo: índice del valor en `valores`
 //      en base 36 (para `color`, índice en la paleta del material), o "-" si no aplica.
 //   m  módulos separados por ".": letra del tipo (r remate, b batea, e esquina) + un carácter
 //      por opción del módulo, igual que en `l`. Los bool son 0/1.
 //
-// ⚠️ Los links dependen del ORDEN de los valores en el catálogo: si se reordenan o se sacan
-// valores, hay que subir `version` en catalogo.json (los links viejos quedan inválidos y el
-// configurador abre con la configuración por defecto, en vez de leerlos mal).
+// ⚠️ Los links dependen del ORDEN de las opciones y de sus valores en el catálogo. Si se agregan
+// opciones en el medio, se reordenan o se sacan valores, hay que subir `version` en catalogo.json
+// y sumar abajo, en MIGRACIONES, cómo pasar un link de la versión anterior a la nueva (con su test),
+// para que los links que ya se compartieron sigan abriendo.
 import { paletaDeColor } from './reglas.js';
+import { crearEsquema, configuracionPorDefecto } from './esquema.js';
+import { normalizar } from './edicion.js';
+
+/**
+ * Inserta "-" (sin valor) en una posición de los módulos de cierto tipo.
+ * @param {string} m        parámetro `m` del link
+ * @param {string} letra    tipo de módulo ('b' batea, 'e' esquina, 'r' remate)
+ * @param {number} posicion índice del carácter nuevo dentro del módulo (la letra es la posición 0)
+ */
+const insertarSinValor = (m, letra, posicion) =>
+  m.split('.').map((t) => (t[0] === letra ? t.slice(0, posicion) + '-' + t.slice(posicion) : t)).join('.');
+
+/**
+ * Migraciones de links: MIGRACIONES[n] convierte los parámetros de la versión n a la n + 1.
+ * @type {Record<number, (p: { l: string, m: string }) => { l: string, m: string }>}
+ */
+const MIGRACIONES = {
+  // v1 → v2: se agregó `estructura` después de `cupula` en la batea (posición 3) y en la esquina (posición 4).
+  // Queda sin valor; normalizar() le pone el default si aplica.
+  1: ({ l, m }) => ({ l, m: insertarSinValor(insertarSinValor(m, 'b', 3), 'e', 4) }),
+};
 
 /** @typedef {import('./reglas.js').Catalogo} Catalogo */
 /** @typedef {import('./reglas.js').ConfigParcial} ConfigParcial */
@@ -94,15 +116,26 @@ export const serializar = (config, catalogo) => {
 };
 
 /**
- * Parámetros de URL → configuración, o null si el formato está roto o es de otra versión del catálogo.
- * No valida las reglas: quien la usa tiene que pasar el resultado por crearEsquema(catalogo).
+ * Parámetros de URL → configuración, o null si el formato está roto o la versión no se puede leer.
+ * Los links de versiones anteriores se migran con MIGRACIONES antes de decodificar.
+ * No completa ni valida: quien la usa tiene que pasar el resultado por normalizar() y crearEsquema().
  * @param {{ v?: string | null, l?: string | null, m?: string | null }} params
  * @param {Catalogo} catalogo
  * @returns {ConfigParcial | null}
  */
-export const deserializar = ({ v, l, m }, catalogo) => {
+export const deserializar = (params, catalogo) => {
   try {
-    if (v !== String(catalogo.version) || !l || !m) return null;
+    const version = Number(params.v);
+    if (!Number.isInteger(version) || version < 1 || version > catalogo.version || !params.l || !params.m) return null;
+
+    // Llevar el link desde su versión hasta la actual
+    let { l, m } = { l: params.l, m: params.m };
+    for (let n = version; n < catalogo.version; n++) {
+      const migrar = MIGRACIONES[n];
+      if (!migrar) return null;
+      ({ l, m } = migrar({ l, m }));
+    }
+
     const opcionesLinea = /** @type {Opcion[]} */ (catalogo.opcionesLinea);
     if (l.length !== opcionesLinea.length) return null;
 
@@ -133,4 +166,21 @@ export const deserializar = ({ v, l, m }, catalogo) => {
   } catch {
     return null;
   }
+};
+
+/**
+ * Configuración que indica un link: lo lee (migrándolo si es de una versión anterior), lo normaliza
+ * (completa opciones que faltan, como la estructura de un link v1, y descarta las que no aplican)
+ * y lo valida. Si algo falla, devuelve la configuración por defecto.
+ * @param {{ v?: string | null, l?: string | null, m?: string | null }} params
+ * @param {Catalogo} catalogo
+ * @returns {{ config: ConfigParcial, desdeLink: boolean }}  desdeLink = false si se usó la de por defecto
+ */
+export const configDesdeLink = (params, catalogo) => {
+  const leida = deserializar(params, catalogo);
+  if (leida) {
+    const normalizada = normalizar(leida, catalogo);
+    if (crearEsquema(catalogo).safeParse(normalizada).success) return { config: normalizada, desdeLink: true };
+  }
+  return { config: configuracionPorDefecto(catalogo), desdeLink: false };
 };

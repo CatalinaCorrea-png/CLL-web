@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 2,
   "provisorio": [
     "paletas.prepintada: los hex son aproximados, falta la carta de colores real"
   ],
@@ -56,6 +56,14 @@
           "cupula_curva": "Vidrio curvo con arcos de aluminio entre paños y LED arriba.",
           "cupula_recta": "Vidrio DVH plano, vidrio superior y LED arriba."
         } },
+      { "id": "estructura", "nombre": "Estructura", "tipo": "select", "default": "curva", "valores": ["curva", "recta"],
+        "soloSi": { "cupula": ["sin_cupula_iluminacion"] }, "ocultarSiNoAplica": true,
+        "motivo": "La estructura solo se elige en el tipo sin cúpula con iluminación.",
+        "etiquetas": { "curva": "Curva (arcos)", "recta": "Recta (marco)" },
+        "ayudas": {
+          "curva": "Arcos curvos que sostienen una viga superior con LED; el vidrio bajo sigue la curva.",
+          "recta": "Marco recto de inox con vidrio superior y LED; vidrio bajo recto."
+        } },
       { "id": "deposito", "nombre": "Depósito inferior", "tipo": "bool", "default": false,
         "ayuda": "Compartimentos con puertas bajo la mesada, del lado del vendedor." },
       { "id": "puertasTraseras", "nombre": "Puertas traseras de acrílico", "tipo": "bool", "default": false,
@@ -75,6 +83,11 @@
         "soloSi": { "version": "frio" },
         "motivo": "La esquina mostrador no lleva exhibición: es una tapa de inox.",
         "etiquetas": { "sin_cupula": "Sin cúpula", "sin_cupula_iluminacion": "Sin cúpula con iluminación", "cupula_curva": "Cúpula curva", "cupula_recta": "Cúpula recta" } },
+      { "id": "estructura", "nombre": "Estructura", "tipo": "select", "default": "curva", "valores": ["curva", "recta"],
+        "copiarDelAnterior": true,
+        "soloSi": { "version": "frio", "cupula": ["sin_cupula_iluminacion"] }, "ocultarSiNoAplica": true,
+        "motivo": "La estructura solo se elige en esquinas con frío sin cúpula con iluminación.",
+        "etiquetas": { "curva": "Curva (arcos)", "recta": "Recta (marco)" } },
       { "id": "puertasTraseras", "nombre": "Puertas traseras de acrílico", "tipo": "bool", "default": false,
         "soloSi": { "version": "frio", "cupula": ["cupula_curva", "cupula_recta"] },
         "motivo": "Las puertas traseras de acrílico solo van en esquinas con frío y cúpula (curva o recta).",

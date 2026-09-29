@@ -1,24 +1,19 @@
 // Sincroniza la configuración del store con la URL (links compartibles).
-// - Al montar: lee ?v, ?l y ?m, los valida con el esquema y, si fallan, usa la configuración por defecto.
+// - Al montar: lee ?v, ?l y ?m (migra links de versiones anteriores), normaliza y valida;
+//   si falla, usa la configuración por defecto.
 // - En cada cambio: reescribe la URL con `replace` (sin recargar ni llenar el historial).
 import { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import catalogo from './modelo/catalogo.json';
-import { crearEsquema, configuracionPorDefecto } from './modelo/esquema.js';
-import { serializar, deserializar } from './modelo/url.js';
+import { serializar, configDesdeLink } from './modelo/url.js';
 import { useConfigurador } from './store.js';
-
-const esquema = crearEsquema(catalogo);
 
 /**
  * Configuración que indica la URL, o la de por defecto si no hay o no es válida.
  * @param {URLSearchParams} params
- * @returns {import('./modelo/reglas.js').ConfigParcial}
  */
-const configDesdeUrl = (params) => {
-  const leida = deserializar({ v: params.get('v'), l: params.get('l'), m: params.get('m') }, catalogo);
-  return leida && esquema.safeParse(leida).success ? leida : configuracionPorDefecto(catalogo);
-};
+const configDesdeUrl = (params) =>
+  configDesdeLink({ v: params.get('v'), l: params.get('l'), m: params.get('m') }, catalogo).config;
 
 export const useUrlConfig = () => {
   const [params, setParams] = useSearchParams();

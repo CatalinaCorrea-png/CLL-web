@@ -35,6 +35,7 @@ test('catálogo: 15 colores epoxi (con blanco por defecto) y los 6 largos de la 
   assert.equal(catalogo.paletas.epoxi.colores.length, 15);
   assert.equal(catalogo.paletas.epoxi.default, 'blanco');
   assert.equal(catalogo.linea.mostradorRemate.alto, 900);
+  assert.equal(catalogo.version, 2);
   const largo = catalogo.modulos.batea.find((o) => o.id === 'largo');
   assert.deepEqual(largo?.valores, [1200, 1500, 2000, 2400, 3000, 3600]);
 });
@@ -63,7 +64,7 @@ test('el ejemplo de la especificación es válido', () => {
     linea: { ...config().linea, material: 'galvanizada_pintada', color: 'blanco', frio: 'forzado' },
     modulos: [
       MOSTRADOR,
-      { tipo: 'batea', largo: 2400, cupula: 'sin_cupula_iluminacion', deposito: false },
+      { tipo: 'batea', largo: 2400, cupula: 'sin_cupula_iluminacion', estructura: 'curva', deposito: false },
       { tipo: 'esquina', forma: 'esquinero', version: 'mostrador' },
       { tipo: 'batea', largo: 2000, cupula: 'cupula_recta', deposito: true },
       REMATE,
@@ -159,4 +160,37 @@ test('valores fuera del catálogo: largo de 900 mm, material inventado, campo ex
   assert.match(errores(config({ modulos: [REMATE, { ...BATEA, largo: 900 }, REMATE] }))[0], /largo/);
   assert.match(errores(config({ linea: { material: 'madera' } }))[0], /material/);
   assert.ok(errores(config({ linea: { precio: 1000 } })).length > 0); // no se aceptan campos desconocidos
+});
+
+// ---------------------------------------------------------------- estructura (v3)
+test('estructura: obligatoria con sin cúpula con iluminación, ignorada con los otros tipos', () => {
+  const conIluminacion = { ...BATEA, cupula: 'sin_cupula_iluminacion', puertasTraseras: undefined };
+  delete conIluminacion.puertasTraseras;
+
+  assert.deepEqual(errores(config({ modulos: [REMATE, { ...conIluminacion, estructura: 'recta' }, REMATE] })), []);
+  assert.deepEqual(errores(config({ modulos: [REMATE, conIluminacion, REMATE] })), ['Falta elegir "estructura".']);
+  assert.match(errores(config({ modulos: [REMATE, { ...conIluminacion, estructura: 'ovalada' }, REMATE] }))[0], /estructura/);
+
+  // Con cúpula curva no aplica: si viene un valor, se ignora (no da error, a diferencia de las puertas traseras)
+  assert.deepEqual(errores(config({ modulos: [REMATE, { ...BATEA, estructura: 'recta' }, REMATE] })), []);
+});
+
+test('estructura en la esquina: solo con frío y sin cúpula con iluminación; si no, se ignora', () => {
+  const bateaIlum = { tipo: 'batea', largo: 2000, cupula: 'sin_cupula_iluminacion', estructura: 'recta', deposito: false };
+  const esquinaIlum = { tipo: 'esquina', forma: 'esquinero', version: 'frio', cupula: 'sin_cupula_iluminacion', estructura: 'recta' };
+  assert.deepEqual(errores(config({ modulos: [REMATE, bateaIlum, esquinaIlum, bateaIlum, REMATE] })), []);
+
+  const { estructura, ...esquinaSinEstructura } = esquinaIlum;
+  assert.equal(estructura, 'recta');
+  assert.deepEqual(errores(config({ modulos: [REMATE, bateaIlum, esquinaSinEstructura, bateaIlum, REMATE] })), ['Falta elegir "estructura".']);
+
+  const mostradorConEstructura = { tipo: 'esquina', forma: 'esquinero', version: 'mostrador', estructura: 'curva' };
+  assert.deepEqual(errores(config({ modulos: [REMATE, BATEA, mostradorConEstructura, BATEA, REMATE] })), []);
+});
+
+test('una esquina nueva copia la estructura de la batea anterior', () => {
+  const bateaIlum = { tipo: 'batea', largo: 2000, cupula: 'sin_cupula_iluminacion', estructura: 'recta', deposito: false };
+  const esquina = moduloPorDefecto(catalogo, 'esquina', bateaIlum);
+  assert.equal(esquina.cupula, 'sin_cupula_iluminacion');
+  assert.equal(esquina.estructura, 'recta');
 });

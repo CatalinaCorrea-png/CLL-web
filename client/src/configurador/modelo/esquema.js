@@ -20,6 +20,7 @@ import { opcionesDeshabilitadas, paletaDeColor } from './reglas.js';
  * @property {string | number | boolean} [default]
  * @property {Record<string, unknown>} [soloSi]
  * @property {boolean} [copiarDelAnterior]  al crear el módulo, toma el valor del módulo anterior
+ * @property {boolean} [ocultarSiNoAplica]  cuando está deshabilitada no se muestra y su valor se ignora al validar
  */
 
 const TIPOS_MODULO = /** @type {const} */ (['remate', 'batea', 'esquina']);
@@ -96,11 +97,19 @@ export const crearEsquema = (catalogo) => {
         });
       }
 
-      // 2) Opciones deshabilitadas que igual traen valor
+      // 2) Opciones deshabilitadas que igual traen valor. Las marcadas con `ocultarSiNoAplica`
+      //    (p. ej. la estructura) no dan error: su valor simplemente se ignora.
       const deshabilitadas = opcionesDeshabilitadas({ linea, modulos }, catalogo);
+      /** @param {import('./reglas.js').OpcionDeshabilitada} d */
+      const seIgnora = (d) => {
+        const opciones = d.ambito === 'linea'
+          ? /** @type {Opcion[]} */ (catalogo.opcionesLinea)
+          : opcionesPorModulo[String(modulos[d.indice ?? -1]?.tipo)] ?? [];
+        return opciones.find((o) => o.id === d.opcion)?.ocultarSiNoAplica === true;
+      };
       for (const d of deshabilitadas) {
         const origen = d.ambito === 'linea' ? linea : modulos[d.indice ?? -1];
-        if (origen?.[d.opcion] !== undefined) {
+        if (origen?.[d.opcion] !== undefined && !seIgnora(d)) {
           ctx.addIssue({
             code: 'custom',
             path: d.ambito === 'linea' ? ['linea', d.opcion] : ['modulos', d.indice ?? -1, d.opcion],

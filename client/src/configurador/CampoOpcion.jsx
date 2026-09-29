@@ -16,6 +16,7 @@ const LARGO_MAX_BOTON = 10;
  * @property {Record<string, string>} [etiquetas]
  * @property {Record<string, string>} [ayudas]    ayuda de cada valor
  * @property {string} [ayuda]                     ayuda general de la opción
+ * @property {boolean} [ocultarSiNoAplica]        si está deshabilitada no se muestra (p. ej. la estructura)
  */
 
 /** @typedef {{ default: string, colores: Array<{ id: string, nombre: string, hex: string }> }} Paleta */

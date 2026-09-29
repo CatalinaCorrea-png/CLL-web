@@ -74,6 +74,29 @@ test('normalizar: batea sin cúpula pierde las puertas traseras y las recupera c
   assert.equal(con.modulos[1].puertasTraseras, false);
 });
 
+test('normalizar: pasar a sin cúpula con iluminación agrega la estructura; cambiar de tipo la saca', () => {
+  const c = base();
+  const conIluminacion = normalizar({ ...c, modulos: c.modulos.map((m, i) => (i === 1 ? { ...m, cupula: 'sin_cupula_iluminacion' } : m)) }, catalogo);
+  assert.equal(conIluminacion.modulos[1].estructura, 'curva');
+  assert.ok(!('puertasTraseras' in conIluminacion.modulos[1]));
+  assert.ok(esValida(conIluminacion));
+
+  const recta = normalizar({ ...conIluminacion, modulos: conIluminacion.modulos.map((m, i) => (i === 1 ? { ...m, estructura: 'recta' } : m)) }, catalogo);
+  const curva = normalizar({ ...recta, modulos: recta.modulos.map((m, i) => (i === 1 ? { ...m, cupula: 'cupula_curva' } : m)) }, catalogo);
+  assert.ok(!('estructura' in curva.modulos[1]));
+  assert.equal(curva.modulos[1].puertasTraseras, false);
+  assert.ok(esValida(curva));
+});
+
+test('agregar batea después de una sin cúpula con iluminación: la esquina copia tipo y estructura', () => {
+  const c = base();
+  const recta = normalizar({ ...c, modulos: c.modulos.map((m, i) => (i === 1 ? { ...m, cupula: 'sin_cupula_iluminacion', estructura: 'recta' } : m)) }, catalogo);
+  const dos = agregarBatea(recta, catalogo);
+  assert.equal(dos.modulos[2].cupula, 'sin_cupula_iluminacion');
+  assert.equal(dos.modulos[2].estructura, 'recta');
+  assert.ok(esValida(dos));
+});
+
 test('normalizar no modifica la configuración original', () => {
   const c = base();
   const copia = structuredClone(c);

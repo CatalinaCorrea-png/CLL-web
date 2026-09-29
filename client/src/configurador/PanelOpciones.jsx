@@ -104,16 +104,20 @@ const PanelOpciones = ({ mostrar, onCerrar }) => {
 
             <div className="cfg-editor">
               <h4 className="cfg-editor-titulo">{nombreModulo(config, seleccionado, catalogo)}</h4>
-              {(OPCIONES_MODULO[String(modulo.tipo)] ?? []).map((o) => (
-                <CampoOpcion
-                  key={o.id}
-                  idBase={`cfg-m${seleccionado}`}
-                  opcion={o}
-                  valor={modulo[o.id]}
-                  motivo={motivoModulo(seleccionado, o.id)}
-                  onCambio={(v) => setOpcionModulo(seleccionado, o.id, v)}
-                />
-              ))}
+              {(OPCIONES_MODULO[String(modulo.tipo)] ?? [])
+                // Las opciones con `ocultarSiNoAplica` (la estructura) desaparecen cuando no aplican;
+                // el resto se muestra deshabilitado con el motivo.
+                .filter((o) => !(o.ocultarSiNoAplica && motivoModulo(seleccionado, o.id)))
+                .map((o) => (
+                  <CampoOpcion
+                    key={o.id}
+                    idBase={`cfg-m${seleccionado}`}
+                    opcion={o}
+                    valor={modulo[o.id]}
+                    motivo={motivoModulo(seleccionado, o.id)}
+                    onCambio={(v) => setOpcionModulo(seleccionado, o.id, v)}
+                  />
+                ))}
             </div>
           </section>
 

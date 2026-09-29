@@ -21,12 +21,17 @@ const configCon = (linea = {}) => {
 const deshabilitadasDeLinea = (config) =>
   opcionesDeshabilitadas(config, catalogo).filter((d) => d.ambito === 'linea').map((d) => d.opcion);
 
-test('con la configuración por defecto no hay nada deshabilitado', () => {
-  assert.deepEqual(opcionesDeshabilitadas(configuracionPorDefecto(catalogo), catalogo), []);
+test('con la configuración por defecto solo queda deshabilitada la estructura (la batea es cúpula curva)', () => {
+  assert.deepEqual(opcionesDeshabilitadas(configuracionPorDefecto(catalogo), catalogo), [{
+    ambito: 'modulo',
+    indice: 1,
+    opcion: 'estructura',
+    motivo: 'La estructura solo se elige en el tipo sin cúpula con iluminación.',
+  }]);
 });
 
 test('semi-equipada deshabilita la ubicación del equipo, con su motivo', () => {
-  const d = opcionesDeshabilitadas(configCon({ equipamiento: 'semi' }), catalogo);
+  const d = opcionesDeshabilitadas(configCon({ equipamiento: 'semi' }), catalogo).filter((x) => x.ambito === 'linea');
   assert.deepEqual(d, [{
     ambito: 'linea',
     opcion: 'ubicacionEquipo',
@@ -43,7 +48,7 @@ test('frío forzado habilita bandejas y rejilla', () => {
 });
 
 test('el color solo se elige con chapa: inox lo deshabilita', () => {
-  const d = opcionesDeshabilitadas(configCon({ material: 'inox' }), catalogo);
+  const d = opcionesDeshabilitadas(configCon({ material: 'inox' }), catalogo).filter((x) => x.ambito === 'linea');
   assert.deepEqual(d, [{ ambito: 'linea', opcion: 'color', motivo: 'El acero inoxidable no se pinta.' }]);
   assert.deepEqual(deshabilitadasDeLinea(configCon({ material: 'galvanizada_prepintada' })), []);
 });
@@ -70,7 +75,7 @@ test('puertas traseras: deshabilitadas solo en las bateas sin cúpula, por índi
       { tipo: 'remate', valor: 'mostrador' },
     ],
   };
-  const d = opcionesDeshabilitadas(config, catalogo);
+  const d = opcionesDeshabilitadas(config, catalogo).filter((x) => x.opcion === 'puertasTraseras');
   assert.deepEqual(d.map((x) => [x.indice, x.opcion]), [[1, 'puertasTraseras'], [5, 'puertasTraseras']]);
   assert.match(d[0].motivo, /solo van en bateas con cúpula/);
 });
@@ -84,9 +89,11 @@ test('esquinas: la mostrador no lleva cúpula ni puertas; la con frío, puertas 
       .filter((d) => d.indice === 2)
       .map((d) => d.opcion);
 
-  assert.deepEqual(deshabilitadasEsquina({ tipo: 'esquina', forma: 'esquinero', version: 'mostrador' }), ['cupula', 'puertasTraseras']);
-  assert.deepEqual(deshabilitadasEsquina({ tipo: 'esquina', forma: 'esquinero', version: 'frio', cupula: 'sin_cupula' }), ['puertasTraseras']);
-  assert.deepEqual(deshabilitadasEsquina({ tipo: 'esquina', forma: 'rinconero', version: 'frio', cupula: 'cupula_recta' }), []);
+  assert.deepEqual(deshabilitadasEsquina({ tipo: 'esquina', forma: 'esquinero', version: 'mostrador' }), ['cupula', 'estructura', 'puertasTraseras']);
+  assert.deepEqual(deshabilitadasEsquina({ tipo: 'esquina', forma: 'esquinero', version: 'frio', cupula: 'sin_cupula' }), ['estructura', 'puertasTraseras']);
+  assert.deepEqual(deshabilitadasEsquina({ tipo: 'esquina', forma: 'rinconero', version: 'frio', cupula: 'cupula_recta' }), ['estructura']);
+  // Sin cúpula con iluminación: se habilita la estructura y se deshabilitan las puertas
+  assert.deepEqual(deshabilitadasEsquina({ tipo: 'esquina', forma: 'rinconero', version: 'frio', cupula: 'sin_cupula_iluminacion' }), ['puertasTraseras']);
 });
 
 test('depósito con equipo incorporado y carnes con cualquier frío o cúpula: nada deshabilitado', () => {
@@ -100,7 +107,16 @@ test('depósito con equipo incorporado y carnes con cualquier frío o cúpula: n
       ];
       const d = opcionesDeshabilitadas(config, catalogo).map((x) => x.opcion);
       // Lo único que puede aparecer es lo que depende del frío o de la cúpula, nunca por el producto o el depósito
-      assert.ok(d.every((o) => ['bandeja', 'rejillaSobreBandeja', 'puertasTraseras'].includes(o)), `${frio}/${cupula}: ${d}`);
+      assert.ok(d.every((o) => ['bandeja', 'rejillaSobreBandeja', 'estructura', 'puertasTraseras'].includes(o)), `${frio}/${cupula}: ${d}`);
     }
+  }
+});
+
+test('estructura de la batea: solo se habilita con sin cúpula con iluminación', () => {
+  const linea = configuracionPorDefecto(catalogo).linea;
+  for (const cupula of ['sin_cupula', 'sin_cupula_iluminacion', 'cupula_curva', 'cupula_recta']) {
+    const modulos = [{ tipo: 'remate', valor: 'ninguno' }, { tipo: 'batea', largo: 2000, cupula, deposito: false }, { tipo: 'remate', valor: 'ninguno' }];
+    const deshabilitada = opcionesDeshabilitadas({ linea, modulos }, catalogo).some((d) => d.opcion === 'estructura');
+    assert.equal(deshabilitada, cupula !== 'sin_cupula_iluminacion', cupula);
   }
 });
