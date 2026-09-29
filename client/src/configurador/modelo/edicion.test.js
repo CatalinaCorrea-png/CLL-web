@@ -36,9 +36,14 @@ test('normalizar: material y color', () => {
   assert.ok(!('color' in inox.linea));
   assert.ok(esValida(inox));
 
-  // Volver a pintada pone el color por defecto (blanco)
+  assert.ok(!('tina' in inox.linea)); // con inox la tina es de acero, no se elige
+  assert.ok(!('zonaColor' in inox.linea));
+
+  // Volver a pintada pone el color por defecto (blanco) y la tina en chapa blanca
   const pintada = normalizar({ ...inox, linea: { ...inox.linea, material: 'galvanizada_pintada' } }, catalogo);
   assert.equal(pintada.linea.color, 'blanco');
+  assert.equal(pintada.linea.tina, 'chapa_blanca');
+  assert.equal(pintada.linea.zonaColor, 'faldon_y_zocalo');
 
   // Un color de la epoxi que no existe en la prepintada se corrige al default de la prepintada
   const prepintada = conLinea({ color: 'plata', material: 'galvanizada_prepintada' });

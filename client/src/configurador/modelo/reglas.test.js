@@ -47,9 +47,13 @@ test('frío forzado habilita bandejas y rejilla', () => {
   assert.deepEqual(deshabilitadasDeLinea(configCon({ frio: 'forzado' })), []);
 });
 
-test('el color solo se elige con chapa: inox lo deshabilita', () => {
+test('color, dónde va el color y tina solo se eligen con chapa: inox los deshabilita', () => {
   const d = opcionesDeshabilitadas(configCon({ material: 'inox' }), catalogo).filter((x) => x.ambito === 'linea');
-  assert.deepEqual(d, [{ ambito: 'linea', opcion: 'color', motivo: 'El acero inoxidable no se pinta.' }]);
+  assert.deepEqual(d, [
+    { ambito: 'linea', opcion: 'color', motivo: 'El acero inoxidable no se pinta.' },
+    { ambito: 'linea', opcion: 'zonaColor', motivo: 'El acero inoxidable no se pinta.' },
+    { ambito: 'linea', opcion: 'tina', motivo: 'Con cuerpo de acero inoxidable, la tina también es de acero.' },
+  ]);
   assert.deepEqual(deshabilitadasDeLinea(configCon({ material: 'galvanizada_prepintada' })), []);
 });
 

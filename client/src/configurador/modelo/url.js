@@ -1,7 +1,7 @@
 // Serialización compacta de una configuración de línea para la URL (links compartibles).
 // JS puro (sin React ni three). Solo lo usa el client; no se copia al server.
 //
-// Formato:  ?producto=bateas&v=2&l=000010100&m=r0.b22-00.r0
+// Formato:  ?producto=bateas&v=5&l=0000010010&m=r0.b22-00.r0
 //   v  versión del catálogo.
 //   l  un carácter por opción general, en el orden del catálogo: índice del valor en `valores`
 //      en base 36 (para `color`, índice en la paleta del material), o "-" si no aplica.
@@ -33,6 +33,16 @@ const MIGRACIONES = {
   // v1 → v2: se agregó `estructura` después de `cupula` en la batea (posición 3) y en la esquina (posición 4).
   // Queda sin valor; normalizar() le pone el default si aplica.
   1: ({ l, m }) => ({ l, m: insertarSinValor(insertarSinValor(m, 'b', 3), 'e', 4) }),
+  // v2 → v3: se sacó `lateral` (posición 2 de la línea) y en su lugar entró `tina`.
+  // Queda sin valor; normalizar() le pone el default (chapa blanca) si el material es chapa.
+  2: ({ l, m }) => ({ l: l.slice(0, 2) + '-' + l.slice(3), m }),
+  // v3 → v4: se agregó `zonaColor` (dónde va el color) después de `color` (posición 2 de la línea).
+  // Queda sin valor; normalizar() le pone el default (faldón y zócalo) si el material es chapa.
+  3: ({ l, m }) => ({ l: l.slice(0, 2) + '-' + l.slice(2), m }),
+  // v4 → v5: se reordenaron las opciones de la línea: frío, bandeja y rejilla pasaron antes de
+  // equipamiento y ubicación del equipo. v4: material, color, zona, tina, producto, equipamiento (5),
+  // ubicación (6), frío (7), bandeja (8), rejilla (9).
+  4: ({ l, m }) => ({ l: l.slice(0, 5) + l[7] + l[8] + l[9] + l[5] + l[6], m }),
 };
 
 /** @typedef {import('./reglas.js').Catalogo} Catalogo */

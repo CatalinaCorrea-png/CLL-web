@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import Escena from './Escena';
 import PanelOpciones from './PanelOpciones';
@@ -24,11 +24,20 @@ const ConfiguradorBatea = () => {
   useUrlConfig();
   const config = useConfigurador((s) => s.config);
   const [panelAbierto, setPanelAbierto] = useState(false);
+  const barra = useRef(/** @type {HTMLDivElement | null} */ (null));
+  const listo = config !== null;
+
+  // Desde md, al abrir el configurador se lo encuadra: la barra arriba (debajo del navbar) y el panel
+  // con el 3D llenando el resto de la pantalla. En mobile no hace falta (el 3D ya queda arriba).
+  useEffect(() => {
+    if (!listo || !barra.current || !window.matchMedia('(min-width: 768px)').matches) return;
+    const alturaNavbar = document.querySelector('.navbar-container')?.getBoundingClientRect().height ?? 80;
+    window.scrollTo({ top: barra.current.getBoundingClientRect().top + window.scrollY - alturaNavbar - 12 });
+  }, [listo]);
 
   if (!config) return null;
-  // Por ahora la escena muestra una caja con el largo de la primera batea (la batea real llega en el Prompt 6).
-  const primeraBatea = config.modulos.find((m) => m.tipo === 'batea');
-  const largo = Number(primeraBatea?.largo ?? 2000);
+  // Por ahora la escena muestra solo la primera batea de la línea (la línea completa llega en el 6b).
+  const primeraBatea = config.modulos.find((m) => m.tipo === 'batea') ?? config.modulos[1];
 
   return (
     <div className="cfg-configurador">
@@ -37,7 +46,7 @@ const ConfiguradorBatea = () => {
         <span>{AVISO}</span>
       </p>
 
-      <div className="cfg-barra">
+      <div className="cfg-barra" ref={barra}>
         <Link to="/planificacion" className="cfg-volver">
           <i className="fa-solid fa-arrow-left"></i> Cambiar producto
         </Link>
@@ -52,7 +61,7 @@ const ConfiguradorBatea = () => {
       <div className="cfg-layout">
         <PanelOpciones mostrar={panelAbierto} onCerrar={() => setPanelAbierto(false)} />
         <div className="cfg-visor">
-          <Escena largo={largo} />
+          <Escena linea={config.linea} batea={primeraBatea} />
         </div>
       </div>
     </div>

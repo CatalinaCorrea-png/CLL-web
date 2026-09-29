@@ -35,7 +35,16 @@ test('catálogo: 15 colores epoxi (con blanco por defecto) y los 6 largos de la 
   assert.equal(catalogo.paletas.epoxi.colores.length, 15);
   assert.equal(catalogo.paletas.epoxi.default, 'blanco');
   assert.equal(catalogo.linea.mostradorRemate.alto, 900);
-  assert.equal(catalogo.version, 2);
+  assert.equal(catalogo.version, 5);
+  // Orden del panel: frío, bandejas y rejilla antes de equipamiento
+  const orden = catalogo.opcionesLinea.map((o) => o.id);
+  assert.ok(orden.indexOf('rejillaSobreBandeja') < orden.indexOf('equipamiento'));
+  assert.equal(catalogo.paletas.epoxi.colores.find((c) => c.id === 'blanco')?.hex, '#FFFFFF');
+  assert.equal(catalogo.paletas.prepintada.colores.find((c) => c.id === 'blanco')?.hex, '#FFFFFF');
+  const ids = catalogo.opcionesLinea.map((o) => o.id);
+  assert.ok(!ids.includes('lateral'), 'el estilo de lateral ya no se ofrece');
+  assert.equal(ids[2], 'zonaColor');
+  assert.equal(ids[3], 'tina');
   const largo = catalogo.modulos.batea.find((o) => o.id === 'largo');
   assert.deepEqual(largo?.valores, [1200, 1500, 2000, 2400, 3000, 3600]);
 });
@@ -83,6 +92,8 @@ test('líneas en L, en U y en zigzag son válidas', () => {
 test('inox sin color y prepintada con su paleta son válidas', () => {
   const inox = config({ linea: { material: 'inox' } });
   delete inox.linea.color;
+  delete inox.linea.tina; // con inox la tina es de acero, no se elige
+  delete inox.linea.zonaColor;
   assert.deepEqual(errores(inox), []);
   assert.deepEqual(errores(config({ linea: { material: 'galvanizada_prepintada', color: 'negro' } })), []);
 });
@@ -142,7 +153,10 @@ test('una opción deshabilitada que trae valor es inválida', () => {
 
 test('color: "negro" no existe en la epoxi, y con inox no se admite color', () => {
   assert.match(errores(config({ linea: { material: 'galvanizada_pintada', color: 'negro' } }))[0], /paleta/);
-  assert.deepEqual(errores(config({ linea: { material: 'inox', color: 'plata' } })), ['El acero inoxidable no se pinta.']);
+  const inoxConColor = config({ linea: { material: 'inox', color: 'plata' } });
+  delete inoxConColor.linea.tina;
+  delete inoxConColor.linea.zonaColor;
+  assert.deepEqual(errores(inoxConColor), ['El acero inoxidable no se pinta.']);
   const sinColor = config();
   delete sinColor.linea.color;
   assert.match(errores(sinColor)[0], /paleta/);
@@ -193,4 +207,35 @@ test('una esquina nueva copia la estructura de la batea anterior', () => {
   const esquina = moduloPorDefecto(catalogo, 'esquina', bateaIlum);
   assert.equal(esquina.cupula, 'sin_cupula_iluminacion');
   assert.equal(esquina.estructura, 'recta');
+});
+
+// ---------------------------------------------------------------- tina (v4 de la especificación)
+test('tina: chapa blanca o acero con cuerpo de chapa; con inox no se elige', () => {
+  assert.deepEqual(errores(config({ linea: { tina: 'inox' } })), []);
+  assert.deepEqual(errores(config({ linea: { material: 'galvanizada_prepintada', color: 'negro', tina: 'chapa_blanca' } })), []);
+  const inox = config({ linea: { material: 'inox' } });
+  delete inox.linea.color;
+  delete inox.linea.tina;
+  delete inox.linea.zonaColor;
+  assert.deepEqual(errores(inox), []);
+  assert.deepEqual(errores({ ...inox, linea: { ...inox.linea, tina: 'chapa_blanca' } }), ['Con cuerpo de acero inoxidable, la tina también es de acero.']);
+  const sinTina = config();
+  delete sinTina.linea.tina;
+  assert.deepEqual(errores(sinTina), ['Falta elegir "tina".']);
+});
+
+// ---------------------------------------------------------------- dónde va el color (v4)
+test('zonaColor: faldón, zócalo o los dos con chapa; con inox no se elige', () => {
+  for (const zona of ['faldon_y_zocalo', 'faldon', 'zocalo']) {
+    assert.deepEqual(errores(config({ linea: { zonaColor: zona } })), [], zona);
+  }
+  assert.match(errores(config({ linea: { zonaColor: 'laterales' } }))[0], /zonaColor/);
+  const sinZona = config();
+  delete sinZona.linea.zonaColor;
+  assert.deepEqual(errores(sinZona), ['Falta elegir "zonaColor".']);
+
+  const inox = config({ linea: { material: 'inox' } });
+  delete inox.linea.color;
+  delete inox.linea.tina;
+  assert.deepEqual(errores(inox), ['El acero inoxidable no se pinta.']); // queda zonaColor con inox
 });

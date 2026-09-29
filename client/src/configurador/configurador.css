@@ -267,17 +267,32 @@ button.cfg-producto { cursor: pointer; }
 .cfg-producto.inactivo:hover { transform: none; box-shadow: var(--shadow-sm); border-color: var(--border); }
 .cfg-producto.inactivo:hover::before { opacity: 0; }
 
+/* Desde md: el configurador ocupa el alto de la pantalla (menos el navbar). El 3D llena su columna
+   y el panel tiene su propio scroll, así el 3D se ve siempre mientras se eligen opciones. */
 @media (min-width: 768px) {
   .cfg-layout {
     display: grid;
     grid-template-columns: minmax(280px, 340px) 1fr;
-    align-items: start;
+    align-items: stretch;
+    /* pantalla − navbar (~80) − barra de herramientas (~55) − márgenes */
+    height: calc(100svh - 170px);
+    min-height: 520px;
   }
   .cfg-visor {
     order: 0;
-    height: min(70vh, 640px);
-    /* El 3D queda a la vista mientras se recorre un panel largo */
-    position: sticky;
-    top: 96px;
+    height: 100%;
+    min-height: 0;
   }
+  /* Nodo estático del Offcanvas responsive: es la columna del panel, con scroll propio */
+  .cfg-layout > .cfg-offcanvas {
+    height: 100%;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain; /* al llegar al final del panel, no arrastra la página */
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-strong) transparent;
+    border-radius: var(--r);
+  }
+  .cfg-layout > .cfg-offcanvas .offcanvas-body { overflow: visible; }
+  .cfg-layout > .cfg-offcanvas .cfg-panel { min-height: 100%; }
 }

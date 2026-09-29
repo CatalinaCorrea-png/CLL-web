@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { Bounds, Grid, OrbitControls, useBounds } from '@react-three/drei';
-import Mueble from './Mueble';
+import { Bounds, Environment, Grid, Lightformer, OrbitControls, useBounds } from '@react-three/drei';
+import Batea from './productos/Batea';
 import Persona from './Persona';
 
-// Distancia entre el costado del mueble y la silueta humana (m).
+// Distancia entre el costado de la batea y la silueta humana (m).
 const SEPARACION_PERSONA = 0.5;
 
 // Colores de theme.css (three no lee variables CSS): --ice, --accent, --indigo-dye.
@@ -14,24 +14,26 @@ const COLOR_GRILLA = '#96c5f7';
 const COLOR_GRILLA_METRO = '#5387c0';
 
 /**
- * Reencuadra la cámara cuando cambia el largo. Bounds ya llama invalidate() mientras anima,
- * así que funciona con frameloop="demand".
+ * Reencuadra la cámara cuando cambia el tamaño de lo que se muestra. Bounds ya llama invalidate()
+ * mientras anima, así que funciona con frameloop="demand".
  * @param {object} props
- * @param {number} props.largo  largo en mm (solo se usa para disparar el reencuadre)
+ * @param {string} props.clave  cambia cuando hay que reencuadrar (hoy, el largo)
  */
-const Reencuadre = ({ largo }) => {
+const Reencuadre = ({ clave }) => {
   const bounds = useBounds();
   useEffect(() => {
     bounds.refresh().clip().fit();
-  }, [bounds, largo]);
+  }, [bounds, clave]);
   return null;
 };
 
 /**
  * @param {object} props
- * @param {number} props.largo  largo del mueble en mm
+ * @param {Record<string, unknown>} props.linea  opciones generales de la línea
+ * @param {Record<string, unknown>} props.batea  la batea a mostrar (por ahora, la primera de la línea)
  */
-const Escena = ({ largo }) => {
+const Escena = ({ linea, batea }) => {
+  const largo = Number(batea.largo);
   const xPersona = -(largo / 2000) - SEPARACION_PERSONA;
 
   return (
@@ -41,9 +43,17 @@ const Escena = ({ largo }) => {
       gl={{ preserveDrawingBuffer: true }} // necesario para sacar la captura del canvas más adelante
       camera={{ position: [-1.8, 1.7, 4.5], fov: 40 }} // de frente y del lado de la silueta, para que no quede tapada
     >
-      {/* Luz de entorno sencilla, sin HDR externo */}
-      <hemisphereLight args={[COLOR_CIELO, COLOR_PISO, 1.2]} />
-      <directionalLight position={[3, 5, 4]} intensity={1.4} />
+      {/* Luces: hemisférica + direccional, y un entorno armado con paneles de luz (sin HDR externo)
+          para que el inox y el galvanizado tengan reflejos en vez de verse negros. */}
+      <hemisphereLight args={[COLOR_CIELO, COLOR_PISO, 0.8]} />
+      <directionalLight position={[3, 5, 4]} intensity={1.2} />
+      <Environment resolution={128} frames={1}>
+        <Lightformer intensity={2.5} position={[0, 5, 3]} rotation-x={Math.PI / 2} scale={[10, 6, 1]} />
+        <Lightformer intensity={1.5} position={[-5, 2, 1]} rotation-y={Math.PI / 2} scale={[6, 3, 1]} />
+        <Lightformer intensity={1.5} position={[5, 2, 1]} rotation-y={-Math.PI / 2} scale={[6, 3, 1]} />
+        <Lightformer intensity={1.5} position={[0, 2, 6]} scale={[10, 3, 1]} />
+        <Lightformer intensity={1.5} position={[0, 2, -5]} scale={[10, 3, 1]} />
+      </Environment>
 
       <Grid
         infiniteGrid
@@ -56,8 +66,8 @@ const Escena = ({ largo }) => {
       />
 
       <Bounds fit clip observe margin={1.2}>
-        <Reencuadre largo={largo} />
-        <Mueble largo={largo} />
+        <Reencuadre clave={String(largo)} />
+        <Batea batea={batea} linea={linea} />
         <Persona x={xPersona} />
       </Bounds>
 

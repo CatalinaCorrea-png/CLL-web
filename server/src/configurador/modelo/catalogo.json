@@ -1,7 +1,7 @@
 {
-  "version": 2,
+  "version": 5,
   "provisorio": [
-    "paletas.prepintada: los hex son aproximados, falta la carta de colores real"
+    "paletas.prepintada: los hex (salvo el blanco) son aproximados, falta la carta de colores real"
   ],
   "medidas": { "altoTotal": 1250, "altoMesada": 900, "profundidad": 1100 },
   "linea": {
@@ -14,24 +14,26 @@
   "opcionesLinea": [
     { "id": "material", "nombre": "Material del cuerpo", "tipo": "select", "default": "galvanizada_pintada",
       "valores": ["galvanizada_pintada", "galvanizada_prepintada", "inox"],
-      "etiquetas": { "galvanizada_pintada": "Chapa galvanizada pintada", "galvanizada_prepintada": "Chapa galvanizada prepintada", "inox": "Acero inoxidable" } },
+      "etiquetas": { "galvanizada_pintada": "Chapa galvanizada pintada", "galvanizada_prepintada": "Chapa galvanizada prepintada", "inox": "Acero inoxidable" },
+      "ayuda": "Material del faldón (franja del frente) y del zócalo; el color se aplica donde elijas." },
     { "id": "color", "nombre": "Color", "tipo": "color",
       "paletaSegun": { "galvanizada_pintada": "epoxi", "galvanizada_prepintada": "prepintada", "inox": null },
-      "motivoSinPaleta": "El acero inoxidable no se pinta." },
-    { "id": "lateral", "nombre": "Estilo de lateral", "tipo": "select", "default": "recto", "valores": ["recto", "curvo"],
-      "etiquetas": { "recto": "Recto", "curvo": "Curvo" },
-      "ayuda": "Los laterales siempre van cerrados con vidrio." },
+      "motivoSinPaleta": "El acero inoxidable no se pinta.",
+      "ayuda": "Se aplica al faldón (franja del frente), al zócalo o a los dos." },
+    { "id": "zonaColor", "nombre": "Dónde va el color", "tipo": "select", "default": "faldon_y_zocalo",
+      "valores": ["faldon_y_zocalo", "faldon", "zocalo"],
+      "soloSi": { "material": ["galvanizada_pintada", "galvanizada_prepintada"] },
+      "motivo": "El acero inoxidable no se pinta.",
+      "etiquetas": { "faldon_y_zocalo": "Faldón y zócalo", "faldon": "Solo faldón", "zocalo": "Solo zócalo" },
+      "ayuda": "La parte que no lleva color queda de chapa blanca." },
+    { "id": "tina", "nombre": "Tina (bacha y respaldo)", "tipo": "select", "default": "chapa_blanca", "valores": ["chapa_blanca", "inox"],
+      "soloSi": { "material": ["galvanizada_pintada", "galvanizada_prepintada"] },
+      "motivo": "Con cuerpo de acero inoxidable, la tina también es de acero.",
+      "etiquetas": { "chapa_blanca": "Chapa blanca", "inox": "Acero inoxidable" },
+      "ayuda": "Bacha, respaldo y respaldo trasero, del mismo material. Aislación de poliuretano inyectado de 40 kg/m³." },
     { "id": "producto", "nombre": "Producto", "tipo": "select", "default": "fiambres_lacteos", "valores": ["fiambres_lacteos", "carnes"],
       "etiquetas": { "fiambres_lacteos": "Fiambres / lácteos", "carnes": "Carne / pollo / pescado" },
       "ayudas": { "fiambres_lacteos": "Temperatura de 4 °C.", "carnes": "Temperatura de 0 a 2 °C." } },
-    { "id": "equipamiento", "nombre": "Equipamiento", "tipo": "select", "default": "equipada", "valores": ["semi", "equipada"],
-      "etiquetas": { "semi": "Semi-equipada", "equipada": "Equipada" },
-      "ayudas": { "semi": "Con enfriador, sin termostato; el motor lo pone el cliente.", "equipada": "Con equipo de frío y termostato." } },
-    { "id": "ubicacionEquipo", "nombre": "Ubicación del equipo", "tipo": "select", "default": "incorporado",
-      "valores": ["incorporado", "remoto"], "soloSi": { "equipamiento": "equipada" },
-      "motivo": "La ubicación del equipo solo se elige si la batea es equipada.",
-      "etiquetas": { "incorporado": "Incorporado", "remoto": "Remoto" },
-      "ayudas": { "incorporado": "El equipo va abajo, a un costado de la batea.", "remoto": "El equipo va afuera, separado de la batea." } },
     { "id": "frio", "nombre": "Tipo de frío", "tipo": "select", "default": "forzado", "valores": ["estatico", "forzado"],
       "etiquetas": { "estatico": "Estático", "forzado": "Aire forzado" },
       "ayudas": { "estatico": "Rejillas planas apoyadas en el fondo.", "forzado": "Bandejas lisas, con rejilla opcional encima." } },
@@ -42,7 +44,15 @@
     { "id": "rejillaSobreBandeja", "nombre": "Rejilla sobre bandeja", "tipo": "select", "default": "ninguna",
       "valores": ["ninguna", "recta", "escalonada"], "soloSi": { "frio": "forzado" },
       "motivo": "La rejilla sobre bandeja solo va con frío por aire forzado.",
-      "etiquetas": { "ninguna": "Ninguna", "recta": "Recta", "escalonada": "Escalonada" } }
+      "etiquetas": { "ninguna": "Ninguna", "recta": "Recta", "escalonada": "Escalonada" } },
+    { "id": "equipamiento", "nombre": "Equipamiento", "tipo": "select", "default": "equipada", "valores": ["semi", "equipada"],
+      "etiquetas": { "semi": "Semi-equipada", "equipada": "Equipada" },
+      "ayudas": { "semi": "Con enfriador, sin termostato; el motor lo pone el cliente.", "equipada": "Con equipo de frío y termostato." } },
+    { "id": "ubicacionEquipo", "nombre": "Ubicación del equipo", "tipo": "select", "default": "incorporado",
+      "valores": ["incorporado", "remoto"], "soloSi": { "equipamiento": "equipada" },
+      "motivo": "La ubicación del equipo solo se elige si la batea es equipada.",
+      "etiquetas": { "incorporado": "Incorporado", "remoto": "Remoto" },
+      "ayudas": { "incorporado": "El equipo va abajo, a un costado de la batea.", "remoto": "El equipo va afuera, separado de la batea." } }
   ],
   "modulos": {
     "batea": [
@@ -96,14 +106,14 @@
     "remate": [
       { "id": "valor", "nombre": "Remate", "tipo": "select", "default": "ninguno", "valores": ["ninguno", "mostrador"],
         "etiquetas": { "ninguno": "Ninguno", "mostrador": "Mostrador" },
-        "ayudas": { "ninguno": "La batea termina con su lateral de vidrio.", "mostrador": "Caja cerrada de 1,10 × 1,10 m, del color de la línea." } }
+        "ayudas": { "ninguno": "La batea termina con su lateral de chapa.", "mostrador": "Caja cerrada de 1,10 × 1,10 m, del color de la línea." } }
     ]
   },
   "paletas": {
     "epoxi": {
       "default": "blanco",
       "colores": [
-        { "id": "blanco", "nombre": "Blanco (RAL 9016)", "hex": "#F1F0EA" },
+        { "id": "blanco", "nombre": "Blanco", "hex": "#FFFFFF" },
         { "id": "plata", "nombre": "Plata", "hex": "#DEDEDE" },
         { "id": "oro", "nombre": "Oro", "hex": "#C4B98A" },
         { "id": "amarillo", "nombre": "Amarillo", "hex": "#FFCC00" },
@@ -123,7 +133,7 @@
     "prepintada": {
       "default": "blanco",
       "colores": [
-        { "id": "blanco", "nombre": "Blanco", "hex": "#F4F5F2" },
+        { "id": "blanco", "nombre": "Blanco", "hex": "#FFFFFF" },
         { "id": "negro", "nombre": "Negro", "hex": "#1E1F21" },
         { "id": "gris", "nombre": "Gris", "hex": "#8A8F94" },
         { "id": "rojo", "nombre": "Rojo", "hex": "#B3261E" },
