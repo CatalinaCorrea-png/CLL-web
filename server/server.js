@@ -1,5 +1,5 @@
-const app = require('./src/app.js');
 require('dotenv').config(); // Cargar variables de entorno
+const app = require('./src/app.js');
 
 const PORT = process.env.PORT || 3001;
 
