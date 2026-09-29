@@ -11,9 +11,9 @@ const Planificacion = () => {
       <header className='page-hero'>
         <div className='container-narrow'>
           <span className='eyebrow'>Planificación</span>
-          <h1 className='section-title on-deep'>Planificador en construcción</h1>
+          <h1 className='section-title on-deep'>Planificá tu equipo</h1>
           <p className='section-lead on-deep'>
-            Prototipo: mové el largo y girá la vista para ver el equipo en 3D.
+            Armá tu equipo, miralo en 3D y compartí la configuración con nosotros.
           </p>
         </div>
       </header>

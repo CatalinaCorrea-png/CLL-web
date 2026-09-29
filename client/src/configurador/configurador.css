@@ -1,8 +1,45 @@
 /* =========================== Configurador 3D =========================
-   Mobile: el 3D arriba y el panel abajo.
+   Mobile: el 3D arriba y el panel en un Offcanvas que sube desde abajo.
    Desde md (768px, mismo corte que el navbar): panel a la izquierda, 3D a la derecha.
    ===================================================================== */
 
+/* --- Aviso y barra de herramientas --- */
+.cfg-aviso {
+  font-weight: 500;
+  font-size: .92rem;
+  margin-bottom: 1rem;
+}
+
+.cfg-barra {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: .75rem;
+  margin-bottom: 1rem;
+}
+.cfg-barra-acciones { display: flex; gap: .5rem; flex-wrap: wrap; }
+.cfg-volver {
+  color: var(--accent);
+  font-size: .9rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+.cfg-volver:hover { color: var(--brand); }
+
+.cfg-accion { font-size: .88rem; padding: .6em 1.1em; }
+.btn-ice:disabled {
+  opacity: .45;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Tooltip sobre controles deshabilitados: el span recibe el hover, no el control */
+.cfg-con-motivo > * { pointer-events: none; }
+.cfg-con-motivo:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: var(--r-sm); }
+
+/* --- Layout --- */
 .cfg-layout {
   display: flex;
   flex-direction: column;
@@ -25,7 +62,8 @@
 
 /* --- Panel de opciones --- */
 .cfg-panel {
-  padding: 1.4rem 1.5rem;
+  width: 100%;
+  padding: 1.3rem 1.4rem;
   text-align: left;
 }
 /* El panel no "salta" como las tarjetas de .ice-card */
@@ -36,52 +74,210 @@
 }
 .cfg-panel.ice-card:hover::before { opacity: 0; }
 
-.cfg-panel-title {
+.cfg-seccion + .cfg-seccion {
+  margin-top: 1.4rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--border);
+}
+.cfg-seccion-titulo {
   color: var(--brand);
-  font-size: 1.35rem;
+  font-size: 1.05rem;
   font-weight: 700;
-  margin: .35rem 0 1.2rem;
+  margin: 0 0 .75rem;
+}
+.cfg-seccion-nota {
+  margin: -.5rem 0 .9rem;
+  font-size: .8rem;
+  color: var(--text-soft);
 }
 
-.cfg-label {
+/* Fila de módulos de la línea */
+.cfg-modulos {
   display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  width: 100%;
+  flex-wrap: wrap;
+  gap: .4rem;
+}
+.cfg-modulo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: .4rem .65rem;
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-sm);
+  text-align: left;
+  cursor: pointer;
+  transition: background .2s ease, border-color .2s ease;
+}
+.cfg-modulo:hover { background: var(--surface-soft); }
+.cfg-modulo-remate { border-style: dashed; }
+.cfg-modulo.activo {
+  background: var(--surface-cold);
+  border-color: var(--accent);
+  box-shadow: inset 0 0 0 1px var(--accent);
+}
+.cfg-modulo-nombre { font-size: .8rem; font-weight: 600; color: var(--brand); }
+.cfg-modulo-detalle { font-size: .74rem; color: var(--text-soft); }
+
+.cfg-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+  margin: .8rem 0;
+}
+
+/* Editor del módulo elegido */
+.cfg-editor {
+  padding: .9rem 1rem .2rem;
+  background: var(--surface-soft);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+}
+.cfg-editor-titulo {
+  color: var(--brand);
+  font-size: .95rem;
+  font-weight: 700;
+  margin: 0 0 .7rem;
+}
+
+/* --- Campo de una opción --- */
+.cfg-campo { margin-bottom: .95rem; }
+.cfg-campo-nombre {
+  margin-bottom: .35rem;
+  font-size: .85rem;
   font-weight: 600;
   color: var(--text);
 }
-.cfg-valor {
-  font-size: .9rem;
-  font-weight: 600;
-  color: var(--accent);
-}
-
-.cfg-panel .form-range::-webkit-slider-thumb { background: var(--brand); }
-.cfg-panel .form-range::-moz-range-thumb { background: var(--brand); }
-
-.cfg-rango {
-  display: flex;
-  justify-content: space-between;
+.cfg-campo.deshabilitada .cfg-campo-nombre { color: var(--text-soft); }
+.cfg-campo-ayuda {
+  display: block;
+  margin-top: .3rem;
   font-size: .78rem;
   color: var(--text-soft);
 }
 
-.cfg-ayuda {
-  margin: 1.4rem 0 0;
+/* Valores como botones (etiquetas cortas) */
+.cfg-botones { display: flex; flex-wrap: wrap; gap: .35rem; }
+.cfg-boton {
+  padding: .35em .95em;
   font-size: .85rem;
+  font-weight: 600;
+  color: var(--brand);
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-pill);
+  transition: background .2s ease, color .2s ease;
+}
+.cfg-boton:hover:not(:disabled) { background: var(--surface-cold); }
+.cfg-boton.activo { color: #fff; background: var(--brand); border-color: var(--brand); }
+.cfg-boton:disabled { opacity: .45; cursor: not-allowed; }
+
+/* Radios y switches de Bootstrap con los colores del sitio */
+.cfg-panel .form-check-input:checked {
+  background-color: var(--brand);
+  border-color: var(--brand);
+}
+.cfg-panel .form-check-input:focus { box-shadow: 0 0 0 .2rem rgba(83, 135, 192, .25); }
+.cfg-panel .form-check-label { font-size: .88rem; }
+
+/* Muestras de color */
+.cfg-colores { display: flex; flex-wrap: wrap; gap: .45rem; }
+.cfg-color {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  background: var(--cfg-color);
+  box-shadow: 0 0 0 1px var(--border-strong);
+  cursor: pointer;
+  transition: transform .15s ease;
+}
+.cfg-color:hover:not(:disabled) { transform: scale(1.1); }
+.cfg-color.activo { box-shadow: 0 0 0 2px var(--accent); }
+.cfg-color:disabled { opacity: .4; cursor: not-allowed; }
+.cfg-color-inox {
+  background: linear-gradient(135deg, #eef1f3, #b9c0c7 55%, #e6e9ec);
+}
+.cfg-color-inox:disabled { opacity: 1; }
+.cfg-color-nombre {
+  display: block;
+  margin-top: .35rem;
+  font-size: .8rem;
   color: var(--text-soft);
 }
-.cfg-ayuda i { color: var(--accent); margin-right: .35rem; }
+
+/* --- Offcanvas (solo mobile) ---
+   OJO: css/offcanvasFabricacion.css estiliza .offcanvas-title/-header/-body de forma global
+   (con !important). Estas reglas, más específicas, lo pisan solo para este panel. */
+@media (max-width: 767.98px) {
+  .cfg-offcanvas.offcanvas-bottom {
+    --bs-offcanvas-height: 70vh;
+    border-radius: var(--r-lg) var(--r-lg) 0 0;
+    box-shadow: var(--shadow-lg);
+  }
+  .cfg-offcanvas .offcanvas-header { padding: 1rem 1.25rem .25rem !important; }
+  .cfg-offcanvas .offcanvas-title { display: block; color: var(--brand); font-weight: 700; font-size: 1.1rem; }
+  .cfg-offcanvas .offcanvas-body { padding: .5rem 1.25rem 2rem !important; }
+  .cfg-offcanvas .cfg-panel.ice-card {
+    padding: 0;
+    border: 0;
+    box-shadow: none;
+  }
+}
+
+/* --- Selector de producto --- */
+.cfg-selector-titulo {
+  color: var(--brand);
+  font-size: 1.35rem;
+  font-weight: 700;
+  margin-bottom: 1.2rem;
+}
+.cfg-productos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: var(--gap);
+}
+.cfg-producto {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: .3rem;
+  padding: 0 0 1rem;
+  overflow: hidden;
+  text-align: left;
+  font: inherit;
+}
+button.cfg-producto { cursor: pointer; }
+.cfg-producto-foto {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  margin-bottom: .5rem;
+}
+.cfg-producto-nombre,
+.cfg-producto-desc,
+.cfg-producto-ir,
+.cfg-producto-pronto { margin-inline: 1rem; }
+.cfg-producto-nombre { color: var(--brand); font-weight: 700; font-size: 1.05rem; }
+.cfg-producto-desc { color: var(--text-soft); font-size: .85rem; }
+.cfg-producto-ir { color: var(--accent); font-weight: 600; font-size: .88rem; margin-top: .3rem; }
+.cfg-producto.inactivo { opacity: .65; }
+.cfg-producto.inactivo .cfg-producto-foto { filter: grayscale(.7); }
+.cfg-producto.inactivo:hover { transform: none; box-shadow: var(--shadow-sm); border-color: var(--border); }
+.cfg-producto.inactivo:hover::before { opacity: 0; }
 
 @media (min-width: 768px) {
   .cfg-layout {
     display: grid;
-    grid-template-columns: minmax(260px, 320px) 1fr;
+    grid-template-columns: minmax(280px, 340px) 1fr;
     align-items: start;
   }
   .cfg-visor {
     order: 0;
     height: min(70vh, 640px);
+    /* El 3D queda a la vista mientras se recorre un panel largo */
+    position: sticky;
+    top: 96px;
   }
 }

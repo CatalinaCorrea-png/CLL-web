@@ -39,6 +39,18 @@ test('catálogo: 15 colores epoxi (con blanco por defecto) y los 6 largos de la 
   assert.deepEqual(largo?.valores, [1200, 1500, 2000, 2400, 3000, 3600]);
 });
 
+test('catálogo: cada opción tiene nombre y cada valor de texto tiene etiqueta (para el panel)', () => {
+  /** @type {Array<{ id: string, nombre?: string, tipo: string, valores?: Array<string | number>, etiquetas?: Record<string, string> }>} */
+  const opciones = [...catalogo.opcionesLinea, ...Object.values(catalogo.modulos).flat()];
+  for (const o of opciones) {
+    assert.ok(o.nombre, `"${o.id}" no tiene nombre`);
+    for (const v of o.valores ?? []) {
+      if (typeof v === 'string') assert.ok(o.etiquetas?.[v], `"${o.id}": el valor "${v}" no tiene etiqueta`);
+    }
+  }
+  assert.deepEqual(Object.keys(catalogo.nombresModulo), ['batea', 'esquina', 'remate']);
+});
+
 // ---------------------------------------------------------------- válidas
 test('la configuración por defecto es válida (una batea de 2000 mm, sin remates)', () => {
   const c = configuracionPorDefecto(catalogo);

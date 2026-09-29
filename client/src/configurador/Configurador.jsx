@@ -1,49 +1,59 @@
 import { useState } from 'react';
-import Form from 'react-bootstrap/Form';
+import { Link, useSearchParams } from 'react-router-dom';
 import Escena from './Escena';
+import PanelOpciones from './PanelOpciones';
+import BotonCopiarLink from './BotonCopiarLink';
+import SelectorProducto from './SelectorProducto';
+import { useUrlConfig } from './useUrlConfig';
+import { useConfigurador } from './store.js';
 import './configurador.css';
 
-// Límites del largo en mm (docs/especificacion-batea.md).
-const LARGO_MIN = 1200;
-const LARGO_MAX = 3600;
+const AVISO =
+  'Este planificador es una simulación para que te hagas una idea de tu equipo. Cuando nos mandes tu configuración, ' +
+  'el equipo de CLL te va a asesorar para definir cada detalle: medidas especiales, instalación y lo que necesites.';
 
-// Prototipo: el estado vive acá hasta que se arme el store de zustand.
+// Paso 1: elegir el producto. Si la URL ya trae ?producto=bateas (o una configuración), se abre directo la batea.
 const Configurador = () => {
-  const [largo, setLargo] = useState(2000);
+  const [params] = useSearchParams();
+  const enBatea = params.get('producto') === 'bateas' || params.has('m');
+  return enBatea ? <ConfiguradorBatea /> : <SelectorProducto />;
+};
+
+// Paso 2: configurar la línea de bateas.
+const ConfiguradorBatea = () => {
+  useUrlConfig();
+  const config = useConfigurador((s) => s.config);
+  const [panelAbierto, setPanelAbierto] = useState(false);
+
+  if (!config) return null;
+  // Por ahora la escena muestra una caja con el largo de la primera batea (la batea real llega en el Prompt 6).
+  const primeraBatea = config.modulos.find((m) => m.tipo === 'batea');
+  const largo = Number(primeraBatea?.largo ?? 2000);
 
   return (
-    <div className="cfg-layout">
-      <aside className="cfg-panel ice-card">
-        <span className="eyebrow">Opciones</span>
-        <h2 className="cfg-panel-title">Tu equipo</h2>
+    <div className="cfg-configurador">
+      <p className="callout cfg-aviso">
+        <i className="fa-solid fa-circle-info"></i>
+        <span>{AVISO}</span>
+      </p>
 
-        <Form.Group controlId="cfg-largo">
-          <Form.Label className="cfg-label">
-            Largo
-            <span className="cfg-valor">
-              {largo} mm · {(largo / 1000).toFixed(2).replace('.', ',')} m
-            </span>
-          </Form.Label>
-          <Form.Range
-            min={LARGO_MIN}
-            max={LARGO_MAX}
-            step={100}
-            value={largo}
-            onChange={(e) => setLargo(Number(e.target.value))}
-          />
-          <div className="cfg-rango">
-            <span>{LARGO_MIN} mm</span>
-            <span>{LARGO_MAX} mm</span>
-          </div>
-        </Form.Group>
+      <div className="cfg-barra">
+        <Link to="/planificacion" className="cfg-volver">
+          <i className="fa-solid fa-arrow-left"></i> Cambiar producto
+        </Link>
+        <div className="cfg-barra-acciones">
+          <button type="button" className="btn-ice cfg-accion d-md-none" onClick={() => setPanelAbierto(true)}>
+            <i className="fa-solid fa-sliders"></i> Opciones
+          </button>
+          <BotonCopiarLink />
+        </div>
+      </div>
 
-        <p className="cfg-ayuda">
-          <i className="fa-solid fa-person"></i> La silueta mide 1,75 m, como referencia de escala.
-        </p>
-      </aside>
-
-      <div className="cfg-visor">
-        <Escena largo={largo} />
+      <div className="cfg-layout">
+        <PanelOpciones mostrar={panelAbierto} onCerrar={() => setPanelAbierto(false)} />
+        <div className="cfg-visor">
+          <Escena largo={largo} />
+        </div>
       </div>
     </div>
   );
