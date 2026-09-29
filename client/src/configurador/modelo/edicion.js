@@ -119,7 +119,26 @@ export const agregarBatea = (config, catalogo) => {
 };
 
 /**
- * Quita la batea en esa posición junto con la esquina que la une:
+ * Cambia el tipo de una unión entre bateas (esquina, mostrador intermedio o directa).
+ * El módulo nuevo arranca con sus valores por defecto; una esquina copia la cúpula y la estructura
+ * de la batea anterior. Si la posición no es una unión o el tipo no existe, devuelve la misma configuración.
+ * @param {ConfigParcial} config
+ * @param {Catalogo} catalogo
+ * @param {number} indice  posición de la unión en config.modulos
+ * @param {string} tipo    uno de catalogo.uniones.valores
+ * @returns {ConfigParcial}
+ */
+export const cambiarUnion = (config, catalogo, indice, tipo) => {
+  /** @type {string[]} */
+  const uniones = catalogo.uniones.valores;
+  const actual = config.modulos[indice];
+  if (!actual || !uniones.includes(String(actual.tipo)) || !uniones.includes(tipo) || actual.tipo === tipo) return config;
+  const nuevo = moduloPorDefecto(catalogo, /** @type {import('./esquema.js').TipoModulo} */ (tipo), config.modulos[indice - 1]);
+  return normalizar({ ...config, modulos: config.modulos.map((m, i) => (i === indice ? nuevo : m)) }, catalogo);
+};
+
+/**
+ * Quita la batea en esa posición junto con la unión (esquina, mostrador o directa) que la une:
  * la de su izquierda, o la de su derecha si es la primera batea.
  * Si no se puede (no es una batea o es la única), devuelve la misma configuración.
  * @param {ConfigParcial} config

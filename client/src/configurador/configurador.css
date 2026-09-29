@@ -60,6 +60,22 @@
   touch-action: none; /* el gesto de órbita no scrollea la página */
 }
 
+/* Botones de vista (Cliente / Vendedor) sobre el 3D */
+.cfg-vistas {
+  position: absolute;
+  top: .6rem;
+  right: .6rem;
+  display: flex;
+  gap: .3rem;
+  padding: .3rem;
+  background: rgba(255, 255, 255, .75);
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+}
+.cfg-vistas .cfg-boton { font-size: .8rem; padding: .3em .85em; }
+
 /* --- Panel de opciones --- */
 .cfg-panel {
   width: 100%;
@@ -111,6 +127,10 @@
 }
 .cfg-modulo:hover { background: var(--surface-soft); }
 .cfg-modulo-remate { border-style: dashed; }
+/* Uniones entre bateas: el mostrador con fondo suave, la directa más chica */
+.cfg-modulo-mostrador { background: var(--surface-soft); }
+.cfg-modulo-union { padding: .4rem .45rem; }
+.cfg-modulo-union .cfg-modulo-nombre { font-size: .72rem; }
 .cfg-modulo.activo {
   background: var(--surface-cold);
   border-color: var(--accent);

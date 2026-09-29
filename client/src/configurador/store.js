@@ -2,7 +2,7 @@
 // No toca la URL: eso lo hace useUrlConfig.js.
 import { create } from 'zustand';
 import catalogo from './modelo/catalogo.json';
-import { normalizar, agregarBatea, quitarBatea } from './modelo/edicion.js';
+import { normalizar, agregarBatea, quitarBatea, cambiarUnion } from './modelo/edicion.js';
 
 /** @typedef {import('./modelo/reglas.js').ConfigParcial} ConfigParcial */
 
@@ -16,6 +16,7 @@ import { normalizar, agregarBatea, quitarBatea } from './modelo/edicion.js';
  * @property {(indice: number, id: string, valor: unknown) => void} setOpcionModulo
  * @property {() => void} agregarBatea
  * @property {(indice: number) => void} quitarBatea
+ * @property {(indice: number, tipo: string) => void} cambiarUnion  esquina, mostrador intermedio o directa
  */
 
 /** @type {import('zustand').StateCreator<EstadoConfigurador>} */
@@ -49,6 +50,10 @@ const crearEstado = (set) => ({
       const nueva = agregarBatea(config, catalogo);
       return { config: nueva, seleccionado: nueva === config ? seleccionado : nueva.modulos.length - 2 };
     }),
+
+  // La unión cambiada sigue seleccionada, para editar sus opciones.
+  cambiarUnion: (indice, tipo) =>
+    set(({ config }) => (config ? { config: cambiarUnion(config, catalogo, indice, tipo) } : {})),
 
   // Después de quitar, se selecciona la primera batea.
   quitarBatea: (indice) =>

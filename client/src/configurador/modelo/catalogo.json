@@ -1,16 +1,28 @@
 {
   "version": 5,
   "provisorio": [
-    "paletas.prepintada: los hex (salvo el blanco) son aproximados, falta la carta de colores real"
+    "paletas.prepintada: los hex (salvo el blanco) son aproximados, falta la carta de colores real",
+    "modulos.mostrador.largo: largos del mostrador intermedio supuestos (600 · 900 · 1200 · 1500 mm)"
   ],
   "medidas": { "altoTotal": 1250, "altoMesada": 900, "profundidad": 1100 },
   "linea": {
     "maxBateas": 3,
     "anguloEsquina": 90,
     "esquina": { "ancho": 1100, "fondo": 1100 },
-    "mostradorRemate": { "ancho": 1100, "fondo": 1100, "alto": 900, "terminacion": "linea" }
+    "mostradorRemate": { "ancho": 1100, "fondo": 1100, "alto": 900, "terminacion": "linea" },
+    "mostradorIntermedio": { "fondo": 1100, "alto": 900, "terminacion": "linea" }
   },
-  "nombresModulo": { "batea": "Batea", "esquina": "Esquina", "remate": "Remate" },
+  "nombresModulo": { "batea": "Batea", "esquina": "Esquina", "mostrador": "Mostrador", "union": "Unión", "remate": "Remate" },
+  "uniones": {
+    "nombre": "Unión entre bateas",
+    "valores": ["esquina", "mostrador", "union"],
+    "etiquetas": { "esquina": "Esquina", "mostrador": "Mostrador", "union": "Directa" },
+    "ayudas": {
+      "esquina": "La línea dobla 90°: esquinero o rinconero, con frío o tipo mostrador.",
+      "mostrador": "Tramo recto sin frío entre dos bateas: tapa de inox a la altura de la mesada.",
+      "union": "Las dos bateas quedan pegadas, en línea recta."
+    }
+  },
   "opcionesLinea": [
     { "id": "material", "nombre": "Material del cuerpo", "tipo": "select", "default": "galvanizada_pintada",
       "valores": ["galvanizada_pintada", "galvanizada_prepintada", "inox"],
@@ -103,6 +115,11 @@
         "motivo": "Las puertas traseras de acrílico solo van en esquinas con frío y cúpula (curva o recta).",
         "ayuda": "Adicional: cierran la cúpula del lado del vendedor." }
     ],
+    "mostrador": [
+      { "id": "largo", "nombre": "Largo", "tipo": "select", "unidad": "mm", "default": 900, "valores": [600, 900, 1200, 1500],
+        "ayuda": "Tapa de inox a la altura de la mesada; el faldón sigue el color de la línea." }
+    ],
+    "union": [],
     "remate": [
       { "id": "valor", "nombre": "Remate", "tipo": "select", "default": "ninguno", "valores": ["ninguno", "mostrador"],
         "etiquetas": { "ninguno": "Ninguno", "mostrador": "Mostrador" },

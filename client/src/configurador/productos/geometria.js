@@ -112,3 +112,10 @@ export const tramos = (largo, paso) => {
   const cortes = Array.from({ length: n + 1 }, (_, i) => -largo / 2 + (largo * i) / n);
   return { cortes, tramos: cortes.slice(0, -1).map((x, i) => /** @type {[number, number]} */ ([x, cortes[i + 1]])) };
 };
+
+/**
+ * ¿La línea lleva el equipo dentro de la batea? Solo si es equipada y con el equipo incorporado
+ * (remoto va afuera; semi-equipada no trae equipo, lo pone el cliente).
+ * @param {Record<string, unknown>} linea
+ */
+export const hayEquipoIncorporado = (linea) => linea.equipamiento === 'equipada' && linea.ubicacionEquipo === 'incorporado';

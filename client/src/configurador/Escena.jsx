@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Canvas } from '@react-three/fiber';
+import { Canvas, useThree } from '@react-three/fiber';
 import { Bounds, Environment, Grid, Lightformer, OrbitControls, useBounds } from '@react-three/drei';
 import { Bloom, EffectComposer, ToneMapping } from '@react-three/postprocessing';
 import { ToneMappingMode } from 'postprocessing';
@@ -29,12 +29,36 @@ const Reencuadre = ({ clave }) => {
   return null;
 };
 
+/** Dirección de la cámara para cada vista (se reencuadra con Bounds, así la distancia la pone el fit). */
+const DIRECCION_VISTA = /** @type {Record<string, [number, number, number]>} */ ({
+  cliente: [-1.8, 1.7, 4.5],   // de frente y del lado de la silueta
+  vendedor: [1.8, 1.7, -4.5],  // desde atrás: mesada, depósito y puertas traseras
+});
+
+/**
+ * Lleva la cámara al lado pedido y reencuadra. `n` cambia en cada clic, así se puede volver a una
+ * vista aunque después se haya girado la cámara con el mouse.
+ * @param {object} props
+ * @param {{ lado: string, n: number }} props.vista
+ */
+const CambiarVista = ({ vista }) => {
+  const bounds = useBounds();
+  const camera = useThree((s) => s.camera);
+  useEffect(() => {
+    if (vista.n === 0) return; // al abrir, la cámara ya arranca del lado del cliente
+    camera.position.set(...(DIRECCION_VISTA[vista.lado] ?? DIRECCION_VISTA.cliente));
+    bounds.refresh().clip().fit();
+  }, [bounds, camera, vista.n, vista.lado]);
+  return null;
+};
+
 /**
  * @param {object} props
+ * @param {{ lado: string, n: number }} props.vista  lado desde el que se mira (botones Cliente / Vendedor)
  * @param {Record<string, unknown>} props.linea  opciones generales de la línea
  * @param {Record<string, unknown>} props.batea  la batea a mostrar (por ahora, la primera de la línea)
  */
-const Escena = ({ linea, batea }) => {
+const Escena = ({ vista, linea, batea }) => {
   const largo = Number(batea.largo);
   const xPersona = -(largo / 2000) - SEPARACION_PERSONA;
 
@@ -69,6 +93,7 @@ const Escena = ({ linea, batea }) => {
 
       <Bounds fit clip observe margin={1.2}>
         <Reencuadre clave={`${largo}-${batea.cupula}-${batea.estructura ?? ''}`} />
+        <CambiarVista vista={vista} />
         <Batea batea={batea} linea={linea} />
         <Persona x={xPersona} />
       </Bounds>

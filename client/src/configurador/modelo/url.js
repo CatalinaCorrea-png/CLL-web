@@ -5,7 +5,8 @@
 //   v  versión del catálogo.
 //   l  un carácter por opción general, en el orden del catálogo: índice del valor en `valores`
 //      en base 36 (para `color`, índice en la paleta del material), o "-" si no aplica.
-//   m  módulos separados por ".": letra del tipo (r remate, b batea, e esquina) + un carácter
+//   m  módulos separados por ".": letra del tipo (r remate, b batea, e esquina, o mostrador intermedio,
+//      u unión directa, que no lleva opciones) + un carácter
 //      por opción del módulo, igual que en `l`. Los bool son 0/1.
 //
 // ⚠️ Los links dependen del ORDEN de las opciones y de sus valores en el catálogo. Si se agregan
@@ -56,9 +57,9 @@ const MIGRACIONES = {
  */
 
 /** @type {Record<string, string>} */
-const LETRA_DE_TIPO = { remate: 'r', batea: 'b', esquina: 'e' };
+const LETRA_DE_TIPO = { remate: 'r', batea: 'b', esquina: 'e', mostrador: 'o', union: 'u' };
 /** @type {Record<string, string>} */
-const TIPO_DE_LETRA = { r: 'remate', b: 'batea', e: 'esquina' };
+const TIPO_DE_LETRA = { r: 'remate', b: 'batea', e: 'esquina', o: 'mostrador', u: 'union' };
 const SIN_VALOR = '-';
 
 /**

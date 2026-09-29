@@ -12,6 +12,12 @@ const AVISO =
   'Este planificador es una simulación para que te hagas una idea de tu equipo. Cuando nos mandes tu configuración, ' +
   'el equipo de CLL te va a asesorar para definir cada detalle: medidas especiales, instalación y lo que necesites.';
 
+// Botones de vista sobre el 3D (el Prompt 7 suma frente, costado, perspectiva y arriba).
+const VISTAS = [
+  { lado: 'cliente', texto: 'Cliente' },
+  { lado: 'vendedor', texto: 'Vendedor' },
+];
+
 // Paso 1: elegir el producto. Si la URL ya trae ?producto=bateas (o una configuración), se abre directo la batea.
 const Configurador = () => {
   const [params] = useSearchParams();
@@ -24,6 +30,8 @@ const ConfiguradorBatea = () => {
   useUrlConfig();
   const config = useConfigurador((s) => s.config);
   const [panelAbierto, setPanelAbierto] = useState(false);
+  // Lado desde el que se mira; n sube en cada clic para poder volver a la misma vista
+  const [vista, setVista] = useState({ lado: 'cliente', n: 0 });
   const barra = useRef(/** @type {HTMLDivElement | null} */ (null));
   const listo = config !== null;
 
@@ -61,7 +69,20 @@ const ConfiguradorBatea = () => {
       <div className="cfg-layout">
         <PanelOpciones mostrar={panelAbierto} onCerrar={() => setPanelAbierto(false)} />
         <div className="cfg-visor">
-          <Escena linea={config.linea} batea={primeraBatea} />
+          <Escena vista={vista} linea={config.linea} batea={primeraBatea} />
+          <div className="cfg-vistas" role="group" aria-label="Vista">
+            {VISTAS.map(({ lado, texto }) => (
+              <button
+                key={lado}
+                type="button"
+                className={`cfg-boton ${vista.lado === lado ? 'activo' : ''}`}
+                aria-pressed={vista.lado === lado}
+                onClick={() => setVista(({ n }) => ({ lado, n: n + 1 }))}
+              >
+                {texto}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
     </div>

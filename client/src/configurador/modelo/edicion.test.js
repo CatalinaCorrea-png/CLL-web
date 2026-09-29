@@ -3,7 +3,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import catalogo from './catalogo.json' with { type: 'json' };
 import { configuracionPorDefecto, crearEsquema } from './esquema.js';
-import { normalizar, agregarBatea, quitarBatea, puedeAgregarBatea, puedeQuitarBatea, contarBateas } from './edicion.js';
+import { normalizar, agregarBatea, quitarBatea, puedeAgregarBatea, puedeQuitarBatea, contarBateas, cambiarUnion } from './edicion.js';
 
 const esquema = crearEsquema(catalogo);
 const base = () => configuracionPorDefecto(catalogo);
@@ -151,4 +151,36 @@ test('no se puede quitar la única batea ni algo que no es batea', () => {
   assert.equal(quitarBatea(c, 1), c);
   assert.deepEqual(puedeQuitarBatea(c, 1), { ok: false, motivo: 'La línea necesita al menos una batea.' });
   assert.equal(puedeQuitarBatea(agregarBatea(c, catalogo), 2).ok, false); // es una esquina
+});
+
+// ---------------------------------------------------------------- uniones
+test('cambiarUnion: esquina → mostrador → directa → esquina (copia la cúpula de la batea anterior)', () => {
+  let c = agregarBatea(base(), catalogo);
+  c = normalizar({ ...c, modulos: c.modulos.map((m, i) => (i === 1 ? { ...m, cupula: 'cupula_recta' } : m)) }, catalogo);
+
+  const mostrador = cambiarUnion(c, catalogo, 2, 'mostrador');
+  assert.deepEqual(mostrador.modulos[2], { tipo: 'mostrador', largo: 900 });
+  assert.ok(esValida(mostrador));
+
+  const directa = cambiarUnion(mostrador, catalogo, 2, 'union');
+  assert.deepEqual(directa.modulos[2], { tipo: 'union' });
+  assert.ok(esValida(directa));
+
+  const esquina = cambiarUnion(directa, catalogo, 2, 'esquina');
+  assert.equal(esquina.modulos[2].tipo, 'esquina');
+  assert.equal(esquina.modulos[2].cupula, 'cupula_recta');
+  assert.ok(esValida(esquina));
+});
+
+test('cambiarUnion no toca bateas ni remates, ni tipos inexistentes', () => {
+  const c = agregarBatea(base(), catalogo);
+  assert.equal(cambiarUnion(c, catalogo, 1, 'mostrador'), c); // es una batea
+  assert.equal(cambiarUnion(c, catalogo, 0, 'mostrador'), c); // es un remate
+  assert.equal(cambiarUnion(c, catalogo, 2, 'puente'), c);
+});
+
+test('quitar una batea unida por un mostrador saca también el mostrador', () => {
+  const c = cambiarUnion(agregarBatea(base(), catalogo), catalogo, 2, 'mostrador');
+  const sin = quitarBatea(c, 3);
+  assert.deepEqual(sin.modulos.map((m) => m.tipo), ['remate', 'batea', 'remate']);
 });

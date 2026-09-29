@@ -27,6 +27,8 @@ const COLOR_ALUMINIO = '#cfd4d8';   // arcos y perfiles de la parte de arriba
  * @property {THREE.MeshStandardMaterial} aluminio  arcos, perfil superior y tirantes de la parte de arriba
  * @property {THREE.MeshPhysicalMaterial} vidrio   transparente simple (sin transmission, liviano para mobile)
  * @property {THREE.MeshStandardMaterial} led      emisivo por encima de 1 y sin tone mapping: es lo único que toma el Bloom
+ * @property {THREE.MeshStandardMaterial} acrilico puertas traseras: translúcido esmerilado
+ * @property {THREE.MeshStandardMaterial} rejillaVentilacion  chapa perforada en la pared del costado del equipo (textura generada por código)
  * @property {THREE.MeshStandardMaterial} faldon  franja del frente: pintura si lleva color, chapa blanca si no; inox con cuerpo de inox
  * @property {THREE.MeshStandardMaterial} zocalo  base: pintura si lleva color, chapa blanca si no; inox con cuerpo de inox
  * @property {THREE.MeshStandardMaterial} tina    bacha, respaldo y respaldo trasero: chapa blanca o inox
@@ -38,6 +40,30 @@ const COLOR_ALUMINIO = '#cfd4d8';   // arcos y perfiles de la parte de arriba
  * @param {THREE.MeshStandardMaterialParameters} params
  */
 const estandar = (name, params) => Object.assign(new THREE.MeshStandardMaterial(params), { name });
+
+/**
+ * Textura de chapa perforada (agujeros redondos oscuros sobre gris), generada en un canvas:
+ * no hace falta ningún archivo de imagen. Cada repetición es un agujero de ~12 mm.
+ * @param {number} repX  repeticiones a lo ancho de la cara
+ * @param {number} repY  repeticiones a lo alto
+ * @returns {THREE.CanvasTexture}
+ */
+const texturaPerforada = (repX, repY) => {
+  const lienzo = document.createElement('canvas');
+  lienzo.width = lienzo.height = 32;
+  const g = /** @type {CanvasRenderingContext2D} */ (lienzo.getContext('2d'));
+  g.fillStyle = '#b9c0c6';
+  g.fillRect(0, 0, 32, 32);
+  g.fillStyle = '#2f353b';
+  g.beginPath();
+  g.arc(16, 16, 9, 0, Math.PI * 2);
+  g.fill();
+  const t = new THREE.CanvasTexture(lienzo);
+  t.wrapS = t.wrapT = THREE.RepeatWrapping;
+  t.repeat.set(repX, repY);
+  t.colorSpace = THREE.SRGBColorSpace;
+  return t;
+};
 
 /**
  * Materiales de la batea según las opciones de la línea (material, color, tina, bandeja).
@@ -65,10 +91,19 @@ export const useMateriales = (linea) => {
       { name: 'vidrio' }
     ),
     led: estandar('led', { color: '#ffffff', emissive: '#f2f7ff', emissiveIntensity: 4, toneMapped: false }),
+    acrilico: estandar('acrilico', {
+      color: '#eef6f8', metalness: 0, roughness: 0.4, transparent: true, opacity: 0.45,
+      depthWrite: false, side: THREE.DoubleSide,
+    }),
+    // PROVISORIO: repeticiones pensadas para la pared del costado del equipo (~0,92 m de fondo × 0,23 m de alto)
+    rejillaVentilacion: estandar('rejillaVentilacion', { map: texturaPerforada(77, 20), metalness: 0.4, roughness: 0.5 }),
   }), []);
 
   // Liberar la memoria de GPU al desmontar
-  useEffect(() => () => { Object.values(base).forEach((m) => m.dispose()); }, [base]);
+  useEffect(() => () => {
+    base.rejillaVentilacion.map?.dispose();
+    Object.values(base).forEach((m) => m.dispose());
+  }, [base]);
 
   // Recolorear en vivo: color de la pintura y material de las bandejas
   const hexPintura = paletaDeColor(catalogo, linea.material)?.colores.find((c) => c.id === linea.color)?.hex;

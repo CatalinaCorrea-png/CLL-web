@@ -2,7 +2,8 @@
 // JS puro (sin React ni three): lo usa el client (URL, store) y el server (revalidar el pedido).
 // Se edita SOLO en client/src/configurador/modelo/; el server tiene una copia (npm run sync-modelo).
 //
-// Una línea es: remate – batea – [esquina – batea] × 0..2 – remate.
+// Una línea es: remate – batea – [unión – batea] × 0..2 – remate, donde la unión es una esquina,
+// un mostrador intermedio o una unión directa (catalogo.uniones).
 // Formato:
 //   { linea: { material, color, frio, ... },
 //     modulos: [ { tipo: 'remate', valor }, { tipo: 'batea', largo, cupula, ... }, { tipo: 'esquina', forma, version }, ... ] }
@@ -23,7 +24,9 @@ import { opcionesDeshabilitadas, paletaDeColor } from './reglas.js';
  * @property {boolean} [ocultarSiNoAplica]  cuando está deshabilitada no se muestra y su valor se ignora al validar
  */
 
-const TIPOS_MODULO = /** @type {const} */ (['remate', 'batea', 'esquina']);
+const TIPOS_MODULO = /** @type {const} */ (['remate', 'batea', 'esquina', 'mostrador', 'union']);
+
+/** @typedef {typeof TIPOS_MODULO[number]} TipoModulo */
 
 /**
  * Campo zod para una opción 'select' o 'bool'. Las que dependen de otra (soloSi) son opcionales:
@@ -75,16 +78,19 @@ export const crearEsquema = (catalogo) => {
       const { linea } = config;
       const modulos = /** @type {Array<Record<string, unknown>>} */ (config.modulos);
 
-      // 1) Estructura: remate – batea – [esquina – batea]… – remate, con 1..maxBateas bateas
+      // 1) Estructura: remate – batea – [unión – batea]… – remate, con 1..maxBateas bateas.
+      //    La unión puede ser cualquiera de catalogo.uniones (esquina, mostrador, directa).
       const tipos = modulos.map((m) => m.tipo);
       const interior = tipos.slice(1, -1);
+      /** @type {unknown[]} */
+      const uniones = catalogo.uniones.valores;
       const alternaBien = interior.length % 2 === 1 &&
-        interior.every((t, i) => t === (i % 2 === 0 ? 'batea' : 'esquina'));
+        interior.every((t, i) => (i % 2 === 0 ? t === 'batea' : uniones.includes(t)));
       if (tipos.length < 3 || tipos[0] !== 'remate' || tipos[tipos.length - 1] !== 'remate' || !alternaBien) {
         ctx.addIssue({
           code: 'custom',
           path: ['modulos'],
-          message: 'La línea tiene que ser: remate – batea – (esquina – batea)… – remate.',
+          message: 'La línea tiene que ser: remate – batea – (unión – batea)… – remate.',
         });
         return; // sin estructura válida, el resto de los chequeos no tiene sentido
       }
@@ -152,7 +158,7 @@ export const crearEsquema = (catalogo) => {
  * Las opciones con `copiarDelAnterior` toman el valor del módulo anterior si lo tiene
  * (p. ej. una esquina nueva copia la cúpula de la batea de su izquierda).
  * @param {Catalogo} catalogo
- * @param {'remate' | 'batea' | 'esquina'} tipo
+ * @param {TipoModulo} tipo
  * @param {Record<string, unknown>} [anterior]  módulo que queda a la izquierda del nuevo
  * @returns {Record<string, unknown>}
  */

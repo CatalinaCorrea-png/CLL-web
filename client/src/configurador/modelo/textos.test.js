@@ -3,7 +3,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import catalogo from './catalogo.json' with { type: 'json' };
 import { configuracionPorDefecto } from './esquema.js';
-import { agregarBatea } from './edicion.js';
+import { agregarBatea, cambiarUnion } from './edicion.js';
 import { formatearMetros, textoValor, nombreModulo } from './textos.js';
 
 test('metros con coma decimal', () => {
@@ -23,5 +23,14 @@ test('nombres de los módulos según su posición', () => {
   assert.deepEqual(
     c.modulos.map((_, i) => nombreModulo(c, i, catalogo)),
     ['Remate izquierdo', 'Batea 1', 'Esquina 1', 'Batea 2', 'Remate derecho']
+  );
+});
+
+test('nombres de mostradores y uniones directas', () => {
+  let c = agregarBatea(agregarBatea(configuracionPorDefecto(catalogo), catalogo), catalogo);
+  c = cambiarUnion(cambiarUnion(c, catalogo, 2, 'mostrador'), catalogo, 4, 'union');
+  assert.deepEqual(
+    c.modulos.map((_, i) => nombreModulo(c, i, catalogo)),
+    ['Remate izquierdo', 'Batea 1', 'Mostrador 1', 'Batea 2', 'Unión 1', 'Batea 3', 'Remate derecho']
   );
 });

@@ -58,7 +58,12 @@ test('catálogo: cada opción tiene nombre y cada valor de texto tiene etiqueta 
       if (typeof v === 'string') assert.ok(o.etiquetas?.[v], `"${o.id}": el valor "${v}" no tiene etiqueta`);
     }
   }
-  assert.deepEqual(Object.keys(catalogo.nombresModulo), ['batea', 'esquina', 'remate']);
+  assert.deepEqual(Object.keys(catalogo.nombresModulo), ['batea', 'esquina', 'mostrador', 'union', 'remate']);
+  // Cada tipo de unión tiene su etiqueta, y existe en los módulos
+  for (const u of catalogo.uniones.valores) {
+    assert.ok(/** @type {Record<string, string>} */ (catalogo.uniones.etiquetas)[u], u);
+    assert.ok(u in catalogo.modulos, u);
+  }
 });
 
 // ---------------------------------------------------------------- válidas
@@ -239,3 +244,26 @@ test('zonaColor: faldón, zócalo o los dos con chapa; con inox no se elige', ()
   delete inox.linea.tina;
   assert.deepEqual(errores(inox), ['El acero inoxidable no se pinta.']); // queda zonaColor con inox
 });
+
+// ---------------------------------------------------------------- uniones: mostrador intermedio y directa
+const MOSTRADOR_INTERMEDIO = { tipo: 'mostrador', largo: 900 };
+const DIRECTA = { tipo: 'union' };
+
+test('uniones: mostrador intermedio, directa y esquinas mezcladas son válidas', () => {
+  assert.deepEqual(errores(config({ modulos: [REMATE, BATEA, MOSTRADOR_INTERMEDIO, BATEA, REMATE] })), []);
+  assert.deepEqual(errores(config({ modulos: [REMATE, BATEA, DIRECTA, BATEA, REMATE] })), []);
+  assert.deepEqual(errores(config({ modulos: [MOSTRADOR, BATEA, ESQUINERO, BATEA, { tipo: 'mostrador', largo: 1500 }, BATEA, REMATE] })), []);
+});
+
+test('uniones inválidas: en la punta, largo fuera de catálogo, directa con opciones', () => {
+  assert.ok(errores(config({ modulos: [REMATE, MOSTRADOR_INTERMEDIO, BATEA, REMATE] })).length > 0);
+  assert.ok(errores(config({ modulos: [REMATE, BATEA, DIRECTA, REMATE] })).length > 0);
+  assert.match(errores(config({ modulos: [REMATE, BATEA, { tipo: 'mostrador', largo: 2000 }, BATEA, REMATE] }))[0], /largo/);
+  assert.ok(errores(config({ modulos: [REMATE, BATEA, { tipo: 'union', largo: 900 }, BATEA, REMATE] })).length > 0);
+});
+
+test('el máximo sigue siendo 3 bateas aunque las uniones sean mostradores o directas', () => {
+  const cuatro = [REMATE, BATEA, MOSTRADOR_INTERMEDIO, BATEA, DIRECTA, BATEA, MOSTRADOR_INTERMEDIO, BATEA, REMATE];
+  assert.deepEqual(errores(config({ modulos: cuatro })), ['La línea puede tener hasta 3 bateas.']);
+});
+

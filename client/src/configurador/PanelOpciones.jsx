@@ -14,6 +14,11 @@ import ConMotivo from './ConMotivo';
 const OPCIONES_LINEA = /** @type {OpcionUI[]} */ (/** @type {unknown} */ (catalogo.opcionesLinea));
 const OPCIONES_MODULO = /** @type {Record<string, OpcionUI[]>} */ (/** @type {unknown} */ (catalogo.modulos));
 
+// Selector del tipo de unión entre bateas, armado del catálogo como si fuera una opción más.
+const OPCION_UNION = /** @type {OpcionUI} */ ({ id: 'tipoUnion', tipo: 'select', ...catalogo.uniones });
+/** @type {string[]} */
+const TIPOS_UNION = catalogo.uniones.valores;
+
 /**
  * Detalle corto que se muestra debajo del nombre de cada módulo en la fila de "Tu línea".
  * @param {Record<string, unknown>} modulo
@@ -22,6 +27,8 @@ const detalleModulo = (modulo) => {
   const opcion = (/** @type {string} */ id) => OPCIONES_MODULO[String(modulo.tipo)]?.find((o) => o.id === id) ?? { id, nombre: id, tipo: 'select' };
   if (modulo.tipo === 'batea') return textoValor(opcion('largo'), modulo.largo);
   if (modulo.tipo === 'esquina') return textoValor(opcion('forma'), modulo.forma);
+  if (modulo.tipo === 'mostrador') return textoValor(opcion('largo'), modulo.largo);
+  if (modulo.tipo === 'union') return 'Directa';
   return modulo.valor === 'mostrador' ? 'Mostrador' : '—';
 };
 
@@ -40,6 +47,7 @@ const PanelOpciones = ({ mostrar, onCerrar }) => {
   const setOpcionModulo = useConfigurador((s) => s.setOpcionModulo);
   const agregarBatea = useConfigurador((s) => s.agregarBatea);
   const quitarBatea = useConfigurador((s) => s.quitarBatea);
+  const cambiarUnion = useConfigurador((s) => s.cambiarUnion);
 
   const deshabilitadas = useMemo(() => (config ? opcionesDeshabilitadas(config, catalogo) : []), [config]);
   if (!config) return null;
@@ -104,6 +112,14 @@ const PanelOpciones = ({ mostrar, onCerrar }) => {
 
             <div className="cfg-editor">
               <h4 className="cfg-editor-titulo">{nombreModulo(config, seleccionado, catalogo)}</h4>
+              {TIPOS_UNION.includes(String(modulo.tipo)) && (
+                <CampoOpcion
+                  idBase={`cfg-m${seleccionado}`}
+                  opcion={OPCION_UNION}
+                  valor={modulo.tipo}
+                  onCambio={(v) => cambiarUnion(seleccionado, String(v))}
+                />
+              )}
               {(OPCIONES_MODULO[String(modulo.tipo)] ?? [])
                 // Las opciones con `ocultarSiNoAplica` (la estructura) desaparecen cuando no aplican;
                 // el resto se muestra deshabilitado con el motivo.

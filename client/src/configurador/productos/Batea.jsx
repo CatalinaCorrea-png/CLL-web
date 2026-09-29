@@ -1,5 +1,5 @@
 // Batea generada por código a partir de su configuración: cuerpo, tina, mesada, laterales e interior (6.1)
-// y la parte de arriba según el tipo (6.2, en ParteSuperior.jsx). Depósito y equipo, en el 6.3.
+// y la parte de arriba según el tipo (6.2, en ParteSuperior.jsx); adicionales (6.3, en Adicionales.jsx).
 // Materiales (especificación v5): el color va en el faldón, el zócalo o los dos (lo sin color, chapa blanca);
 // tina y respaldo trasero son de chapa blanca o de inox (siempre inox con cuerpo de inox); laterales de chapa
 // blanca con remate de inox (todo de inox con cuerpo de inox). Los costados de la tina son la cara interior
@@ -12,9 +12,10 @@ import { Instances, Instance } from '@react-three/drei';
 import * as THREE from 'three';
 import { useMateriales } from './materiales.js';
 import { MEDIDAS } from './medidas.js';
-import { FRENTE, FONDO, PARED_TRASERA, BORDE_LATERAL } from './geometria.js';
+import { FRENTE, FONDO, PARED_TRASERA, BORDE_LATERAL, hayEquipoIncorporado } from './geometria.js';
 import { Caja } from './piezas.jsx';
 import ParteSuperior from './ParteSuperior';
+import Adicionales from './Adicionales';
 
 const Z_INT_FONDO = PARED_TRASERA + 0.02;          // interior de la tina: de la pared trasera…
 const Z_INT_FRENTE = FRENTE - 0.09;                // …a la pared del frente
@@ -201,9 +202,10 @@ const Batea = ({ batea, linea }) => {
         </mesh>
       )))}
 
-      {/* 2. Zócalo, retirado hacia adentro. Lleva el color si se eligió (zonaColor) */}
+      {/* 2. Zócalo, retirado hacia adentro. Lleva el color si se eligió (zonaColor).
+          Con equipo incorporado se acorta: su costado derecho es el lugar del equipo (Adicionales). */}
       <Caja
-        x={[-L / 2 + m.retiroZocaloCostado, L / 2 - m.retiroZocaloCostado]}
+        x={[-L / 2 + m.retiroZocaloCostado, L / 2 - m.retiroZocaloCostado - (hayEquipoIncorporado(linea) ? m.anchoEquipo : 0)]}
         y={[m.altoPatas, m.altoZocalo]}
         z={[FONDO + 0.03, FRENTE - m.retiroZocaloFrente]}
         material={materiales.zocalo}
@@ -248,6 +250,9 @@ const Batea = ({ batea, linea }) => {
 
       {/* 9. Parte de arriba según el tipo (cúpula curva / recta, sin cúpula con iluminación, sin cúpula) */}
       <ParteSuperior batea={batea} anchoInterior={2 * xi} materiales={materiales} />
+
+      {/* 10. Adicionales: depósito, puertas traseras de acrílico y equipo incorporado (6.3) */}
+      <Adicionales batea={batea} linea={linea} largo={L} xi={xi} materiales={materiales} />
     </group>
   );
 };

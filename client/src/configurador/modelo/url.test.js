@@ -3,7 +3,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import catalogo from './catalogo.json' with { type: 'json' };
 import { configuracionPorDefecto, crearEsquema } from './esquema.js';
-import { agregarBatea, normalizar } from './edicion.js';
+import { agregarBatea, normalizar, cambiarUnion } from './edicion.js';
 import { serializar, deserializar, configDesdeLink } from './url.js';
 
 const esquema = crearEsquema(catalogo);
@@ -161,4 +161,16 @@ test('un link de la versión 4 (frío estático, semi-equipada) abre igual con e
   assert.ok(esquema.safeParse(config).success);
   // v5: material, color, zona, tina, producto, frío, bandeja, rejilla, equipamiento, ubicación
   assert.deepEqual(serializar(config, catalogo), { v: '5', l: '031110--0-', m: 'r0.b22-00.r0' });
+});
+
+// ---------------------------------------------------------------- uniones en la URL
+test('mostrador intermedio (o) y unión directa (u) van y vuelven igual', () => {
+  let c = agregarBatea(agregarBatea(configuracionPorDefecto(catalogo), catalogo), catalogo);
+  c = cambiarUnion(c, catalogo, 2, 'mostrador');
+  c = cambiarUnion(c, catalogo, 4, 'union');
+  c = normalizar({ ...c, modulos: c.modulos.map((m, i) => (i === 2 ? { ...m, largo: 1200 } : m)) }, catalogo);
+  const { m } = serializar(c, catalogo);
+  assert.equal(m, 'r0.b22-00.o2.b22-00.u.b22-00.r0');
+  assert.deepEqual(idaYVuelta(c), c);
+  assert.ok(esquema.safeParse(c).success);
 });

@@ -29,4 +29,13 @@ export const MEDIDAS = {
   altoVidrioBajo: 0.18,        // PROVISORIO: vidrio bajo del frente (sin cúpula con iluminación)
   altoDeflector: 0.22,         // PROVISORIO: vidrio deflector (sin cúpula)
   inclinacionDeflector: 15,    // PROVISORIO: grados hacia adentro
+
+  // Adicionales (prompt 6.3): no hay fotos, todo PROVISORIO
+  anchoEquipo: 0.55,           // PROVISORIO: lugar para el equipo incorporado, en el costado derecho (+X)
+  margenDeposito: 0.06,        // PROVISORIO: separación del depósito con el lateral y con el lugar del equipo
+  anchoPuertaDeposito: 0.5,    // PROVISORIO: ancho aproximado de cada puerta batiente del depósito
+  bajoDeposito: 0.04,          // PROVISORIO: las puertas arrancan esto por encima del zócalo…
+  topeDeposito: 0.07,          // PROVISORIO: …y terminan esto por debajo de la mesada
+  espesorPuerta: 0.012,        // PROVISORIO: cuánto sobresalen las puertas del respaldo trasero
+  espesorAcrilico: 0.006,      // PROVISORIO: puertas traseras de acrílico
 };
