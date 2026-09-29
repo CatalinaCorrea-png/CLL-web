@@ -7,7 +7,10 @@ const RADIO_CUERPO = 0.2;
 const ALTO_CUERPO = ALTURA_PERSONA - RADIO_CABEZA * 2;
 const LARGO_CAPSULA = ALTO_CUERPO - RADIO_CUERPO * 2;
 
-// x: posición en metros sobre el eje del largo.
+/**
+ * @param {object} props
+ * @param {number} props.x  posición en metros sobre el eje del largo
+ */
 const Persona = ({ x }) => {
   return (
     <group position={[x, 0, 0]}>

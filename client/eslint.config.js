@@ -36,11 +36,15 @@ export default [
     },
   },
   {
-    // Configurador 3D: en React Three Fiber, props como position, args o intensity
-    // son válidas en los elementos de three, pero esta regla solo conoce atributos del DOM.
+    // Configurador 3D:
+    // - en React Three Fiber, props como position, args o intensity son válidas en los
+    //   elementos de three, pero no-unknown-property solo conoce atributos del DOM.
+    // - las props se tipan con JSDoc y se chequean con checkJs (jsconfig.json, `npm run tipos`),
+    //   así que prop-types sobra.
     files: ['src/configurador/**/*.{js,jsx}'],
     rules: {
       'react/no-unknown-property': 'off',
+      'react/prop-types': 'off',
     },
   },
 ]

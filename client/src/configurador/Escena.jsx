@@ -13,8 +13,12 @@ const COLOR_PISO = '#96c5f7';
 const COLOR_GRILLA = '#96c5f7';
 const COLOR_GRILLA_METRO = '#5387c0';
 
-// Reencuadra la cámara cuando cambia el largo. Bounds ya llama invalidate() mientras anima,
-// así que funciona con frameloop="demand".
+/**
+ * Reencuadra la cámara cuando cambia el largo. Bounds ya llama invalidate() mientras anima,
+ * así que funciona con frameloop="demand".
+ * @param {object} props
+ * @param {number} props.largo  largo en mm (solo se usa para disparar el reencuadre)
+ */
 const Reencuadre = ({ largo }) => {
   const bounds = useBounds();
   useEffect(() => {
@@ -23,7 +27,10 @@ const Reencuadre = ({ largo }) => {
   return null;
 };
 
-// largo en mm
+/**
+ * @param {object} props
+ * @param {number} props.largo  largo del mueble en mm
+ */
 const Escena = ({ largo }) => {
   const xPersona = -(largo / 2000) - SEPARACION_PERSONA;
 

@@ -5,7 +5,11 @@
 export const ALTO = 1.25;
 export const PROFUNDIDAD = 1.1;
 
-// largo en mm. Se cambia la geometría (args), no la escala, para no deformar detalles futuros.
+/**
+ * Se cambia la geometría (args), no la escala, para no deformar detalles futuros.
+ * @param {object} props
+ * @param {number} props.largo  largo del mueble en mm
+ */
 const Mueble = ({ largo }) => {
   return (
     <mesh position={[0, ALTO / 2, 0]}>
