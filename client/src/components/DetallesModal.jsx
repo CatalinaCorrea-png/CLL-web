@@ -102,6 +102,7 @@ export default DetallesModal;
 // Desventaja de este modal: Requiere un <div id="modal-root"></div> en el index.html.
 
 const colores = [
+    {"blanco": "#F1F0EA"},
     {"plata": "#DEDEDE"},
     {"oro": "#C4B98A"},
     {"amarillo": "#FFCC00"},

@@ -8,6 +8,7 @@
     "build": "vite build",
     "lint": "eslint .",
     "tipos": "tsc -p jsconfig.json",
+    "test": "node --test \"src/configurador/modelo/**/*.test.js\"",
     "preview": "vite preview",
     "start": "vite preview --host 0.0.0.0 --port 4173"
   },
@@ -23,6 +24,7 @@
     "react-dom": "~19.3.0",
     "react-router-dom": "^7.1.5",
     "three": "0.186.1",
+    "zod": "^4.6.5",
     "zustand": "^5.0.15"
   },
   "devDependencies": {
