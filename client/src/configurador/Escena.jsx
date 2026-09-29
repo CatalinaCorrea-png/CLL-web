@@ -1,6 +1,8 @@
 import { useEffect } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { Bounds, Environment, Grid, Lightformer, OrbitControls, useBounds } from '@react-three/drei';
+import { Bloom, EffectComposer, ToneMapping } from '@react-three/postprocessing';
+import { ToneMappingMode } from 'postprocessing';
 import Batea from './productos/Batea';
 import Persona from './Persona';
 
@@ -66,10 +68,17 @@ const Escena = ({ linea, batea }) => {
       />
 
       <Bounds fit clip observe margin={1.2}>
-        <Reencuadre clave={String(largo)} />
+        <Reencuadre clave={`${largo}-${batea.cupula}-${batea.estructura ?? ''}`} />
         <Batea batea={batea} linea={linea} />
         <Persona x={xPersona} />
       </Bounds>
+
+      {/* Bloom selectivo: solo brilla lo que supera el umbral (el LED, emisivo × 4 y sin tone mapping).
+          El EffectComposer apaga el tone mapping del renderer, así que se aplica acá al final. */}
+      <EffectComposer multisampling={4}>
+        <Bloom mipmapBlur luminanceThreshold={1.2} luminanceSmoothing={0.2} intensity={0.7} />
+        <ToneMapping mode={ToneMappingMode.ACES_FILMIC} />
+      </EffectComposer>
 
       {/* Ángulo polar limitado: la cámara no puede bajar del piso */}
       <OrbitControls

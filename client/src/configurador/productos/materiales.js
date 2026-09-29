@@ -13,6 +13,7 @@ const COLOR_CHAPA_BLANCA = '#ffffff'; // chapa blanca: tina, respaldo y laterale
 const COLOR_REJILLA = '#f5f7f8';    // alambre blanco
 const COLOR_BANDEJA_PREPINTADA = '#f1f3f2';
 const COLOR_OSCURO = '#3d4349';     // patas, ruedas y juntas del riel
+const COLOR_ALUMINIO = '#cfd4d8';   // arcos y perfiles de la parte de arriba
 
 /**
  * @typedef {object} MaterialesBatea
@@ -23,8 +24,9 @@ const COLOR_OSCURO = '#3d4349';     // patas, ruedas y juntas del riel
  * @property {THREE.MeshStandardMaterial} rejilla
  * @property {THREE.MeshStandardMaterial} bandeja
  * @property {THREE.MeshStandardMaterial} oscuro
- * @property {THREE.MeshPhysicalMaterial} vidrio  (lo usa la parte de arriba, prompt 6.2)
- * @property {THREE.MeshStandardMaterial} led     (lo usa la parte de arriba, prompt 6.2)
+ * @property {THREE.MeshStandardMaterial} aluminio  arcos, perfil superior y tirantes de la parte de arriba
+ * @property {THREE.MeshPhysicalMaterial} vidrio   transparente simple (sin transmission, liviano para mobile)
+ * @property {THREE.MeshStandardMaterial} led      emisivo por encima de 1 y sin tone mapping: es lo único que toma el Bloom
  * @property {THREE.MeshStandardMaterial} faldon  franja del frente: pintura si lleva color, chapa blanca si no; inox con cuerpo de inox
  * @property {THREE.MeshStandardMaterial} zocalo  base: pintura si lleva color, chapa blanca si no; inox con cuerpo de inox
  * @property {THREE.MeshStandardMaterial} tina    bacha, respaldo y respaldo trasero: chapa blanca o inox
@@ -54,11 +56,15 @@ export const useMateriales = (linea) => {
     rejilla: estandar('rejilla', { color: COLOR_REJILLA, metalness: 0.1, roughness: 0.5 }),
     bandeja: estandar('bandeja', { color: COLOR_BANDEJA_PREPINTADA, metalness: 0.1, roughness: 0.45 }),
     oscuro: estandar('oscuro', { color: COLOR_OSCURO, metalness: 0.2, roughness: 0.7 }),
+    aluminio: estandar('aluminio', { color: COLOR_ALUMINIO, metalness: 0.5, roughness: 0.35 }),
     vidrio: Object.assign(
-      new THREE.MeshPhysicalMaterial({ color: '#dff2f7', metalness: 0, roughness: 0.05, transparent: true, opacity: 0.25, depthWrite: false }),
+      new THREE.MeshPhysicalMaterial({
+        color: '#cfeef0', metalness: 0, roughness: 0.05, transparent: true, opacity: 0.32,
+        depthWrite: false, side: THREE.DoubleSide,
+      }),
       { name: 'vidrio' }
     ),
-    led: estandar('led', { color: '#ffffff', emissive: '#ffffff', emissiveIntensity: 2 }),
+    led: estandar('led', { color: '#ffffff', emissive: '#f2f7ff', emissiveIntensity: 4, toneMapped: false }),
   }), []);
 
   // Liberar la memoria de GPU al desmontar

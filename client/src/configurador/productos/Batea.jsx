@@ -1,44 +1,23 @@
-// Batea generada por código a partir de su configuración (prompt 6.1: cuerpo, tina, mesada, laterales e interior).
+// Batea generada por código a partir de su configuración: cuerpo, tina, mesada, laterales e interior (6.1)
+// y la parte de arriba según el tipo (6.2, en ParteSuperior.jsx). Depósito y equipo, en el 6.3.
 // Materiales (especificación v5): el color va en el faldón, el zócalo o los dos (lo sin color, chapa blanca);
-// tina y respaldo trasero son
-// de chapa blanca o de inox (siempre inox con cuerpo de inox); laterales de chapa blanca con remate de inox
-// (todo de inox con cuerpo de inox). Los costados de la tina son la cara interior de los laterales.
-// La parte de arriba (cúpulas y estructuras) va en el prompt 6.2; depósito y equipo en el 6.3.
+// tina y respaldo trasero son de chapa blanca o de inox (siempre inox con cuerpo de inox); laterales de chapa
+// blanca con remate de inox (todo de inox con cuerpo de inox). Los costados de la tina son la cara interior
+// de los laterales.
 //
-// Ejes (1 unidad = 1 metro):
-//   X = largo, centrado en 0 (los laterales van DENTRO del largo nominal).
-//   Y = altura, piso en 0.
-//   Z = profundidad: el CLIENTE mira desde +Z (frente); el VENDEDOR está en −Z (mesada).
-// Nada se escala: cada pieza se dimensiona con el largo, para no deformar perfiles ni detalles.
+// Ejes: ver geometria.js (X largo, Y altura, Z profundidad; el cliente mira desde +Z).
+// Los laterales van DENTRO del largo nominal. Nada se escala: cada pieza se dimensiona con el largo.
 import { useEffect, useMemo } from 'react';
 import { Instances, Instance } from '@react-three/drei';
 import * as THREE from 'three';
 import { useMateriales } from './materiales.js';
 import { MEDIDAS } from './medidas.js';
+import { FRENTE, FONDO, PARED_TRASERA, BORDE_LATERAL } from './geometria.js';
+import { Caja } from './piezas.jsx';
+import ParteSuperior from './ParteSuperior';
 
-const D = MEDIDAS.profundidad;
-const FRENTE = D / 2;                              // cara del frente (lado del cliente)
-const FONDO = -D / 2;                              // cara de atrás (lado del vendedor)
-const PARED_TRASERA = FONDO + MEDIDAS.anchoMesada; // donde termina la mesada y empieza la tina
 const Z_INT_FONDO = PARED_TRASERA + 0.02;          // interior de la tina: de la pared trasera…
 const Z_INT_FRENTE = FRENTE - 0.09;                // …a la pared del frente
-
-/**
- * Caja definida por sus límites en cada eje (más claro que centro + tamaño).
- * @param {object} props
- * @param {[number, number]} props.x
- * @param {[number, number]} props.y
- * @param {[number, number]} props.z
- * @param {THREE.Material} props.material
- */
-const Caja = ({ x, y, z, material }) => (
-  <mesh
-    position={[(x[0] + x[1]) / 2, (y[0] + y[1]) / 2, (z[0] + z[1]) / 2]}
-    material={material}
-  >
-    <boxGeometry args={[x[1] - x[0], y[1] - y[0], z[1] - z[0]]} />
-  </mesh>
-);
 
 /**
  * Divide un largo en paneles de ~MEDIDAS.largoPanel (bandejas, rejillas).
@@ -92,15 +71,6 @@ const Rejilla = ({ ancho, fondo, material, position = [0, 0, 0], rotation = [0, 
   );
 };
 
-// Borde superior del lateral en el plano (z, y), de adelante hacia atrás: frente, tramo
-// horizontal a la altura del riel, diagonal y tope. Lo usan el panel y el remate de inox.
-const ALTO_LATERAL = MEDIDAS.altoMesada + 0.05; // el lateral pasa un poco la mesada
-const BORDE_LATERAL = /** @type {Array<[number, number]>} */ ([
-  [FRENTE + MEDIDAS.salienteRiel, MEDIDAS.altoRiel + 0.05],
-  [0.22, MEDIDAS.altoRiel + 0.05], // PROVISORIO: dónde arranca la diagonal
-  [-0.15, ALTO_LATERAL],
-  [FONDO, ALTO_LATERAL],
-]);
 const ALTO_REMATE_INOX = 0.015; // PROVISORIO: ancho del remate de inox del borde superior
 
 /** Panel del lateral (siempre recto): frente vertical y borde superior en diagonal. */
@@ -275,6 +245,9 @@ const Batea = ({ batea, linea }) => {
 
       {/* 8. Interior según el frío */}
       <Interior anchoInterior={2 * xi} linea={linea} materiales={materiales} />
+
+      {/* 9. Parte de arriba según el tipo (cúpula curva / recta, sin cúpula con iluminación, sin cúpula) */}
+      <ParteSuperior batea={batea} anchoInterior={2 * xi} materiales={materiales} />
     </group>
   );
 };
