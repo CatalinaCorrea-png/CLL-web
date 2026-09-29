@@ -1,0 +1,87 @@
+/* =========================== Configurador 3D =========================
+   Mobile: el 3D arriba y el panel abajo.
+   Desde md (768px, mismo corte que el navbar): panel a la izquierda, 3D a la derecha.
+   ===================================================================== */
+
+.cfg-layout {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+}
+
+/* --- Visor 3D --- */
+.cfg-visor {
+  order: -1; /* en mobile va primero */
+  position: relative;
+  height: 55vh;
+  min-height: 320px;
+  background: var(--surface-soft);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  touch-action: none; /* el gesto de órbita no scrollea la página */
+}
+
+/* --- Panel de opciones --- */
+.cfg-panel {
+  padding: 1.4rem 1.5rem;
+  text-align: left;
+}
+/* El panel no "salta" como las tarjetas de .ice-card */
+.cfg-panel.ice-card:hover {
+  transform: none;
+  box-shadow: var(--shadow-sm);
+  border-color: var(--border);
+}
+.cfg-panel.ice-card:hover::before { opacity: 0; }
+
+.cfg-panel-title {
+  color: var(--brand);
+  font-size: 1.35rem;
+  font-weight: 700;
+  margin: .35rem 0 1.2rem;
+}
+
+.cfg-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  width: 100%;
+  font-weight: 600;
+  color: var(--text);
+}
+.cfg-valor {
+  font-size: .9rem;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.cfg-panel .form-range::-webkit-slider-thumb { background: var(--brand); }
+.cfg-panel .form-range::-moz-range-thumb { background: var(--brand); }
+
+.cfg-rango {
+  display: flex;
+  justify-content: space-between;
+  font-size: .78rem;
+  color: var(--text-soft);
+}
+
+.cfg-ayuda {
+  margin: 1.4rem 0 0;
+  font-size: .85rem;
+  color: var(--text-soft);
+}
+.cfg-ayuda i { color: var(--accent); margin-right: .35rem; }
+
+@media (min-width: 768px) {
+  .cfg-layout {
+    display: grid;
+    grid-template-columns: minmax(260px, 320px) 1fr;
+    align-items: start;
+  }
+  .cfg-visor {
+    order: 0;
+    height: min(70vh, 640px);
+  }
+}
