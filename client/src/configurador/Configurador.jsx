@@ -7,6 +7,7 @@ import VisorSinWebGL from './VisorSinWebGL';
 import { hayWebGL } from './webgl.js';
 import PanelOpciones from './PanelOpciones';
 import BotonCopiarLink from './BotonCopiarLink';
+import PedirPresupuesto from './PedirPresupuesto';
 import SelectorProducto from './SelectorProducto';
 import { useUrlConfig } from './useUrlConfig';
 import { useConfigurador } from './store.js';
@@ -44,6 +45,13 @@ const ConfiguradorBatea = () => {
   const [cotas, setCotas] = useState(() => !(import.meta.env.DEV && params.has('sinCotas')));
   // Sin WebGL (o si la escena falla) se muestran imágenes de referencia en lugar del 3D
   const [con3D, setCon3D] = useState(hayWebGL);
+  // Pedir presupuesto: la escena deja acá la función que saca la captura del 3D
+  const [presupuestoAbierto, setPresupuestoAbierto] = useState(false);
+  const capturador = useRef(/** @type {import('./Escena').Capturar | null} */ (null));
+  const abrirPresupuesto = () => {
+    if (con3D) setVista(({ n }) => ({ lado: 'perspectiva', n })); // la captura va en perspectiva: queda marcada
+    setPresupuestoAbierto(true);
+  };
   const barra = useRef(/** @type {HTMLDivElement | null} */ (null));
   const listo = config !== null;
 
@@ -73,6 +81,9 @@ const ConfiguradorBatea = () => {
             <i className="fa-solid fa-sliders"></i> Opciones
           </button>
           <BotonCopiarLink />
+          <button type="button" className="btn-ice cfg-accion" onClick={abrirPresupuesto}>
+            <i className="fa-solid fa-file-signature"></i> Pedir presupuesto
+          </button>
         </div>
       </div>
 
@@ -82,7 +93,7 @@ const ConfiguradorBatea = () => {
           {con3D ? (
             <>
               <LimiteError3D alFallar={() => setCon3D(false)}>
-                <Escena vista={vista} config={config} cotas={cotas} />
+                <Escena vista={vista} config={config} cotas={cotas} capturador={capturador} />
               </LimiteError3D>
               <div className="cfg-controles-visor">
                 <div className="cfg-vistas" role="group" aria-label="Vista">
@@ -113,6 +124,13 @@ const ConfiguradorBatea = () => {
           )}
         </div>
       </div>
+
+      <PedirPresupuesto
+        mostrar={presupuestoAbierto}
+        onCerrar={() => setPresupuestoAbierto(false)}
+        config={config}
+        capturar={con3D ? () => capturador.current?.() ?? Promise.resolve(null) : null}
+      />
     </div>
   );
 };

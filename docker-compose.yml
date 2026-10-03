@@ -31,6 +31,23 @@ services:
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
       CORS_ORIGIN: ${CORS_ORIGIN}
+      # Pedidos de presupuesto (POST /presupuestos). Ver .env.example.
+      # MAIL_PROVEEDOR: prueba (no manda: deja los mails como archivos) | smtp (Gmail) | resend
+      MAIL_PROVEEDOR: ${MAIL_PROVEEDOR:-prueba}
+      MAIL_VENTAS: ${MAIL_VENTAS:-}
+      MAIL_REMITENTE: ${MAIL_REMITENTE:-}
+      MAIL_TIEMPO_RESPUESTA: ${MAIL_TIEMPO_RESPUESTA:-}
+      SMTP_HOST: ${SMTP_HOST:-smtp.gmail.com}
+      SMTP_PORT: ${SMTP_PORT:-465}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASS: ${SMTP_PASS:-}
+      RESEND_API_KEY: ${RESEND_API_KEY:-}
+      # Capturas del 3D y mails de prueba: en volúmenes, así no se pierden al redeployar
+      CAPTURAS_DIR: /app/capturas
+      MAIL_CARPETA_PRUEBA: /app/mails-prueba
+    volumes:
+      - capturas:/app/capturas
+      - mails_prueba:/app/mails-prueba
     depends_on:
       - db
     expose:
@@ -53,6 +70,8 @@ services:
 
 volumes:
   mysql_data:
+  capturas:
+  mails_prueba:
 
 networks:
   appnet:

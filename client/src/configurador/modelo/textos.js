@@ -56,8 +56,49 @@ export const nombreModulo = (config, indice, catalogo) => {
  */
 
 /**
- * @typedef {OpcionConTextos & { id: string, nombre: string, tipo: string }} OpcionResumen
+ * Opción del catálogo con lo que usan los textos. `frase` es una plantilla con {valor} para leer la
+ * opción dentro de una oración ("tina de {valor}"); `frases` da el texto de cada valor (null = no se
+ * menciona). Sin ninguna de las dos, va la etiqueta en minúscula.
+ * @typedef {OpcionConTextos & { id: string, nombre: string, tipo: string, frase?: string,
+ *   frases?: Record<string, string | null> }} OpcionResumen
  */
+
+/**
+ * Opción de la configuración que aplica, con su valor.
+ * @typedef {{ opcion: OpcionResumen, valor: unknown }} ItemConfig
+ */
+
+/**
+ * Recorre la configuración: opciones generales y módulos, dejando afuera lo que no aplica
+ * (opciones deshabilitadas, remates sin mostrador). Base del resumen, las frases y el resumen corto.
+ * @param {ConfigParcial} config
+ * @param {Catalogo} catalogo
+ */
+const recorrer = (config, catalogo) => {
+  const deshabilitadas = opcionesDeshabilitadas(config, catalogo);
+  /** @param {string} id @param {number} [indice] */
+  const noAplica = (id, indice) =>
+    deshabilitadas.some((d) => d.opcion === id && (indice === undefined ? d.ambito === 'linea' : d.ambito === 'modulo' && d.indice === indice));
+
+  /** @type {ItemConfig[]} */
+  const linea = /** @type {OpcionResumen[]} */ (/** @type {unknown} */ (catalogo.opcionesLinea))
+    .filter((o) => !noAplica(o.id) && config.linea[o.id] !== undefined)
+    .map((opcion) => ({ opcion, valor: config.linea[opcion.id] }));
+
+  /** @type {Record<string, OpcionResumen[]>} */
+  const opcionesPorModulo = /** @type {any} */ (catalogo.modulos);
+  const modulos = config.modulos.flatMap((m, indice) => {
+    const tipo = String(m.tipo);
+    if (tipo === 'remate' && m.valor !== 'mostrador') return [];
+    /** @type {ItemConfig[]} */
+    const items = tipo === 'remate' ? [] : (opcionesPorModulo[tipo] ?? [])
+      .filter((o) => !noAplica(o.id, indice) && m[o.id] !== undefined)
+      .map((opcion) => ({ opcion, valor: m[opcion.id] }));
+    return [{ nombre: nombreModulo(config, indice, catalogo), tipo, items }];
+  });
+
+  return { linea, modulos };
+};
 
 /**
  * Texto de un valor para el resumen: sí/no en las opciones booleanas y el nombre del color de la paleta.
@@ -84,30 +125,63 @@ const textoResumen = (opcion, valor, catalogo, linea) => {
  * @returns {ResumenConfiguracion}
  */
 export const resumenConfiguracion = (config, catalogo) => {
-  const deshabilitadas = opcionesDeshabilitadas(config, catalogo);
-  /** @param {string} id @param {number} [indice] */
-  const noAplica = (id, indice) =>
-    deshabilitadas.some((d) => d.opcion === id && (indice === undefined ? d.ambito === 'linea' : d.ambito === 'modulo' && d.indice === indice));
-
-  const linea = /** @type {OpcionResumen[]} */ (/** @type {unknown} */ (catalogo.opcionesLinea))
-    .filter((o) => !noAplica(o.id) && config.linea[o.id] !== undefined)
-    .map((o) => ({ nombre: o.nombre, valor: textoResumen(o, config.linea[o.id], catalogo, config.linea) }));
-
-  /** @type {Record<string, OpcionResumen[]>} */
-  const opcionesPorModulo = /** @type {any} */ (catalogo.modulos);
+  const { linea, modulos } = recorrer(config, catalogo);
   /** @type {Record<string, string>} */
   const etiquetasUnion = catalogo.uniones.etiquetas;
-  const modulos = config.modulos.flatMap((m, indice) => {
-    const tipo = String(m.tipo);
-    if (tipo === 'remate' && m.valor !== 'mostrador') return [];
-    const nombre = nombreModulo(config, indice, catalogo);
-    if (tipo === 'union') return [{ nombre, filas: [{ nombre: catalogo.uniones.nombre, valor: etiquetasUnion.union }] }];
-    if (tipo === 'remate') return [{ nombre, filas: [{ nombre: 'Tipo', valor: 'Mostrador de remate' }] }];
-    const filas = (opcionesPorModulo[tipo] ?? [])
-      .filter((o) => !noAplica(o.id, indice) && m[o.id] !== undefined)
-      .map((o) => ({ nombre: o.nombre, valor: textoResumen(o, m[o.id], catalogo, config.linea) }));
-    return [{ nombre, filas }];
-  });
+  /** @param {ItemConfig} item */
+  const fila = ({ opcion, valor }) => ({ nombre: opcion.nombre, valor: textoResumen(opcion, valor, catalogo, config.linea) });
+  return {
+    linea: linea.map(fila),
+    modulos: modulos.map(({ nombre, tipo, items }) => ({
+      nombre,
+      filas: tipo === 'union' ? [{ nombre: catalogo.uniones.nombre, valor: etiquetasUnion.union }]
+        : tipo === 'remate' ? [{ nombre: 'Tipo', valor: 'Mostrador de remate' }]
+          : items.map(fila),
+    })),
+  };
+};
 
-  return { linea, modulos };
+/** Primera letra en minúscula ("Cúpula curva" → "cúpula curva"; "2,40 m" queda igual). */
+const minuscula = (/** @type {string} */ t) => t.charAt(0).toLocaleLowerCase('es') + t.slice(1);
+
+/**
+ * Cómo se lee una opción dentro de una frase, o null si no se menciona (p. ej. un "No" o "Ninguna").
+ * @param {OpcionResumen} opcion
+ * @param {unknown} valor
+ * @param {Catalogo} catalogo
+ * @param {Record<string, unknown>} linea
+ * @returns {string | null}
+ */
+const fraseDe = (opcion, valor, catalogo, linea) => {
+  if (opcion.tipo === 'bool') return valor ? (opcion.frase ?? minuscula(opcion.nombre)) : null;
+  if (opcion.frases && String(valor) in opcion.frases) return opcion.frases[String(valor)];
+  const texto = minuscula(textoResumen(opcion, valor, catalogo, linea));
+  return opcion.frase ? opcion.frase.replace('{valor}', texto) : texto;
+};
+
+/**
+ * La configuración en frases, para el resumen antes de pedir presupuesto. Ej.:
+ *   linea: "chapa galvanizada pintada, color rojo, color en faldón y zócalo, tina de chapa blanca, …"
+ *   modulos: [{ nombre: "Batea 1", texto: "2,40 m, sin cúpula con iluminación, estructura curva (arcos), con depósito" },
+ *             { nombre: "Esquina 1", texto: "esquinero, tipo mostrador" }, …]
+ * @param {ConfigParcial} config
+ * @param {Catalogo} catalogo
+ * @returns {{ linea: string, modulos: Array<{ nombre: string, texto: string }> }}
+ */
+export const frasesConfiguracion = (config, catalogo) => {
+  const { linea, modulos } = recorrer(config, catalogo);
+  /** @param {ItemConfig[]} items */
+  const frase = (items) => items
+    .map(({ opcion, valor }) => fraseDe(opcion, valor, catalogo, config.linea))
+    .filter((t) => t)
+    .join(', ');
+  return {
+    linea: frase(linea),
+    modulos: modulos.map(({ nombre, tipo, items }) => ({
+      nombre,
+      texto: tipo === 'union' ? 'directa (las bateas quedan pegadas)'
+        : tipo === 'remate' ? 'mostrador de remate'
+          : frase(items),
+    })),
+  };
 };

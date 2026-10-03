@@ -94,7 +94,7 @@ test('mails: tablas legibles, captura adjunta a ventas y textos del cliente esca
     ref: 'CLL-2026-0001', config: await configPorDefecto(), contacto, captura: decodificarCaptura(PNG_MINIMO), destinos,
   });
   assert.match(ventas.subject, /^\[CLL-2026-0001\] Pedido de presupuesto/);
-  assert.ok(!ventas.subject.includes('MEDIDA ESPECIAL'));
+  assert.ok(!ventas.subject.includes('NOTAS DEL CLIENTE'));
   assert.ok(ventas.html.includes('Carnicería &lt;Don José&gt;')); // escapado
   assert.ok(!ventas.html.includes('<Don José>'));
   assert.ok(ventas.html.includes('Opciones generales') && ventas.html.includes('Batea 1'));
@@ -106,13 +106,13 @@ test('mails: tablas legibles, captura adjunta a ventas y textos del cliente esca
   assert.equal(cliente.attachments.length, 0);
 });
 
-test('mails: marca MEDIDA ESPECIAL solo si el cliente escribió algo', async () => {
+test('mails: marca NOTAS DEL CLIENTE solo si el cliente escribió algo', async () => {
   const { ventas } = await armarMails({
     ref: 'CLL-2026-0002', config: await configPorDefecto(), captura: null, destinos,
     contacto: { ...contacto, medidasEspeciales: 'Necesito 2,75 m de largo' },
   });
-  assert.match(ventas.subject, /MEDIDA ESPECIAL/);
-  assert.ok(ventas.html.includes('MEDIDA ESPECIAL') && ventas.html.includes('Necesito 2,75 m de largo'));
+  assert.match(ventas.subject, /NOTAS DEL CLIENTE/);
+  assert.ok(ventas.html.includes('NOTAS DEL CLIENTE') && ventas.html.includes('Necesito 2,75 m de largo'));
   assert.equal(ventas.attachments.length, 0); // sin captura (modo sin WebGL)
 });
 

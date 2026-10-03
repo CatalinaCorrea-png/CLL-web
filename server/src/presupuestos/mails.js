@@ -76,7 +76,7 @@ const armarMails = async ({ ref, config, contacto, captura, destinos }) => {
 
   const recuadroEspecial = especial ? `
     <div style="margin:20px 0 0;padding:12px 16px;border:2px solid ${COLOR.alerta};background:${COLOR.alertaFondo};border-radius:6px">
-      <strong style="color:${COLOR.alerta}">⚠ MEDIDA ESPECIAL</strong>
+      <strong style="color:${COLOR.alerta}">📝 NOTAS DEL CLIENTE</strong>
       <p style="margin:6px 0 0;white-space:pre-wrap">${escapar(contacto.medidasEspeciales)}</p>
     </div>` : '';
 
@@ -85,7 +85,7 @@ const armarMails = async ({ ref, config, contacto, captura, destinos }) => {
     from: destinos.remitente,
     to: destinos.ventas,
     replyTo: `${contacto.nombre} <${contacto.email}>`,
-    subject: `${especial ? '⚠ MEDIDA ESPECIAL · ' : ''}[${ref}] Pedido de presupuesto – ${descripcionCorta(config)} – ${contacto.empresa}`,
+    subject: `${especial ? '📝 NOTAS DEL CLIENTE · ' : ''}[${ref}] Pedido de presupuesto – ${descripcionCorta(config)} – ${contacto.empresa}`,
     html: marco(`
       <h2 style="margin:16px 0 4px;font-size:20px;color:${COLOR.marca}">Nuevo pedido de presupuesto</h2>
       <p style="margin:0;color:#4a5c72">Referencia <strong style="color:${COLOR.marca}">${escapar(ref)}</strong> · desde el configurador 3D</p>
@@ -96,7 +96,7 @@ const armarMails = async ({ ref, config, contacto, captura, destinos }) => {
       Respondé este mail para escribirle directamente al cliente.</p>`),
     text: [
       `Nuevo pedido de presupuesto ${ref}`,
-      especial ? `\n⚠ MEDIDA ESPECIAL:\n${contacto.medidasEspeciales}\n` : '',
+      especial ? `\n📝 NOTAS DEL CLIENTE:\n${contacto.medidasEspeciales}\n` : '',
       textoPlano('Datos de contacto', filasContacto),
       textoConfig,
     ].join('\n'),
@@ -114,7 +114,7 @@ const armarMails = async ({ ref, config, contacto, captura, destinos }) => {
       <p style="margin:0 0 4px">Recibimos tu pedido de presupuesto. Tu referencia es
         <strong style="color:${COLOR.marca}">${escapar(ref)}</strong>.</p>
       <p style="margin:0">Te respondemos en ${escapar(destinos.tiempoRespuesta)}.</p>
-      ${especial ? `<p style="margin:12px 0 0;color:#4a5c72">También recibimos lo que nos contaste sobre medidas especiales: lo vamos a revisar con vos.</p>` : ''}
+      ${especial ? `<p style="margin:12px 0 0;color:#4a5c72">También recibimos tus notas: las vamos a revisar con vos.</p>` : ''}
       ${htmlConfig}
       <p style="margin:24px 0 0;font-size:13px;color:#4a5c72">Si querés cambiar algo, respondé este mail indicando la referencia.</p>`),
     text: [

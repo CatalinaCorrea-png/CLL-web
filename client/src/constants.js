@@ -23,12 +23,14 @@ export const TELEFONOS = [
 // Arma el link de WhatsApp a partir de un teléfono de AMBA con formato "11-XXXX-XXXX".
 // `texto` (opcional) es el mensaje que aparece ya escrito en el chat.
 // Ej: '11-2154-4111' -> 'https://wa.me/5491121544111'
+/** @param {string} tel @param {string} [texto] */
 export const linkWhatsApp = (tel, texto) => {
   const link = `https://wa.me/549${tel.replace(/\D/g, '')}`;
   return texto ? `${link}?text=${encodeURIComponent(texto)}` : link;
 };
 
 // Arma el link para redactar un mail a CLL desde Gmail web, con asunto y cuerpo (opcional).
+/** @param {string} asunto @param {string} [cuerpo] */
 export const linkGmail = (asunto, cuerpo) => {
   let link = `https://mail.google.com/mail/?view=cm&fs=1&to=${MAIL_CONTACTO}&su=${encodeURIComponent(asunto)}`;
   if (cuerpo) link += `&body=${encodeURIComponent(cuerpo)}`;

@@ -4,7 +4,15 @@ import assert from 'node:assert/strict';
 import catalogo from './catalogo.json' with { type: 'json' };
 import { configuracionPorDefecto } from './esquema.js';
 import { agregarBatea, cambiarUnion } from './edicion.js';
-import { formatearMetros, textoValor, nombreModulo, resumenConfiguracion } from './textos.js';
+import { formatearMetros, textoValor, nombreModulo, resumenConfiguracion, frasesConfiguracion } from './textos.js';
+
+/**
+ * Cambia opciones de un módulo.
+ * @param {import('./reglas.js').ConfigParcial} c
+ * @param {number} indice
+ * @param {Record<string, unknown>} cambios
+ */
+const conModulo = (c, indice, cambios) => ({ ...c, modulos: c.modulos.map((m, i) => (i === indice ? { ...m, ...cambios } : m)) });
 
 test('metros con coma decimal', () => {
   assert.equal(formatearMetros(2000), '2,00 m');
@@ -69,4 +77,29 @@ test('resumen: unión directa y remate con mostrador', () => {
   const r = resumenConfiguracion(c, catalogo);
   assert.deepEqual(r.modulos.map((m) => m.nombre), ['Remate izquierdo', 'Batea 1', 'Unión 1', 'Batea 2']);
   assert.equal(r.modulos[2].filas[0].valor, 'Directa');
+});
+
+test('frases: cada módulo en una oración, como en el ejemplo del pedido', () => {
+  let c = agregarBatea(configuracionPorDefecto(catalogo), catalogo); // remate, batea, esquina, batea, remate
+  c = conModulo(c, 1, { largo: 2400, cupula: 'sin_cupula_iluminacion', estructura: 'curva', deposito: true });
+  c = conModulo(c, 2, { forma: 'esquinero', version: 'mostrador' });
+  const f = frasesConfiguracion(c, catalogo);
+  assert.deepEqual(f.modulos.map((m) => m.nombre), ['Batea 1', 'Esquina 1', 'Batea 2']);
+  assert.equal(f.modulos[0].texto, '2,40 m, sin cúpula con iluminación, estructura curva (arcos), con depósito');
+  assert.equal(f.modulos[1].texto, 'esquinero, tipo mostrador'); // la cúpula no aplica en la esquina mostrador
+  assert.match(f.linea, /^chapa galvanizada pintada, color blanco, color en faldón y zócalo, tina de chapa blanca, para fiambres \/ lácteos, frío por aire forzado, bandejas de chapa prepintada/);
+  assert.ok(!f.linea.includes('rejilla')); // "ninguna" no se menciona
+  assert.ok(!JSON.stringify(f).includes('_')); // nunca ids internos (sin_cupula, galvanizada_pintada…)
+});
+
+test('frases: inox sin color ni tina, sin depósito no se menciona, unión directa', () => {
+  const base = configuracionPorDefecto(catalogo);
+  let c = agregarBatea({ ...base, linea: { ...base.linea, material: 'inox', tina: 'inox' } }, catalogo);
+  c = cambiarUnion(c, catalogo, 2, 'union');
+  const f = frasesConfiguracion(c, catalogo);
+  // Con cuerpo de acero la tina es de acero sí o sí: la opción no aplica y no se repite
+  assert.ok(f.linea.startsWith('acero inoxidable, para fiambres'));
+  assert.ok(!f.linea.includes('color'));
+  assert.equal(f.modulos[0].texto, '2,00 m, cúpula curva');
+  assert.equal(f.modulos[1].texto, 'directa (las bateas quedan pegadas)');
 });

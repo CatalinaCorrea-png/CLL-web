@@ -6,6 +6,7 @@ import { ToneMappingMode } from 'postprocessing';
 import Linea from './productos/Linea';
 import { MEDIDAS } from './productos/medidas.js';
 import Cotas from './Cotas';
+import { canvasAJpeg, esperarCuadros } from './captura.js';
 import Persona from './Persona';
 
 // Distancia entre el arranque de la línea y la silueta humana (m).
@@ -68,6 +69,48 @@ const CambiarVista = ({ vista }) => {
 };
 
 /**
+ * Función que lleva la cámara a la perspectiva, reencuadra toda la línea y devuelve la captura (JPEG).
+ * @typedef {() => Promise<Blob | null>} Capturar
+ */
+
+// Lo que tarda Bounds en terminar de mover la cámara (su animación dura hasta 1 s)
+const TIEMPO_REENCUADRE = 1100;
+// Para la captura, la cámara se aleja un poco más que el encuadre de Bounds: en un visor angosto,
+// una línea con esquinas quedaba con las puntas cortadas en el borde.
+const ALEJAR_CAPTURA = 1.15;
+
+/**
+ * Registra en `api` la función para sacar la captura del pedido de presupuesto.
+ * @param {object} props
+ * @param {import('react').RefObject<Capturar | null>} props.api
+ */
+const Capturador = ({ api }) => {
+  const bounds = useBounds();
+  const camera = useThree((s) => s.camera);
+  const gl = useThree((s) => s.gl);
+  const invalidate = useThree((s) => s.invalidate);
+  const controles = /** @type {any} */ (useThree((s) => s.controls)); // OrbitControls (makeDefault)
+  useEffect(() => {
+    api.current = async () => {
+      camera.position.set(...DIRECCION_VISTA.perspectiva);
+      bounds.refresh().clip().fit();
+      await new Promise((r) => setTimeout(r, TIEMPO_REENCUADRE));
+      if (controles?.target) {
+        camera.position.sub(controles.target).multiplyScalar(ALEJAR_CAPTURA).add(controles.target);
+        controles.update();
+      }
+      invalidate();
+      await esperarCuadros(2);
+      return canvasAJpeg(gl.domElement);
+    };
+    return () => {
+      api.current = null;
+    };
+  }, [api, bounds, camera, gl, invalidate, controles]);
+  return null;
+};
+
+/**
  * Cuenta los cuadros dibujados (mientras se mide la calidad).
  * @param {object} props
  * @param {import('react').RefObject<number>} props.cuadros
@@ -93,8 +136,9 @@ const ExponerRenderer = () => {
  * @param {{ lado: string, n: number }} props.vista  vista elegida con los botones del visor
  * @param {import('./modelo/reglas.js').ConfigParcial} props.config  la línea completa (opciones y módulos)
  * @param {boolean} props.cotas  mostrar las cotas en mm
+ * @param {import('react').RefObject<Capturar | null>} props.capturador  acá queda la función de captura
  */
-const Escena = ({ vista, config, cotas }) => {
+const Escena = ({ vista, config, cotas, capturador }) => {
   // La silueta va antes del arranque de la línea (y del mostrador de remate izquierdo, si hay)
   const remateIzq = config.modulos[0]?.valor === 'mostrador' ? MEDIDAS.profundidad : 0;
   const xPersona = -remateIzq - SEPARACION_PERSONA;
@@ -160,6 +204,7 @@ const Escena = ({ vista, config, cotas }) => {
         <Bounds fit clip observe margin={1.3}>
           <Reencuadre clave={JSON.stringify(config.modulos)} />
           <CambiarVista vista={vista} />
+          <Capturador api={capturador} />
           <Linea linea={config.linea} modulos={config.modulos} />
           <Persona x={xPersona} />
         </Bounds>

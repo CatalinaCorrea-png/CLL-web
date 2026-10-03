@@ -390,3 +390,105 @@ button.cfg-producto { cursor: pointer; }
   .cfg-layout > .cfg-offcanvas .offcanvas-body { overflow: visible; }
   .cfg-layout > .cfg-offcanvas .cfg-panel { min-height: 100%; }
 }
+
+/* --- Pedir presupuesto (modal) --- */
+.cfg-presupuesto .modal-content { border: 1px solid var(--border); border-radius: var(--r); }
+.cfg-presupuesto .modal-title { color: var(--brand); font-weight: 700; font-size: 1.2rem; }
+.cfg-presupuesto-form { display: contents; } /* el Form envuelve body y footer sin romper el scroll del modal */
+/* css/modal.css (modal de detalles de Fabricación) pone .modal-body en flex centrado para todo el sitio */
+.cfg-presupuesto .modal-body {
+  display: block;
+  padding: 1rem 1.25rem;
+  text-align: left;
+}
+
+.cfg-resumen {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.4rem;
+  padding-bottom: 1.2rem;
+  border-bottom: 1px solid var(--border);
+}
+@media (min-width: 576px) {
+  .cfg-resumen { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); }
+}
+.cfg-resumen-imagen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 160px;
+  background: var(--surface-soft);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  overflow: hidden;
+}
+.cfg-resumen-imagen img { display: block; width: 100%; height: auto; }
+.cfg-resumen-sin-imagen {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  padding: 1rem;
+  font-size: .85rem;
+  color: var(--text-soft);
+  text-align: center;
+}
+.cfg-resumen-titulo {
+  margin: 0 0 .6rem;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--brand);
+}
+.cfg-resumen-texto ul {
+  margin: 0;
+  padding-left: 1.1rem;
+  font-size: .88rem;
+  color: var(--text-soft);
+}
+.cfg-resumen-texto li + li { margin-top: .35rem; }
+.cfg-resumen-texto strong { color: var(--text); }
+
+.cfg-campos {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0 1rem;
+}
+@media (min-width: 576px) {
+  .cfg-campos { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+.cfg-campo { margin-bottom: .8rem; }
+.cfg-campo .form-label { margin-bottom: .25rem; font-size: .85rem; font-weight: 600; color: var(--text); }
+.cfg-campo .form-control:focus,
+.cfg-campo .form-select:focus { border-color: var(--accent); box-shadow: 0 0 0 .2rem rgba(83, 135, 192, .2); }
+
+/* Honeypot: fuera de la pantalla (no display:none, que algunos bots detectan) */
+.cfg-trampa {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.cfg-presupuesto-nota { margin: 1rem 0 0; font-size: .8rem; color: var(--text-soft); }
+.cfg-presupuesto .modal-footer { gap: .5rem; }
+
+/* Éxito */
+.cfg-presupuesto .cfg-presupuesto-exito { text-align: center; padding: 1.5rem 1.5rem 2rem; }
+.cfg-presupuesto-ref-etiqueta {
+  margin: 0;
+  font-size: .8rem;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--text-soft);
+}
+.cfg-presupuesto-ref {
+  margin: .2rem 0 1rem;
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: .02em;
+  color: var(--brand);
+  font-variant-numeric: tabular-nums;
+}
+.cfg-boton-whatsapp { margin-top: .5rem; text-decoration: none; }

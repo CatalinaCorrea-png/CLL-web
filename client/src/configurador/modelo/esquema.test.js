@@ -66,6 +66,17 @@ test('catálogo: cada opción tiene nombre y cada valor de texto tiene etiqueta 
   }
 });
 
+test('catálogo: las frases (resumen en lenguaje claro) usan {valor} y solo valores que existen', () => {
+  /** @type {Array<{ id: string, tipo: string, valores?: unknown[], frase?: string, frases?: Record<string, string | null> }>} */
+  const opciones = [...catalogo.opcionesLinea, ...Object.values(catalogo.modulos).flat()];
+  for (const o of opciones) {
+    if (o.frase && o.tipo !== 'bool') assert.ok(o.frase.includes('{valor}'), `"${o.id}": la frase no tiene {valor}`);
+    for (const v of Object.keys(o.frases ?? {})) {
+      assert.ok((o.valores ?? []).includes(v), `"${o.id}": la frase de "${v}" no es de un valor de la opción`);
+    }
+  }
+});
+
 // ---------------------------------------------------------------- válidas
 test('la configuración por defecto es válida (una batea de 2000 mm, sin remates)', () => {
   const c = configuracionPorDefecto(catalogo);
