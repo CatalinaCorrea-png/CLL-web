@@ -36,6 +36,12 @@ export default [
     },
   },
   {
+    // Scripts de Node (p. ej. scripts/capturas-respaldo.mjs)
+    files: ['scripts/**/*.mjs'],
+    languageOptions: { ecmaVersion: 'latest', sourceType: 'module', globals: globals.node },
+    rules: { ...js.configs.recommended.rules },
+  },
+  {
     // Configurador 3D:
     // - en React Three Fiber, props como position, args o intensity son válidas en los
     //   elementos de three, pero no-unknown-property solo conoce atributos del DOM.

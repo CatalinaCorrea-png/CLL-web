@@ -65,3 +65,6 @@ const crearEstado = (set) => ({
 });
 
 export const useConfigurador = create(crearEstado);
+
+// Solo en desarrollo: el store a mano para probar desde la consola o un script (p. ej. fugas al agregar y quitar)
+if (import.meta.env.DEV) /** @type {any} */ (window).__cllStore = useConfigurador;

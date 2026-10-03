@@ -1,29 +1,14 @@
 // Línea completa (prompt 6b): recorre los módulos y los ubica uno después del otro.
 //   remate – batea – [unión – batea]… – remate, donde la unión es una esquina, un mostrador intermedio
 //   o una unión directa (las bateas quedan pegadas).
-// Cada esquina gira el recorrido 90°: el esquinero hacia el vendedor y el rinconero hacia el cliente.
-//
-// El recorrido arranca en el origen hacia +X, con el cliente en +Z. Cada módulo se dibuja en su marco
-// local (largo en X, cliente en +Z) dentro de un <group> con su posición y su giro en Y.
+// Dónde va cada pieza lo calcula recorrido.js; acá cada módulo se dibuja en su marco local dentro de
+// un <group> con su posición y su giro en Y.
 import { useMemo } from 'react';
-import { MEDIDAS } from './medidas.js';
 import { useMateriales } from './materiales.js';
+import { recorrerLinea } from './recorrido.js';
 import Batea from './Batea';
 import Esquina from './Esquina';
 import Mostrador from './Mostrador';
-
-const D = MEDIDAS.profundidad;
-
-/**
- * Pieza ubicada en el mundo.
- * @typedef {object} Ubicacion
- * @property {number} indice                 posición del módulo en config.modulos
- * @property {Record<string, unknown>} modulo
- * @property {[number, number, number]} posicion
- * @property {number} giro                   rotación en Y (radianes)
- * @property {'batea' | 'esquina' | 'mostrador'} pieza
- * @property {number} [largo]                en metros (bateas y mostradores)
- */
 
 /**
  * ¿La batea queda cerrada de ese lado? Abre si sigue en una esquina con frío o en otra batea pegada.
@@ -46,42 +31,6 @@ const vidrioContra = (vecino, batea, otra) => {
 };
 
 /**
- * Calcula dónde va cada pieza de la línea.
- * @param {Array<Record<string, unknown>>} modulos
- * @returns {Ubicacion[]}
- */
-const ubicarLinea = (modulos) => {
-  /** @type {Ubicacion[]} */
-  const piezas = [];
-  let x = 0, z = 0, giro = 0;
-  // Punto del marco actual (local lx a lo largo, lz hacia el cliente) en el mundo
-  const enMundo = (/** @type {number} */ lx, /** @type {number} */ lz) =>
-    /** @type {[number, number]} */ ([x + lx * Math.cos(giro) + lz * Math.sin(giro), z - lx * Math.sin(giro) + lz * Math.cos(giro)]);
-
-  modulos.forEach((modulo, indice) => {
-    if (modulo.tipo === 'remate') {
-      if (modulo.valor !== 'mostrador') return;
-      // El remate izquierdo va antes del arranque; el derecho, a continuación
-      const [px, pz] = enMundo(indice === 0 ? -D / 2 : D / 2, 0);
-      piezas.push({ indice, modulo, posicion: [px, 0, pz], giro, pieza: 'mostrador', largo: D });
-    } else if (modulo.tipo === 'batea' || modulo.tipo === 'mostrador') {
-      const largo = Number(modulo.largo) / 1000;
-      const [px, pz] = enMundo(largo / 2, 0);
-      piezas.push({ indice, modulo, posicion: [px, 0, pz], giro, pieza: modulo.tipo, largo });
-      [x, z] = enMundo(largo, 0);
-    } else if (modulo.tipo === 'esquina') {
-      piezas.push({ indice, modulo, posicion: [x, 0, z], giro, pieza: 'esquina' });
-      // Sale por el costado del cuadrado: esquinero hacia el vendedor (−Z local), rinconero hacia el cliente
-      const rinconero = modulo.forma === 'rinconero';
-      [x, z] = enMundo(D / 2, rinconero ? D / 2 : -D / 2);
-      giro += rinconero ? -Math.PI / 2 : Math.PI / 2;
-    }
-    // union: las bateas quedan pegadas, no hay pieza ni avance
-  });
-  return piezas;
-};
-
-/**
  * Línea completa de bateas, uniones y remates.
  * @param {object} props
  * @param {Record<string, unknown>} props.linea                 opciones generales
@@ -89,7 +38,7 @@ const ubicarLinea = (modulos) => {
  */
 const Linea = ({ linea, modulos }) => {
   const materiales = useMateriales(linea); // una sola vez para toda la línea
-  const piezas = useMemo(() => ubicarLinea(modulos), [modulos]);
+  const piezas = useMemo(() => recorrerLinea(modulos).piezas, [modulos]);
 
   return (
     <group>

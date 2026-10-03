@@ -61,20 +61,94 @@
 }
 
 /* Botones de vista (Cliente / Vendedor) sobre el 3D */
-.cfg-vistas {
+/* Controles sobre el 3D: vistas a la izquierda, switch de cotas a la derecha (en mobile se apilan) */
+.cfg-controles-visor {
   position: absolute;
   top: .6rem;
+  left: .6rem;
   right: .6rem;
   display: flex;
-  gap: .3rem;
-  padding: .3rem;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: .4rem;
+  pointer-events: none; /* el resto de la franja deja girar la cámara */
+}
+.cfg-vistas,
+.cfg-switch-cotas {
+  pointer-events: auto;
   background: rgba(255, 255, 255, .75);
   border: 1px solid var(--border);
   border-radius: var(--r-pill);
   -webkit-backdrop-filter: blur(4px);
   backdrop-filter: blur(4px);
 }
-.cfg-vistas .cfg-boton { font-size: .8rem; padding: .3em .85em; }
+.cfg-vistas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .25rem;
+  padding: .3rem;
+}
+.cfg-vistas .cfg-boton { font-size: .78rem; padding: .3em .75em; }
+.cfg-switch-cotas {
+  margin: 0;
+  padding: .35rem .8rem .35rem 2.9rem; /* lugar para el switch de Bootstrap */
+  font-size: .8rem;
+  font-weight: 600;
+  color: var(--brand);
+}
+.cfg-switch-cotas .form-check-input { cursor: pointer; }
+.cfg-switch-cotas .form-check-input:checked { background-color: var(--accent); border-color: var(--accent); }
+
+/* Aviso de calidad reducida (equipos lentos) */
+.cfg-calidad {
+  position: absolute;
+  left: .6rem;
+  bottom: .6rem;
+  margin: 0;
+  padding: .2em .7em;
+  font-size: .72rem;
+  color: var(--text-soft);
+  background: rgba(255, 255, 255, .75);
+  border-radius: var(--r-pill);
+  pointer-events: none;
+}
+
+/* Sin WebGL: imágenes de referencia en lugar del 3D */
+.cfg-visor-sin3d {
+  touch-action: auto;
+  overflow-y: auto;
+}
+.cfg-sin3d { padding: 1rem; }
+.cfg-sin3d-aviso {
+  display: flex;
+  gap: .5rem;
+  margin: 0 0 1rem;
+  font-size: .85rem;
+  color: var(--text-soft);
+}
+.cfg-sin3d-aviso i { color: var(--accent); margin-top: .2em; }
+.cfg-sin3d-grilla {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1rem;
+}
+.cfg-sin3d-figura { margin: 0; }
+.cfg-sin3d-figura img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+}
+.cfg-sin3d-figura figcaption {
+  margin-top: .4rem;
+  font-size: .85rem;
+  font-weight: 600;
+  color: var(--brand);
+}
 
 /* --- Panel de opciones --- */
 .cfg-panel {

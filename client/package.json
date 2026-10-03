@@ -10,6 +10,7 @@
     "tipos": "tsc -p jsconfig.json",
     "test": "node --test \"src/configurador/modelo/**/*.test.js\"",
     "preview": "vite preview",
+    "capturas-respaldo": "node scripts/capturas-respaldo.mjs",
     "start": "vite preview --host 0.0.0.0 --port 4173"
   },
   "dependencies": {
