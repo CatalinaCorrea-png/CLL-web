@@ -11,6 +11,7 @@ import catalogo from './modelo/catalogo.json';
 import { frasesConfiguracion } from './modelo/textos.js';
 import { blobADataUrl } from './captura.js';
 import { TELEFONOS, linkWhatsApp } from '../constants';
+import { registrar } from './analitica.js';
 
 /** @typedef {import('./modelo/reglas.js').ConfigParcial} ConfigParcial */
 
@@ -64,6 +65,7 @@ const PedirPresupuesto = ({ mostrar, onCerrar, config, capturar }) => {
   useEffect(() => {
     if (!mostrar) return;
     apertura.current = Date.now();
+    if (estado !== 'listo') registrar('configuracion_completa');
     if (!capturar || estado === 'listo') return;
     let vigente = true;
     setCapturando(true);
@@ -106,7 +108,10 @@ const PedirPresupuesto = ({ mostrar, onCerrar, config, capturar }) => {
     e.preventDefault();
     setValidado(true);
     setError(null);
-    if (!e.currentTarget.checkValidity()) return;
+    if (!e.currentTarget.checkValidity()) {
+      /** @type {HTMLElement | null} */ (e.currentTarget.querySelector(':invalid'))?.focus();
+      return;
+    }
 
     setEstado('enviando');
     try {
@@ -155,20 +160,21 @@ const PedirPresupuesto = ({ mostrar, onCerrar, config, capturar }) => {
         onChange={cambiar(campo)}
         isInvalid={Boolean(erroresCampo[campo])}
         disabled={enviando}
+        aria-describedby={`presupuesto-${campo}-error`}
         {...extra}
       />
-      <Form.Control.Feedback type="invalid">{erroresCampo[campo] || 'Completá este dato.'}</Form.Control.Feedback>
+      <Form.Control.Feedback type="invalid" id={`presupuesto-${campo}-error`}>{erroresCampo[campo] || 'Completá este dato.'}</Form.Control.Feedback>
     </Form.Group>
   );
 
   return (
     <Modal show={mostrar} onHide={cerrar} size="lg" centered scrollable className="cfg-presupuesto">
-      <Modal.Header closeButton>
+      <Modal.Header closeButton closeLabel="Cerrar">
         <Modal.Title>{estado === 'listo' ? '¡Pedido enviado!' : 'Pedir presupuesto'}</Modal.Title>
       </Modal.Header>
 
       {estado === 'listo' && resultado ? (
-        <Modal.Body className="cfg-presupuesto-exito">
+        <Modal.Body className="cfg-presupuesto-exito" role="status" aria-live="polite">
           <p className="cfg-presupuesto-ref-etiqueta">Tu referencia</p>
           <p className="cfg-presupuesto-ref">{resultado.ref}</p>
           {resultado.repetido ? (
@@ -179,7 +185,7 @@ const PedirPresupuesto = ({ mostrar, onCerrar, config, capturar }) => {
             </p>
           )}
           <p className="text-muted small">Si querés, seguí la conversación por WhatsApp con tu referencia y el resumen ya escritos.</p>
-          <a className="btn-ice cfg-boton-whatsapp" href={linkWhats} target="_blank" rel="noopener noreferrer">
+          <a className="btn-ice cfg-boton-whatsapp" href={linkWhats} target="_blank" rel="noopener noreferrer" onClick={() => registrar('whatsapp_click', { ref: resultado.ref })}>
             <i className="fa-brands fa-whatsapp"></i> Continuar por WhatsApp
           </a>
         </Modal.Body>
@@ -247,14 +253,16 @@ const PedirPresupuesto = ({ mostrar, onCerrar, config, capturar }) => {
               <input id="presupuesto-sitio" name="sitioWeb" type="text" tabIndex={-1} autoComplete="off" value={sitioWeb} onChange={(e) => setSitioWeb(e.target.value)} />
             </div>
 
-            {error && (
-              <Alert variant="danger" className="mt-3 mb-0">
-                {error.mensaje}
-                {error.red && (
-                  <> También podés <a href={linkWhats} target="_blank" rel="noopener noreferrer">escribirnos por WhatsApp</a>.</>
-                )}
-              </Alert>
-            )}
+            <div aria-live="assertive">
+              {error && (
+                <Alert variant="danger" className="mt-3 mb-0">
+                  {error.mensaje}
+                  {error.red && (
+                    <> También podés <a href={linkWhats} target="_blank" rel="noopener noreferrer" onClick={() => registrar('whatsapp_click')}>escribirnos por WhatsApp</a>.</>
+                  )}
+                </Alert>
+              )}
+            </div>
             <p className="cfg-presupuesto-nota">
               Es una consulta, no una compra: el equipo de CLL revisa tu pedido y te responde con el presupuesto.
             </p>

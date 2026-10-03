@@ -5,6 +5,7 @@ import Escena from './Escena';
 import LimiteError3D from './LimiteError3D';
 import VisorSinWebGL from './VisorSinWebGL';
 import { hayWebGL } from './webgl.js';
+import { registrarUnaVez } from './analitica.js';
 import PanelOpciones from './PanelOpciones';
 import BotonCopiarLink from './BotonCopiarLink';
 import PedirPresupuesto from './PedirPresupuesto';
@@ -61,6 +62,11 @@ const ConfiguradorBatea = () => {
     if (!listo || !barra.current || !window.matchMedia('(min-width: 768px)').matches) return;
     const alturaNavbar = document.querySelector('.navbar-container')?.getBoundingClientRect().height ?? 80;
     window.scrollTo({ top: barra.current.getBoundingClientRect().top + window.scrollY - alturaNavbar - 12 });
+  }, [listo]);
+
+  // Analítica: una vez por pestaña, cuando el configurador de bateas ya cargó
+  useEffect(() => {
+    if (listo) registrarUnaVez('configurador_iniciado');
   }, [listo]);
 
   if (!config) return null;

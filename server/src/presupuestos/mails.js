@@ -84,7 +84,8 @@ const armarMails = async ({ ref, config, contacto, captura, destinos }) => {
   const ventas = {
     from: destinos.remitente,
     to: destinos.ventas,
-    replyTo: `${contacto.nombre} <${contacto.email}>`,
+    // Objeto (no texto): nodemailer encomilla el nombre, así un nombre con <…> o comas no suma direcciones
+    replyTo: { name: contacto.nombre, address: contacto.email },
     subject: `${especial ? '📝 NOTAS DEL CLIENTE · ' : ''}[${ref}] Pedido de presupuesto – ${descripcionCorta(config)} – ${contacto.empresa}`,
     html: marco(`
       <h2 style="margin:16px 0 4px;font-size:20px;color:${COLOR.marca}">Nuevo pedido de presupuesto</h2>

@@ -15,19 +15,31 @@ const cargarEsquema = async () => {
   return esquemaConfig;
 };
 
-const texto = (max) => z.string().trim().min(1, 'Es obligatorio.').max(max, `Máximo ${max} caracteres.`);
-const opcional = (max) => z.string().trim().max(max, `Máximo ${max} caracteres.`).optional()
+// Campos de una sola línea: sin saltos de línea ni caracteres de control (se usan en cabeceras de mail).
+const SIN_CONTROL = /^[^\u0000-\u001f\u007f]*$/;
+// Textos largos (notas): permiten salto de línea y tabulación, pero ningún otro carácter de control.
+const SIN_CONTROL_SALVO_SALTOS = /^[^\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]*$/;
+// El nombre, la empresa, la localidad y el plazo aparecen en el mail de confirmación, que va a la
+// dirección que se escriba en el formulario: sin links, para que no se pueda usar para mandar spam
+// o phishing desde la cuenta de CLL.
+const CON_LINK = /(https?:|:\/\/|www\.)/i;
+
+const texto = (max) => z.string().trim().min(1, 'Es obligatorio.').max(max, `Máximo ${max} caracteres.`)
+  .regex(SIN_CONTROL, 'Tiene caracteres no permitidos.')
+  .refine((v) => !CON_LINK.test(v), 'No se permiten links en este campo.');
+const opcional = (max, patron = SIN_CONTROL) => z.string().trim().max(max, `Máximo ${max} caracteres.`)
+  .regex(patron, 'Tiene caracteres no permitidos.').optional()
   .transform((v) => (v ? v : undefined));
 
 const esquemaContacto = z.object({
   nombre: texto(120),
   empresa: texto(120),
   email: z.string().trim().toLowerCase().max(160).pipe(z.email('El email no es válido.')),
-  telefono: z.string().trim().min(6, 'El teléfono no es válido.').max(40).regex(/^[0-9+()\-\s]+$/, 'El teléfono no es válido.'),
+  telefono: z.string().trim().min(6, 'El teléfono no es válido.').max(40).regex(/^[0-9+() -]+$/, 'El teléfono no es válido.'),
   localidad: texto(120),
   plazo: texto(80),
   cuit: opcional(20).refine((v) => !v || /^\d{2}-?\d{8}-?\d$/.test(v), 'El CUIT no es válido (11 números).'),
-  medidasEspeciales: opcional(2000),
+  medidasEspeciales: opcional(2000, SIN_CONTROL_SALVO_SALTOS),
 });
 
 const esquemaPedido = z.object({

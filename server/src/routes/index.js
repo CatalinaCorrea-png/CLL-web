@@ -4,7 +4,10 @@ const { hola } = require('../models/index'); // Importo funciones http
 const { getDetalles, getProductImages } = require('../controller/fabricacion.controller');
 const { getCatalogo } = require('../controller/configurador.controller');
 const { crearPresupuesto } = require('../controller/presupuestos.controller');
-const { limitePresupuestos, jsonPresupuesto, erroresDelBody } = require('../presupuestos/limites');
+const { registrarEvento } = require('../controller/eventos.controller');
+const {
+  limitePresupuestos, jsonPresupuesto, erroresDelBody, limiteEventos, textoEvento, erroresDelEvento,
+} = require('../presupuestos/limites');
 
 router.get('/', hola);
 
@@ -18,6 +21,9 @@ router.get('/configurador/catalogo', getCatalogo);
 
 // POST de un PEDIDO DE PRESUPUESTO del configurador: límite por IP, body de hasta 2 MB (captura en base64)
 router.post('/presupuestos', limitePresupuestos, jsonPresupuesto, erroresDelBody, crearPresupuesto);
+
+// POST de un EVENTO de analítica del configurador (sin datos personales)
+router.post('/eventos', limiteEventos, textoEvento, erroresDelEvento, registrarEvento);
 
 
 module.exports = router;

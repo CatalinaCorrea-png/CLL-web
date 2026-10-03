@@ -137,3 +137,45 @@ test('transporte de prueba: escribe el .eml con el adjunto y el .html', async ()
     delete process.env.MAIL_CARPETA_PRUEBA;
   }
 });
+
+test('seguridad: sin saltos de línea en los campos de una línea (inyección en cabeceras de mail)', async () => {
+  for (const campo of ['nombre', 'empresa', 'localidad', 'plazo']) {
+    const r = await validarPedido(await pedido({ contacto: { ...contacto, [campo]: 'Algo\r\nBcc: otro@ejemplo.test' } }));
+    assert.equal(r.ok, false, campo);
+  }
+  assert.equal((await validarPedido(await pedido({ contacto: { ...contacto, telefono: '11 2154\n4111' } }))).ok, false);
+  // Las notas sí aceptan saltos de línea
+  const notas = await validarPedido(await pedido({ contacto: { ...contacto, medidasEspeciales: 'Línea 1\nLínea 2' } }));
+  assert.equal(notas.ok, true);
+  assert.equal((await validarPedido(await pedido({ contacto: { ...contacto, medidasEspeciales: 'raro\u0007' } }))).ok, false);
+});
+
+test('seguridad: sin links en lo que va al mail de confirmación', async () => {
+  for (const nombre of ['Visitá https://phishing.example', 'Ana www.algo.com', 'http://x']) {
+    assert.equal((await validarPedido(await pedido({ contacto: { ...contacto, nombre } }))).ok, false, nombre);
+  }
+  assert.equal((await validarPedido(await pedido({ contacto: { ...contacto, empresa: 'Fiambrería Don José S.R.L.' } }))).ok, true);
+});
+
+test('seguridad: el Reply-To a ventas no se puede manipular con el nombre', async () => {
+  const { ventas } = await armarMails({
+    ref: 'CLL-2026-0004', config: await configPorDefecto(), captura: null, destinos,
+    contacto: { ...contacto, nombre: 'Ana <atacante@ejemplo.test>, Otro', email: 'ana@ejemplo.com' },
+  });
+  assert.deepEqual(ventas.replyTo, { name: 'Ana <atacante@ejemplo.test>, Otro', address: 'ana@ejemplo.com' });
+  const carpeta = fs.mkdtempSync(path.join(os.tmpdir(), 'cll-mails-'));
+  process.env.MAIL_PROVEEDOR = 'prueba';
+  process.env.MAIL_CARPETA_PRUEBA = carpeta;
+  try {
+    const { enviar } = require('../src/presupuestos/transportes');
+    await enviar(ventas);
+    const eml = fs.readFileSync(path.join(carpeta, fs.readdirSync(carpeta).find((a) => a.endsWith('.eml'))), 'utf8');
+    const replyTo = eml.split(/\r?\n/).find((l) => l.startsWith('Reply-To:'));
+    assert.ok(replyTo.includes('<ana@ejemplo.com>'));
+    assert.ok(!/Reply-To:.*,\s*Otro\s*$/.test(replyTo) && (replyTo.match(/@/g) ?? []).length === 2); // una sola dirección (el @ del nombre va encomillado)
+  } finally {
+    fs.rmSync(carpeta, { recursive: true, force: true });
+    delete process.env.MAIL_PROVEEDOR;
+    delete process.env.MAIL_CARPETA_PRUEBA;
+  }
+});

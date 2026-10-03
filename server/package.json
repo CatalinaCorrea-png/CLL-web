@@ -7,6 +7,7 @@
     "start": "node server.js",
     "sync-modelo": "node scripts/sync-modelo.js",
     "migrar": "node scripts/migrar.js",
+    "analitica": "node scripts/analitica.js",
     "test": "node --test \"test/**/*.test.js\""
   },
   "keywords": [],

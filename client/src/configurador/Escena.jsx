@@ -166,6 +166,8 @@ const Escena = ({ vista, config, cotas, capturador }) => {
   return (
     <>
       <Canvas
+        role="img"
+        aria-label="Vista 3D de la línea configurada. Se puede girar arrastrando; las opciones están en el panel."
         frameloop={midiendo ? 'always' : 'demand'}
         dpr={alta ? [1, 1.75] : 1}
         gl={{ preserveDrawingBuffer: true }} // necesario para sacar la captura del canvas más adelante

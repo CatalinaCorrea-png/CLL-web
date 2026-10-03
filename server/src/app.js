@@ -4,6 +4,13 @@ const routes = require('./routes'); // importa las rutas
 
 const app = express(); // inicializar la app
 
+// Seguridad básica sin dependencias: no anunciar Express y cabeceras para respuestas JSON
+app.disable('x-powered-by');
+app.use((req, res, next) => {
+  res.set({ 'X-Content-Type-Options': 'nosniff', 'Referrer-Policy': 'no-referrer', 'Cache-Control': 'no-store' });
+  next();
+});
+
 // Detrás del proxy (Traefik en Dokploy): la IP real del cliente viene en X-Forwarded-For.
 // La usa el límite de pedidos por IP de POST /presupuestos.
 app.set('trust proxy', 1);
@@ -27,10 +34,11 @@ app.use(cors({
     return callback(Object.assign(new Error(`CORS blocked for origin: ${origin}`), { status: 403 }));
   },
 }));
-// Middleware para parsear JSON (hasta ~100 kB). POST /presupuestos usa su propio parser de hasta 2 MB
-// (la captura del 3D viaja en base64), así que acá se saltea.
+// Middleware para parsear JSON (hasta ~100 kB). Estas rutas usan su propio parser, así que acá se saltean:
+// POST /presupuestos (hasta 2 MB: la captura del 3D viaja en base64) y POST /eventos (texto de hasta 1 kB).
+const RUTAS_CON_PARSER_PROPIO = ['/presupuestos', '/eventos'];
 const parserJson = express.json();
-app.use((req, res, next) => (req.path === '/presupuestos' ? next() : parserJson(req, res, next)));
+app.use((req, res, next) => (RUTAS_CON_PARSER_PROPIO.includes(req.path) ? next() : parserJson(req, res, next)));
 // Usar las rutas http definidas en routes > index.js
 app.use('/', routes);
 

@@ -48,7 +48,7 @@ const enviarResend = async (mail) => {
     body: JSON.stringify({
       from: mail.from,
       to: [mail.to],
-      reply_to: mail.replyTo,
+      reply_to: typeof mail.replyTo === 'object' ? mail.replyTo.address : mail.replyTo,
       subject: mail.subject,
       html: mail.html,
       text: mail.text,
@@ -62,7 +62,7 @@ const enviarResend = async (mail) => {
 
 /**
  * Manda un mail con el proveedor configurado.
- * @param {{ from: string, to: string, replyTo?: string, subject: string, html: string, text: string,
+ * @param {{ from: string, to: string, replyTo?: string | { name: string, address: string }, subject: string, html: string, text: string,
  *           attachments?: Array<{ filename: string, content: Buffer, contentType?: string }> }} mail
  */
 const enviar = async (mail) => {

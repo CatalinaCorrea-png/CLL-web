@@ -4,6 +4,7 @@
 const fs = require('fs');
 const path = require('path');
 const presupuestosModel = require('../models/presupuestos');
+const eventosModel = require('../models/eventos');
 const catalogo = require('../configurador/modelo/catalogo.json');
 const { validarPedido, esBot, hashConfig, decodificarCaptura } = require('../presupuestos/validacion');
 const { armarMails } = require('../presupuestos/mails');
@@ -91,6 +92,9 @@ const crearPresupuesto = async (req, res) => {
       console.error(`[presupuestos] ${ref} guardado, pero falló el envío de mails:`, error.message);
       await presupuestosModel.marcarEstado(id, 'error_mail').catch(() => {});
     }
+
+    // Analítica: el pedido nuevo lo registra el server (no lo frena un bloqueador; los repetidos no cuentan)
+    eventosModel.registrar({ evento: 'presupuesto_enviado', ref }).catch((e) => console.error('[eventos]', e.message));
 
     return res.status(201).json({ ref });
   } catch (error) {

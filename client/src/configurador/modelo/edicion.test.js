@@ -4,6 +4,7 @@ import assert from 'node:assert/strict';
 import catalogo from './catalogo.json' with { type: 'json' };
 import { configuracionPorDefecto, crearEsquema } from './esquema.js';
 import { normalizar, agregarBatea, quitarBatea, puedeAgregarBatea, puedeQuitarBatea, contarBateas, cambiarUnion } from './edicion.js';
+import { serializar, configDesdeLink } from './url.js';
 
 const esquema = crearEsquema(catalogo);
 const base = () => configuracionPorDefecto(catalogo);
@@ -183,4 +184,58 @@ test('quitar una batea unida por un mostrador saca también el mostrador', () =>
   const c = cambiarUnion(agregarBatea(base(), catalogo), catalogo, 2, 'mostrador');
   const sin = quitarBatea(c, 3);
   assert.deepEqual(sin.modulos.map((m) => m.tipo), ['remate', 'batea', 'remate']);
+});
+
+// ---------------------------------------------------------------- casos borde (revisión del prompt 11)
+/**
+ * Cambia opciones de un módulo y normaliza.
+ * @param {import('./reglas.js').ConfigParcial} c
+ * @param {number} indice
+ * @param {Record<string, unknown>} cambios
+ */
+const cambiarModulo = (c, indice, cambios) =>
+  normalizar({ ...c, modulos: c.modulos.map((m, i) => (i === indice ? { ...m, ...cambios } : m)) }, catalogo);
+
+test('borde: batea con puertas traseras que pasa a sin cúpula o sin cúpula con iluminación pierde las puertas y queda válida', () => {
+  const conPuertas = cambiarModulo(base(), 1, { cupula: 'cupula_recta', puertasTraseras: true });
+  assert.equal(conPuertas.modulos[1].puertasTraseras, true);
+  for (const cupula of ['sin_cupula', 'sin_cupula_iluminacion']) {
+    const c = cambiarModulo(conPuertas, 1, { cupula });
+    assert.ok(!('puertasTraseras' in c.modulos[1]), cupula);
+    assert.ok(esValida(c), cupula);
+  }
+});
+
+test('borde: esquina con frío y puertas traseras que pasa a mostrador pierde cúpula, estructura y puertas', () => {
+  let c = agregarBatea(base(), catalogo);
+  c = cambiarModulo(c, 2, { puertasTraseras: true });
+  c = cambiarModulo(c, 2, { version: 'mostrador' });
+  assert.deepEqual(Object.keys(c.modulos[2]).sort(), ['forma', 'tipo', 'version']);
+  assert.ok(esValida(c));
+});
+
+test('borde: quitar la batea del medio de una línea con dos esquinas deja una línea válida y el link la reabre igual', () => {
+  let c = agregarBatea(agregarBatea(base(), catalogo), catalogo); // r b e b e b r
+  c = cambiarModulo(c, 2, { forma: 'esquinero' });
+  c = cambiarModulo(c, 4, { forma: 'rinconero', version: 'mostrador' });
+  c = cambiarModulo(c, 3, { largo: 3600, deposito: true });
+  const sinMedio = quitarBatea(c, 3);
+  assert.deepEqual(sinMedio.modulos.map((m) => m.tipo), ['remate', 'batea', 'esquina', 'batea', 'remate']);
+  assert.equal(sinMedio.modulos[2].forma, 'rinconero'); // se va la esquina de la izquierda de la batea quitada
+  assert.ok(esValida(sinMedio));
+  const reabierta = configDesdeLink(serializar(sinMedio, catalogo), catalogo);
+  assert.equal(reabierta.desdeLink, true);
+  assert.deepEqual(reabierta.config, normalizar(sinMedio, catalogo));
+});
+
+test('borde: quitar bateas en cualquier orden siempre deja una línea válida', () => {
+  const tres = agregarBatea(agregarBatea(base(), catalogo), catalogo);
+  for (const orden of [[1, 1], [3, 1], [5, 3], [5, 1], [1, 3]]) {
+    let c = tres;
+    for (const i of orden) {
+      c = quitarBatea(c, i);
+      assert.ok(esValida(c), `orden ${orden}`);
+    }
+    assert.equal(contarBateas(c), 1);
+  }
 });
