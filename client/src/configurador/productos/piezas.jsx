@@ -1,6 +1,7 @@
 // Piezas básicas reutilizables para armar la batea (cuerpo, parte de arriba, esquinas).
 import { useEffect, useMemo } from 'react';
 import * as THREE from 'three';
+import { barrido, losa } from './geometria.js';
 
 /**
  * Caja definida por sus límites en cada eje (más claro que centro + tamaño).
@@ -58,4 +59,34 @@ export const Barra = ({ desde, hasta, grosor, material }) => {
       <boxGeometry args={[grosor, largo, grosor]} />
     </mesh>
   );
+};
+
+/**
+ * Perfil barrido por un recorrido que dobla (piezas de las esquinas). Ver barrido() en geometria.js.
+ * Las secciones y la forma tienen que ser estables (constantes del módulo) para no recrear la geometría.
+ * @param {object} props
+ * @param {import('./geometria.js').Seccion[]} props.secciones
+ * @param {THREE.Shape} props.forma
+ * @param {THREE.Material} props.material
+ * @param {'frente' | 'fondo'} [props.desde]
+ */
+export const Barrido = ({ secciones, forma, material, desde = 'frente' }) => {
+  const geometria = useMemo(() => barrido(secciones, forma, desde), [secciones, forma, desde]);
+  useEffect(() => () => geometria.dispose(), [geometria]);
+  return <mesh geometry={geometria} material={material} />;
+};
+
+/**
+ * Polígono en planta (x, z) extruido en vertical entre y0 e y1.
+ * El polígono tiene que ser estable (constante del módulo) para no recrear la geometría.
+ * @param {object} props
+ * @param {Array<[number, number]>} props.poligono
+ * @param {number} props.y0
+ * @param {number} props.y1
+ * @param {THREE.Material} props.material
+ */
+export const Losa = ({ poligono, y0, y1, material }) => {
+  const geometria = useMemo(() => losa(poligono, y0, y1), [poligono, y0, y1]);
+  useEffect(() => () => geometria.dispose(), [geometria]);
+  return <mesh geometry={geometria} material={material} />;
 };

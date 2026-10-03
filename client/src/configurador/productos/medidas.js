@@ -38,4 +38,7 @@ export const MEDIDAS = {
   topeDeposito: 0.07,          // PROVISORIO: …y terminan esto por debajo de la mesada
   espesorPuerta: 0.012,        // PROVISORIO: cuánto sobresalen las puertas del respaldo trasero
   espesorAcrilico: 0.006,      // PROVISORIO: puertas traseras de acrílico
+
+  // Esquinas (prompt 6b): la pieza ocupa un cuadrado de profundidad × profundidad (especificación)
+  ochavado: 0.5,               // PROVISORIO: cuánto recorta el ochavado de 45° en cada lado del cuadrado
 };

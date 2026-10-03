@@ -44,8 +44,6 @@ const ConfiguradorBatea = () => {
   }, [listo]);
 
   if (!config) return null;
-  // Por ahora la escena muestra solo la primera batea de la línea (la línea completa llega en el 6b).
-  const primeraBatea = config.modulos.find((m) => m.tipo === 'batea') ?? config.modulos[1];
 
   return (
     <div className="cfg-configurador">
@@ -69,7 +67,7 @@ const ConfiguradorBatea = () => {
       <div className="cfg-layout">
         <PanelOpciones mostrar={panelAbierto} onCerrar={() => setPanelAbierto(false)} />
         <div className="cfg-visor">
-          <Escena vista={vista} linea={config.linea} batea={primeraBatea} />
+          <Escena vista={vista} config={config} />
           <div className="cfg-vistas" role="group" aria-label="Vista">
             {VISTAS.map(({ lado, texto }) => (
               <button

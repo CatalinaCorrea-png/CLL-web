@@ -3,10 +3,11 @@ import { Canvas, useThree } from '@react-three/fiber';
 import { Bounds, Environment, Grid, Lightformer, OrbitControls, useBounds } from '@react-three/drei';
 import { Bloom, EffectComposer, ToneMapping } from '@react-three/postprocessing';
 import { ToneMappingMode } from 'postprocessing';
-import Batea from './productos/Batea';
+import Linea from './productos/Linea';
+import { MEDIDAS } from './productos/medidas.js';
 import Persona from './Persona';
 
-// Distancia entre el costado de la batea y la silueta humana (m).
+// Distancia entre el arranque de la línea y la silueta humana (m).
 const SEPARACION_PERSONA = 0.5;
 
 // Colores de theme.css (three no lee variables CSS): --ice, --accent, --indigo-dye.
@@ -19,7 +20,7 @@ const COLOR_GRILLA_METRO = '#5387c0';
  * Reencuadra la cámara cuando cambia el tamaño de lo que se muestra. Bounds ya llama invalidate()
  * mientras anima, así que funciona con frameloop="demand".
  * @param {object} props
- * @param {string} props.clave  cambia cuando hay que reencuadrar (hoy, el largo)
+ * @param {string} props.clave  cambia cuando hay que reencuadrar (módulos de la línea)
  */
 const Reencuadre = ({ clave }) => {
   const bounds = useBounds();
@@ -55,12 +56,12 @@ const CambiarVista = ({ vista }) => {
 /**
  * @param {object} props
  * @param {{ lado: string, n: number }} props.vista  lado desde el que se mira (botones Cliente / Vendedor)
- * @param {Record<string, unknown>} props.linea  opciones generales de la línea
- * @param {Record<string, unknown>} props.batea  la batea a mostrar (por ahora, la primera de la línea)
+ * @param {import('./modelo/reglas.js').ConfigParcial} props.config  la línea completa (opciones y módulos)
  */
-const Escena = ({ vista, linea, batea }) => {
-  const largo = Number(batea.largo);
-  const xPersona = -(largo / 2000) - SEPARACION_PERSONA;
+const Escena = ({ vista, config }) => {
+  // La silueta va antes del arranque de la línea (y del mostrador de remate izquierdo, si hay)
+  const remateIzq = config.modulos[0]?.valor === 'mostrador' ? MEDIDAS.profundidad : 0;
+  const xPersona = -remateIzq - SEPARACION_PERSONA;
 
   return (
     <Canvas
@@ -92,9 +93,9 @@ const Escena = ({ vista, linea, batea }) => {
       />
 
       <Bounds fit clip observe margin={1.2}>
-        <Reencuadre clave={`${largo}-${batea.cupula}-${batea.estructura ?? ''}`} />
+        <Reencuadre clave={JSON.stringify(config.modulos)} />
         <CambiarVista vista={vista} />
-        <Batea batea={batea} linea={linea} />
+        <Linea linea={config.linea} modulos={config.modulos} />
         <Persona x={xPersona} />
       </Bounds>
 

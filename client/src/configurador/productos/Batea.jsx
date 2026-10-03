@@ -10,7 +10,6 @@
 import { useEffect, useMemo } from 'react';
 import { Instances, Instance } from '@react-three/drei';
 import * as THREE from 'three';
-import { useMateriales } from './materiales.js';
 import { MEDIDAS } from './medidas.js';
 import { FRENTE, FONDO, PARED_TRASERA, BORDE_LATERAL, hayEquipoIncorporado } from './geometria.js';
 import { Caja } from './piezas.jsx';
@@ -96,14 +95,16 @@ const perfilRemateInox = () => {
 };
 
 /**
- * Los dos laterales: siempre rectos, de chapa blanca con la parte de arriba de inox; con cuerpo de inox,
+ * Los laterales de las puntas CERRADAS: siempre rectos, de chapa blanca con la parte de arriba de inox; con cuerpo de inox,
  * todo de acero. No cambian de color ni con el material del interior (su cara de adentro es el costado
  * de la tina). La especificación completa de los laterales llega más adelante.
  * @param {object} props
  * @param {number} props.largo  en metros
+ * @param {boolean} props.izq   dibujar el lateral izquierdo
+ * @param {boolean} props.der   dibujar el lateral derecho
  * @param {import('./materiales.js').MaterialesBatea} props.materiales
  */
-const Laterales = ({ largo, materiales }) => {
+const Laterales = ({ largo, izq, der, materiales }) => {
   const t = MEDIDAS.espesorLateral;
   const sobra = 0.003; // el remate de inox es un poco más ancho que el panel
   const [panel, remate] = useMemo(() => [
@@ -116,7 +117,7 @@ const Laterales = ({ largo, materiales }) => {
   const rotacion = /** @type {[number, number, number]} */ ([0, -Math.PI / 2, 0]);
   return (
     <>
-      {[-largo / 2 + t, largo / 2].map((x) => (
+      {[izq ? -largo / 2 + t : null, der ? largo / 2 : null].filter((x) => x !== null).map((x) => (
         <group key={x}>
           <mesh geometry={panel} material={materiales.lateral} position={[x, 0, 0]} rotation={rotacion} />
           <mesh geometry={remate} material={materiales.inox} position={[x + sobra, 0, 0]} rotation={rotacion} />
@@ -175,15 +176,24 @@ const Interior = ({ anchoInterior, linea, materiales }) => {
 
 /**
  * Batea generada por código (cuerpo, tina, mesada, laterales e interior).
+ * Cada punta puede estar CERRADA (lleva lateral y vidrio lateral: remate, mostrador o esquina mostrador
+ * al lado) o ABIERTA (sigue en una esquina con frío o en otra batea pegada): ahí no hay lateral y el
+ * cuerpo, la tina, la mesada y la parte de arriba llegan hasta el borde para unirse con la vecina.
  * @param {object} props
  * @param {Record<string, unknown>} props.batea  módulo de la línea (largo en mm, cúpula, etc.)
  * @param {Record<string, unknown>} props.linea  opciones generales (material, color, tina, frío, …)
+ * @param {import('./materiales.js').MaterialesBatea} props.materiales  compartidos por toda la línea
+ * @param {boolean} [props.cerradoIzq]
+ * @param {boolean} [props.cerradoDer]
+ * @param {boolean} [props.vidrioIzq]  vidrio lateral aunque la punta abra (bateas pegadas de distinto tipo)
+ * @param {boolean} [props.vidrioDer]
  */
-const Batea = ({ batea, linea }) => {
-  const materiales = useMateriales(linea);
+const Batea = ({ batea, linea, materiales, cerradoIzq = true, cerradoDer = true, vidrioIzq = cerradoIzq, vidrioDer = cerradoDer }) => {
   const L = Number(batea.largo) / 1000;
   const t = MEDIDAS.espesorLateral;
   const xi = L / 2 - t; // cara interior de los laterales
+  const xa = cerradoIzq ? -xi : -L / 2; // extremos de lo que va entre laterales (o hasta el borde si abre)
+  const xb = cerradoDer ? xi : L / 2;
   const m = MEDIDAS;
 
   // Patas: en las puntas del zócalo y una cada ~1 m
@@ -205,7 +215,10 @@ const Batea = ({ batea, linea }) => {
       {/* 2. Zócalo, retirado hacia adentro. Lleva el color si se eligió (zonaColor).
           Con equipo incorporado se acorta: su costado derecho es el lugar del equipo (Adicionales). */}
       <Caja
-        x={[-L / 2 + m.retiroZocaloCostado, L / 2 - m.retiroZocaloCostado - (hayEquipoIncorporado(linea) ? m.anchoEquipo : 0)]}
+        x={[
+          cerradoIzq ? -L / 2 + m.retiroZocaloCostado : -L / 2,
+          (cerradoDer ? L / 2 - m.retiroZocaloCostado : L / 2) - (hayEquipoIncorporado(linea) ? m.anchoEquipo : 0),
+        ]}
         y={[m.altoPatas, m.altoZocalo]}
         z={[FONDO + 0.03, FRENTE - m.retiroZocaloFrente]}
         material={materiales.zocalo}
@@ -213,16 +226,16 @@ const Batea = ({ batea, linea }) => {
 
       {/* 3. Bloque bajo la tina y respaldo trasero (lado del vendedor, bajo la mesada): material de la tina.
           Faldón (franja del frente): lleva el color si se eligió (zonaColor). */}
-      <Caja x={[-xi, xi]} y={[m.altoZocalo, m.pisoExhibicion - 0.02]} z={[PARED_TRASERA, FRENTE - 0.04]} material={materiales.tina} />
-      <Caja x={[-xi, xi]} y={[m.altoZocalo, m.altoMesada - m.espesorMesada]} z={[FONDO, PARED_TRASERA]} material={materiales.tina} />
-      <Caja x={[-xi, xi]} y={[m.altoZocalo, m.altoFranja]} z={[FRENTE - 0.04, FRENTE]} material={materiales.faldon} />
+      <Caja x={[xa, xb]} y={[m.altoZocalo, m.pisoExhibicion - 0.02]} z={[PARED_TRASERA, FRENTE - 0.04]} material={materiales.tina} />
+      <Caja x={[xa, xb]} y={[m.altoZocalo, m.altoMesada - m.espesorMesada]} z={[FONDO, PARED_TRASERA]} material={materiales.tina} />
+      <Caja x={[xa, xb]} y={[m.altoZocalo, m.altoFranja]} z={[FRENTE - 0.04, FRENTE]} material={materiales.faldon} />
 
       {/* 4. Riel frontal (galvanizado) con dos juntas oscuras */}
-      <Caja x={[-xi, xi]} y={[m.altoFranja, m.altoRiel]} z={[FRENTE - 0.08, FRENTE + m.salienteRiel]} material={materiales.galvanizado} />
+      <Caja x={[xa, xb]} y={[m.altoFranja, m.altoRiel]} z={[FRENTE - 0.08, FRENTE + m.salienteRiel]} material={materiales.galvanizado} />
       {[0.035, 0.075].map((dy) => (
         <Caja
           key={dy}
-          x={[-xi, xi]}
+          x={[xa, xb]}
           y={[m.altoFranja + dy - 0.004, m.altoFranja + dy + 0.004]}
           z={[FRENTE + m.salienteRiel - 0.002, FRENTE + m.salienteRiel + 0.003]}
           material={materiales.oscuro}
@@ -230,26 +243,28 @@ const Batea = ({ batea, linea }) => {
       ))}
 
       {/* 5. Tina: bacha (piso), pared del frente por dentro y respaldo hasta la mesada */}
-      <Caja x={[-xi, xi]} y={[m.pisoExhibicion - 0.02, m.pisoExhibicion]} z={[PARED_TRASERA, FRENTE - 0.08]} material={materiales.tina} />
-      <Caja x={[-xi, xi]} y={[m.pisoExhibicion, m.altoRiel - 0.005]} z={[FRENTE - 0.09, FRENTE - 0.08]} material={materiales.tina} />
-      <Caja x={[-xi, xi]} y={[m.pisoExhibicion, m.altoMesada - m.espesorMesada]} z={[PARED_TRASERA, PARED_TRASERA + 0.02]} material={materiales.tina} />
+      <Caja x={[xa, xb]} y={[m.pisoExhibicion - 0.02, m.pisoExhibicion]} z={[PARED_TRASERA, FRENTE - 0.08]} material={materiales.tina} />
+      <Caja x={[xa, xb]} y={[m.pisoExhibicion, m.altoRiel - 0.005]} z={[FRENTE - 0.09, FRENTE - 0.08]} material={materiales.tina} />
+      <Caja x={[xa, xb]} y={[m.pisoExhibicion, m.altoMesada - m.espesorMesada]} z={[PARED_TRASERA, PARED_TRASERA + 0.02]} material={materiales.tina} />
 
       {/* 6. Mesada de inox del lado del vendedor, a todo el largo */}
       <Caja
-        x={[-xi, xi]}
+        x={[xa, xb]}
         y={[m.altoMesada - m.espesorMesada, m.altoMesada]}
         z={[FONDO - 0.02, PARED_TRASERA + 0.02]}
         material={materiales.inox}
       />
 
       {/* 7. Laterales */}
-      <Laterales largo={L} materiales={materiales} />
+      <Laterales largo={L} izq={cerradoIzq} der={cerradoDer} materiales={materiales} />
 
       {/* 8. Interior según el frío */}
-      <Interior anchoInterior={2 * xi} linea={linea} materiales={materiales} />
+      <group position={[(xa + xb) / 2, 0, 0]}>
+        <Interior anchoInterior={xb - xa} linea={linea} materiales={materiales} />
+      </group>
 
       {/* 9. Parte de arriba según el tipo (cúpula curva / recta, sin cúpula con iluminación, sin cúpula) */}
-      <ParteSuperior batea={batea} anchoInterior={2 * xi} materiales={materiales} />
+      <ParteSuperior batea={batea} x0={xa} x1={xb} cerradoIzq={vidrioIzq} cerradoDer={vidrioDer} materiales={materiales} />
 
       {/* 10. Adicionales: depósito, puertas traseras de acrílico y equipo incorporado (6.3) */}
       <Adicionales batea={batea} linea={linea} largo={L} xi={xi} materiales={materiales} />

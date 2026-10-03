@@ -83,17 +83,19 @@ export const useMateriales = (linea) => {
     bandeja: estandar('bandeja', { color: COLOR_BANDEJA_PREPINTADA, metalness: 0.1, roughness: 0.45 }),
     oscuro: estandar('oscuro', { color: COLOR_OSCURO, metalness: 0.2, roughness: 0.7 }),
     aluminio: estandar('aluminio', { color: COLOR_ALUMINIO, metalness: 0.5, roughness: 0.35 }),
+    // Vidrio y acrílico son losas cerradas (con espesor): alcanza con dibujarlos de un solo lado, y al mirar
+    // a través no se mezclan dos caras encimadas.
     vidrio: Object.assign(
       new THREE.MeshPhysicalMaterial({
         color: '#cfeef0', metalness: 0, roughness: 0.05, transparent: true, opacity: 0.32,
-        depthWrite: false, side: THREE.DoubleSide,
+        depthWrite: false,
       }),
       { name: 'vidrio' }
     ),
     led: estandar('led', { color: '#ffffff', emissive: '#f2f7ff', emissiveIntensity: 4, toneMapped: false }),
     acrilico: estandar('acrilico', {
       color: '#eef6f8', metalness: 0, roughness: 0.4, transparent: true, opacity: 0.45,
-      depthWrite: false, side: THREE.DoubleSide,
+      depthWrite: false,
     }),
     // PROVISORIO: repeticiones pensadas para la pared del costado del equipo (~0,92 m de fondo × 0,23 m de alto)
     rejillaVentilacion: estandar('rejillaVentilacion', { map: texturaPerforada(77, 20), metalness: 0.4, roughness: 0.5 }),
