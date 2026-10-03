@@ -6,6 +6,7 @@
     "dev": "nodemon server.js",
     "start": "node server.js",
     "sync-modelo": "node scripts/sync-modelo.js",
+    "migrar": "node scripts/migrar.js",
     "test": "node --test \"test/**/*.test.js\""
   },
   "keywords": [],
@@ -16,7 +17,9 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
+    "express-rate-limit": "^8.7.0",
     "mysql2": "^3.14.0",
+    "nodemailer": "^10.0.14",
     "zod": "^4.6.5"
   },
   "devDependencies": {

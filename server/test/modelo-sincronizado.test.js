@@ -7,7 +7,7 @@ const path = require('path');
 
 const ORIGEN = path.join(__dirname, '../../client/src/configurador/modelo');
 const DESTINO = path.join(__dirname, '../src/configurador/modelo');
-const ARCHIVOS = ['catalogo.json', 'esquema.js', 'reglas.js'];
+const ARCHIVOS = ['catalogo.json', 'esquema.js', 'reglas.js', 'textos.js'];
 
 test('la copia del modelo está sincronizada con el client', { skip: !fs.existsSync(ORIGEN) && 'no está la carpeta client/ (p. ej. en Docker)' }, () => {
   for (const archivo of ARCHIVOS) {

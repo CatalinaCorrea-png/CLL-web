@@ -1,5 +1,8 @@
 require('dotenv').config(); // Cargar variables de entorno
 const app = require('./src/app.js');
+const { revisarConfiguracion } = require('./src/presupuestos/transportes');
+
+revisarConfiguracion(); // avisa si faltan variables de los mails
 
 const PORT = process.env.PORT || 3001;
 

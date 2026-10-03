@@ -1,4 +1,4 @@
-// Copia el modelo del configurador (catálogo, esquema y reglas) desde el client al server.
+// Copia el modelo del configurador (catálogo, esquema, reglas y textos) desde el client al server.
 // La fuente es client/src/configurador/modelo/: se edita SOLO ahí y después se corre
 //   npm run sync-modelo      (desde server/)
 // La copia se commitea, porque la imagen Docker del server no ve la carpeta client/.
@@ -10,7 +10,7 @@ const ORIGEN = path.join(__dirname, '../../client/src/configurador/modelo');
 const DESTINO = path.join(__dirname, '../src/configurador/modelo');
 
 // Archivos que se comparten (los tests se quedan en el client).
-const ARCHIVOS = ['catalogo.json', 'esquema.js', 'reglas.js'];
+const ARCHIVOS = ['catalogo.json', 'esquema.js', 'reglas.js', 'textos.js'];
 
 if (!fs.existsSync(ORIGEN)) {
   console.error(`No se encontró el modelo en ${ORIGEN}`);

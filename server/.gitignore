@@ -1,2 +1,4 @@
 .env
 node_modules
+# Mails de prueba y capturas en desarrollo (npm run dev)
+tmp
