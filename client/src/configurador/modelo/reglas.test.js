@@ -2,7 +2,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import catalogo from './catalogo.json' with { type: 'json' };
-import { opcionesDeshabilitadas, paletaDeColor } from './reglas.js';
+import { opcionesDeshabilitadas, paletaDeColor, coloresDe, SIN_COLOR } from './reglas.js';
 import { configuracionPorDefecto } from './esquema.js';
 
 /**
@@ -47,11 +47,11 @@ test('frío forzado habilita bandejas y rejilla', () => {
   assert.deepEqual(deshabilitadasDeLinea(configCon({ frio: 'forzado' })), []);
 });
 
-test('color, dónde va el color y tina solo se eligen con chapa: inox los deshabilita', () => {
+test('colores de faldón y zócalo y tina solo se eligen con chapa: inox los deshabilita', () => {
   const d = opcionesDeshabilitadas(configCon({ material: 'inox' }), catalogo).filter((x) => x.ambito === 'linea');
   assert.deepEqual(d, [
-    { ambito: 'linea', opcion: 'color', motivo: 'El acero inoxidable no se pinta.' },
-    { ambito: 'linea', opcion: 'zonaColor', motivo: 'El acero inoxidable no se pinta.' },
+    { ambito: 'linea', opcion: 'colorFaldon', motivo: 'El acero inoxidable no se pinta.' },
+    { ambito: 'linea', opcion: 'colorZocalo', motivo: 'El acero inoxidable no se pinta.' },
     { ambito: 'linea', opcion: 'tina', motivo: 'Con cuerpo de acero inoxidable, la tina también es de acero.' },
   ]);
   assert.deepEqual(deshabilitadasDeLinea(configCon({ material: 'galvanizada_prepintada' })), []);
@@ -64,6 +64,12 @@ test('paleta de color según el material', () => {
     ['blanco', 'negro', 'gris', 'rojo', 'azul']
   );
   assert.equal(paletaDeColor(catalogo, 'inox'), null);
+});
+
+test('colores posibles: "sin color" primero y después la paleta; ninguno con inox', () => {
+  assert.deepEqual(coloresDe(catalogo, 'galvanizada_prepintada'), [SIN_COLOR, 'blanco', 'negro', 'gris', 'rojo', 'azul']);
+  assert.equal(coloresDe(catalogo, 'galvanizada_pintada').length, 16);
+  assert.deepEqual(coloresDe(catalogo, 'inox'), []);
 });
 
 test('puertas traseras: deshabilitadas solo en las bateas sin cúpula, por índice', () => {

@@ -26,16 +26,18 @@ const presupuestosModel = {
     }
   },
 
-  // Pedido igual (mismo email y misma configuración, sin contar el color) en los últimos `dias` días:
-  // { ref, color } con el color con el que se pidió, o null.
+  // Pedido igual (mismo email y misma configuración, sin contar los colores) en los últimos `dias` días:
+  // { ref, colorFaldon, colorZocalo } con los colores con los que se pidió, o null.
   buscarRepetido: async (email, configHash, dias) => {
     const [filas] = await db.query(
-      `SELECT ref, config_json->>'$.linea.color' AS color FROM presupuestos
+      `SELECT ref, config_json->>'$.linea.colorFaldon' AS colorFaldon, config_json->>'$.linea.colorZocalo' AS colorZocalo
+       FROM presupuestos
        WHERE email = ? AND config_hash = ? AND created_at >= NOW() - INTERVAL ? DAY
        ORDER BY created_at DESC LIMIT 1`,
       [email, configHash, dias]
     );
-    return filas[0] ? { ref: filas[0].ref, color: filas[0].color ?? null } : null;
+    const f = filas[0];
+    return f ? { ref: f.ref, colorFaldon: f.colorFaldon ?? null, colorZocalo: f.colorZocalo ?? null } : null;
   },
 
   guardar: async (p) => {

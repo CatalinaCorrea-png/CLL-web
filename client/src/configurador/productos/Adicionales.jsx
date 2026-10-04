@@ -1,7 +1,7 @@
 // Adicionales de la batea (prompt 6.3): depósito, puertas traseras de acrílico y equipo incorporado.
 // No hay fotos de estas partes (salvo la rejilla de ventilación de batea-8): todo es PROVISORIO.
-//   - Depósito: puertas batientes en el respaldo trasero (lado del vendedor), bajo la mesada, sin ocupar
-//     el costado reservado para el equipo.
+//   - Depósito: puertas batientes en el zócalo, del lado del vendedor (sobre la cara de atrás del zócalo,
+//     que está retirada), sin ocupar el costado reservado para el equipo.
 //   - Puertas traseras: hojas de acrílico corredizas que cierran la cúpula del lado del vendedor, en el
 //     plano inclinado entre la mesada y el borde de atrás del techo.
 //   - Equipo incorporado: volumen en la zona del zócalo, costado derecho (+X), con rejilla perforada en el costado.
@@ -51,7 +51,8 @@ const FORMAS_HOJA = Object.fromEntries(
 // ------------------------------------------------------------------ piezas
 
 /**
- * Depósito: puertas batientes en el respaldo trasero, con juntas oscuras y manijas de inox.
+ * Depósito: puertas batientes en el zócalo, del lado del vendedor, del material (y color) del zócalo,
+ * con juntas oscuras y manijas de inox.
  * @param {{ xi: number, mat: MaterialesBatea }} props
  */
 const Deposito = ({ xi, mat }) => {
@@ -60,21 +61,22 @@ const Deposito = ({ xi, mat }) => {
   if (x1 - x0 < 0.25) return null; // no entra ni una puerta
   const centro = (x0 + x1) / 2;
   const { tramos: puertas } = tramos(x1 - x0, m.anchoPuertaDeposito);
-  const y = /** @type {[number, number]} */ ([m.altoZocalo + m.bajoDeposito, m.altoMesada - m.topeDeposito]);
+  const y = /** @type {[number, number]} */ ([m.altoPatas + m.bajoDeposito, m.altoZocalo - m.topeDeposito]);
   const yMedio = (y[0] + y[1]) / 2;
-  const zFondo = FONDO - 0.002;               // fondo oscuro que se ve por las juntas
+  const zCara = FONDO + 0.03;                // cara de atrás del zócalo (está retirada 3 cm del fondo)
+  const zFondo = zCara - 0.002;              // fondo oscuro que se ve por las juntas
   const zPuerta = zFondo - m.espesorPuerta;  // cara exterior de las puertas
 
   return (
     <>
-      <Caja x={[x0, x1]} y={y} z={[zFondo, FONDO]} material={mat.oscuro} />
+      <Caja x={[x0, x1]} y={y} z={[zFondo, zCara]} material={mat.oscuro} />
       {puertas.map(([a, b], i) => {
         const xa = centro + a + 0.003, xb = centro + b - 0.003;
         // Manijas alternadas: las de a pares quedan enfrentadas en el medio
         const xManija = i % 2 === 0 ? xb - 0.05 : xa + 0.05;
         return (
           <group key={i}>
-            <Caja x={[xa, xb]} y={y} z={[zPuerta, zFondo]} material={mat.tina} />
+            <Caja x={[xa, xb]} y={y} z={[zPuerta, zFondo]} material={mat.zocalo} />
             <Caja x={[xManija - 0.008, xManija + 0.008]} y={[yMedio - 0.06, yMedio + 0.06]} z={[zPuerta - 0.022, zPuerta]} material={mat.inox} />
           </group>
         );

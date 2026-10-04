@@ -1,6 +1,6 @@
 // Operaciones de edición de una línea: mantener la configuración coherente, agregar y quitar bateas.
 // JS puro (sin React ni three). Solo lo usa el client (store.js); no se copia al server.
-import { opcionesDeshabilitadas, paletaDeColor } from './reglas.js';
+import { opcionesDeshabilitadas, paletaDeColor, coloresDe } from './reglas.js';
 import { moduloPorDefecto } from './esquema.js';
 
 /** @typedef {import('./reglas.js').Catalogo} Catalogo */
@@ -20,7 +20,8 @@ import { moduloPorDefecto } from './esquema.js';
  * - borra los valores de las opciones que quedaron deshabilitadas;
  * - completa las que se acaban de habilitar con su valor por defecto
  *   (o con el del módulo anterior, si la opción tiene `copiarDelAnterior`);
- * - corrige el color: si no está en la paleta del material usa el de por defecto, y con inox lo borra.
+ * - corrige los colores (faldón y zócalo): si no son de la paleta del material ni "sin color" usa el de
+ *   por defecto, y con inox los borra.
  * Repite hasta que no cambie nada, porque una opción puede habilitar otra (versión → cúpula → puertas).
  * No modifica la configuración recibida: devuelve una nueva.
  * @param {ConfigParcial} config
@@ -47,9 +48,14 @@ export const normalizar = (config, catalogo) => {
       if (deshabilitadaEnLinea(o.id)) delete actual.linea[o.id];
       else if (actual.linea[o.id] === undefined) actual.linea[o.id] = o.default;
     }
+    // Colores (faldón y zócalo): con inox no van; si el valor no es de la paleta ni "sin color", el default
     const paleta = paletaDeColor(catalogo, actual.linea.material);
-    if (!paleta) delete actual.linea.color;
-    else if (!paleta.colores.some((c) => c.id === actual.linea.color)) actual.linea.color = paleta.default;
+    const colores = coloresDe(catalogo, actual.linea.material);
+    for (const o of /** @type {Opcion[]} */ (catalogo.opcionesLinea)) {
+      if (o.tipo !== 'color') continue;
+      if (!paleta) delete actual.linea[o.id];
+      else if (!colores.includes(String(actual.linea[o.id]))) actual.linea[o.id] = paleta.default;
+    }
 
     // Opciones de cada módulo
     actual.modulos.forEach((modulo, indice) => {

@@ -212,7 +212,7 @@ const Batea = ({ batea, linea, materiales, cerradoIzq = true, cerradoDer = true,
         </mesh>
       )))}
 
-      {/* 2. Zócalo, retirado hacia adentro. Lleva el color si se eligió (zonaColor).
+      {/* 2. Zócalo, retirado hacia adentro. Lleva el color del zócalo (o chapa blanca si va sin color).
           Con equipo incorporado se acorta: su costado derecho es el lugar del equipo (Adicionales). */}
       <Caja
         x={[
@@ -225,7 +225,7 @@ const Batea = ({ batea, linea, materiales, cerradoIzq = true, cerradoDer = true,
       />
 
       {/* 3. Bloque bajo la tina y respaldo trasero (lado del vendedor, bajo la mesada): material de la tina.
-          Faldón (franja del frente): lleva el color si se eligió (zonaColor). */}
+          Faldón (franja del frente): lleva el color del faldón (o chapa blanca si va sin color). */}
       <Caja x={[xa, xb]} y={[m.altoZocalo, m.pisoExhibicion - 0.02]} z={[PARED_TRASERA, FRENTE - 0.04]} material={materiales.tina} />
       <Caja x={[xa, xb]} y={[m.altoZocalo, m.altoMesada - m.espesorMesada]} z={[FONDO, PARED_TRASERA]} material={materiales.tina} />
       <Caja x={[xa, xb]} y={[m.altoZocalo, m.altoFranja]} z={[FRENTE - 0.04, FRENTE]} material={materiales.faldon} />

@@ -294,6 +294,10 @@
   background: linear-gradient(135deg, #eef1f3, #b9c0c7 55%, #e6e9ec);
 }
 .cfg-color-inox:disabled { opacity: 1; }
+/* Sin color (chapa blanca): blanco con una diagonal, para no confundirlo con el blanco de la paleta */
+.cfg-color-sin {
+  background: linear-gradient(135deg, var(--surface) 45%, var(--border-strong) 45%, var(--border-strong) 55%, var(--surface) 55%);
+}
 .cfg-color-nombre {
   display: block;
   margin-top: .35rem;
@@ -305,8 +309,10 @@
    OJO: css/offcanvasFabricacion.css estiliza .offcanvas-title/-header/-body de forma global
    (con !important). Estas reglas, más específicas, lo pisan solo para este panel. */
 @media (max-width: 767.98px) {
+  /* La hoja ocupa menos de la mitad de abajo: el 3D queda arriba y se ve mientras se eligen opciones
+     (no tiene fondo oscuro: backdrop={false} en PanelOpciones) */
   .cfg-offcanvas.offcanvas-bottom {
-    --bs-offcanvas-height: 70vh;
+    --bs-offcanvas-height: 42vh;
     border-radius: var(--r-lg) var(--r-lg) 0 0;
     box-shadow: var(--shadow-lg);
   }
@@ -318,6 +324,9 @@
     border: 0;
     box-shadow: none;
   }
+  /* Márgenes a los costados del 3D: al tocar el visor se gira la cámara (touch-action: none), así que
+     estas franjas son las que permiten scrollear la página con el dedo */
+  .cfg-visor { margin-inline: 1.5rem; }
 }
 
 /* --- Selector de producto --- */

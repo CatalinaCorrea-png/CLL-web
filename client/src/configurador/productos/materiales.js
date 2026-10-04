@@ -4,7 +4,7 @@ import { useEffect, useMemo } from 'react';
 import { useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 import catalogo from '../modelo/catalogo.json';
-import { paletaDeColor } from '../modelo/reglas.js';
+import { paletaDeColor, SIN_COLOR } from '../modelo/reglas.js';
 
 // Colores fijos (los que no elige el cliente). Aproximados de las fotos.
 const COLOR_GALVANIZADO = '#b9c0c6';
@@ -17,7 +17,8 @@ const COLOR_ALUMINIO = '#cfd4d8';   // arcos y perfiles de la parte de arriba
 
 /**
  * @typedef {object} MaterialesBatea
- * @property {THREE.MeshStandardMaterial} pintura
+ * @property {THREE.MeshStandardMaterial} pinturaFaldon  color elegido para el faldón
+ * @property {THREE.MeshStandardMaterial} pinturaZocalo  color elegido para el zócalo
  * @property {THREE.MeshStandardMaterial} inox
  * @property {THREE.MeshStandardMaterial} galvanizado
  * @property {THREE.MeshStandardMaterial} chapaBlanca  tina de chapa y caras de los laterales
@@ -29,8 +30,8 @@ const COLOR_ALUMINIO = '#cfd4d8';   // arcos y perfiles de la parte de arriba
  * @property {THREE.MeshStandardMaterial} led      emisivo por encima de 1 y sin tone mapping: es lo único que toma el Bloom
  * @property {THREE.MeshStandardMaterial} acrilico puertas traseras: translúcido esmerilado
  * @property {THREE.MeshStandardMaterial} rejillaVentilacion  chapa perforada en la pared del costado del equipo (textura generada por código)
- * @property {THREE.MeshStandardMaterial} faldon  franja del frente: pintura si lleva color, chapa blanca si no; inox con cuerpo de inox
- * @property {THREE.MeshStandardMaterial} zocalo  base: pintura si lleva color, chapa blanca si no; inox con cuerpo de inox
+ * @property {THREE.MeshStandardMaterial} faldon  franja del frente: su color, chapa blanca si va "sin color"; inox con cuerpo de inox
+ * @property {THREE.MeshStandardMaterial} zocalo  base: su color, chapa blanca si va "sin color"; inox con cuerpo de inox
  * @property {THREE.MeshStandardMaterial} tina    bacha, respaldo y respaldo trasero: chapa blanca o inox
  * @property {THREE.MeshStandardMaterial} lateral laterales de cierre (y costados de la tina): chapa blanca, o inox con cuerpo de inox
  */
@@ -66,7 +67,7 @@ const texturaPerforada = (repX, repY) => {
 };
 
 /**
- * Materiales de la batea según las opciones de la línea (material, color, tina, bandeja).
+ * Materiales de la batea según las opciones de la línea (material, colores de faldón y zócalo, tina, bandeja).
  * @param {Record<string, unknown>} linea  opciones generales de la línea
  * @returns {MaterialesBatea}
  */
@@ -74,7 +75,8 @@ export const useMateriales = (linea) => {
   const invalidate = useThree((s) => s.invalidate);
 
   const base = useMemo(() => ({
-    pintura: estandar('pintura', { color: '#ffffff', metalness: 0.1, roughness: 0.5 }),
+    pinturaFaldon: estandar('pinturaFaldon', { color: '#ffffff', metalness: 0.1, roughness: 0.5 }),
+    pinturaZocalo: estandar('pinturaZocalo', { color: '#ffffff', metalness: 0.1, roughness: 0.5 }),
     // Metales con metalness moderado: el entorno es simple y con valores altos se ven oscuros
     inox: estandar('inox', { color: COLOR_INOX, metalness: 0.6, roughness: 0.3 }),
     galvanizado: estandar('galvanizado', { color: COLOR_GALVANIZADO, metalness: 0.35, roughness: 0.45 }),
@@ -107,25 +109,27 @@ export const useMateriales = (linea) => {
     Object.values(base).forEach((m) => m.dispose());
   }, [base]);
 
-  // Recolorear en vivo: color de la pintura y material de las bandejas
-  const hexPintura = paletaDeColor(catalogo, linea.material)?.colores.find((c) => c.id === linea.color)?.hex;
+  // Recolorear en vivo: colores del faldón y del zócalo, y material de las bandejas
+  const paleta = paletaDeColor(catalogo, linea.material);
+  const hexDe = (/** @type {unknown} */ id) => paleta?.colores.find((c) => c.id === id)?.hex;
+  const hexFaldon = hexDe(linea.colorFaldon);
+  const hexZocalo = hexDe(linea.colorZocalo);
   const bandejaInox = linea.bandeja === 'inox';
   useEffect(() => {
-    if (hexPintura) base.pintura.color.set(hexPintura);
+    if (hexFaldon) base.pinturaFaldon.color.set(hexFaldon);
+    if (hexZocalo) base.pinturaZocalo.color.set(hexZocalo);
     base.bandeja.color.set(bandejaInox ? COLOR_INOX : COLOR_BANDEJA_PREPINTADA);
     base.bandeja.metalness = bandejaInox ? 0.6 : 0.1;
     base.bandeja.roughness = bandejaInox ? 0.28 : 0.45;
     invalidate();
-  }, [base, hexPintura, bandejaInox, invalidate]);
+  }, [base, hexFaldon, hexZocalo, bandejaInox, invalidate]);
 
   const esInox = linea.material === 'inox';
-  // El color va en el faldón, en el zócalo o en los dos (zonaColor); la parte sin color queda de chapa blanca
-  const conColor = (/** @type {'faldon' | 'zocalo'} */ parte) =>
-    linea.zonaColor === 'faldon_y_zocalo' || linea.zonaColor === parte ? base.pintura : base.chapaBlanca;
+  // Cada parte lleva su color; "sin color" queda de chapa blanca
   return {
     ...base,
-    faldon: esInox ? base.inox : conColor('faldon'),
-    zocalo: esInox ? base.inox : conColor('zocalo'),
+    faldon: esInox ? base.inox : linea.colorFaldon === SIN_COLOR ? base.chapaBlanca : base.pinturaFaldon,
+    zocalo: esInox ? base.inox : linea.colorZocalo === SIN_COLOR ? base.chapaBlanca : base.pinturaZocalo,
     // Con cuerpo de inox la tina es siempre de acero; con chapa, lo que se eligió
     tina: esInox || linea.tina === 'inox' ? base.inox : base.chapaBlanca,
     // Laterales de cierre: chapa blanca, o todo de acero con cuerpo de inox (no dependen de la tina)

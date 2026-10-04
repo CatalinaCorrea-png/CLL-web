@@ -35,7 +35,7 @@ test('catálogo: 15 colores epoxi (con blanco por defecto) y los 6 largos de la 
   assert.equal(catalogo.paletas.epoxi.colores.length, 15);
   assert.equal(catalogo.paletas.epoxi.default, 'blanco');
   assert.equal(catalogo.linea.mostradorRemate.alto, 900);
-  assert.equal(catalogo.version, 5);
+  assert.equal(catalogo.version, 6);
   // Orden del panel: frío, bandejas y rejilla antes de equipamiento
   const orden = catalogo.opcionesLinea.map((o) => o.id);
   assert.ok(orden.indexOf('rejillaSobreBandeja') < orden.indexOf('equipamiento'));
@@ -43,7 +43,7 @@ test('catálogo: 15 colores epoxi (con blanco por defecto) y los 6 largos de la 
   assert.equal(catalogo.paletas.prepintada.colores.find((c) => c.id === 'blanco')?.hex, '#FFFFFF');
   const ids = catalogo.opcionesLinea.map((o) => o.id);
   assert.ok(!ids.includes('lateral'), 'el estilo de lateral ya no se ofrece');
-  assert.equal(ids[2], 'zonaColor');
+  assert.deepEqual(ids.slice(1, 3), ['colorFaldon', 'colorZocalo']); // v6: un color por parte
   assert.equal(ids[3], 'tina');
   const largo = catalogo.modulos.batea.find((o) => o.id === 'largo');
   assert.deepEqual(largo?.valores, [1200, 1500, 2000, 2400, 3000, 3600]);
@@ -86,7 +86,7 @@ test('la configuración por defecto es válida (una batea de 2000 mm, sin remate
 
 test('el ejemplo de la especificación es válido', () => {
   const c = {
-    linea: { ...config().linea, material: 'galvanizada_pintada', color: 'blanco', frio: 'forzado' },
+    linea: { ...config().linea, material: 'galvanizada_pintada', colorFaldon: 'blanco', colorZocalo: 'blanco', frio: 'forzado' },
     modulos: [
       MOSTRADOR,
       { tipo: 'batea', largo: 2400, cupula: 'sin_cupula_iluminacion', estructura: 'curva', deposito: false },
@@ -105,13 +105,18 @@ test('líneas en L, en U y en zigzag son válidas', () => {
   for (const modulos of [L, U, zigzag]) assert.deepEqual(errores(config({ modulos })), []);
 });
 
-test('inox sin color y prepintada con su paleta son válidas', () => {
+/** Línea de inox: sin colores ni tina (no se eligen). */
+const lineaInox = () => {
   const inox = config({ linea: { material: 'inox' } });
-  delete inox.linea.color;
+  delete inox.linea.colorFaldon;
+  delete inox.linea.colorZocalo;
   delete inox.linea.tina; // con inox la tina es de acero, no se elige
-  delete inox.linea.zonaColor;
-  assert.deepEqual(errores(inox), []);
-  assert.deepEqual(errores(config({ linea: { material: 'galvanizada_prepintada', color: 'negro' } })), []);
+  return inox;
+};
+
+test('inox sin color y prepintada con su paleta son válidas', () => {
+  assert.deepEqual(errores(lineaInox()), []);
+  assert.deepEqual(errores(config({ linea: { material: 'galvanizada_prepintada', colorFaldon: 'negro', colorZocalo: 'negro' } })), []);
 });
 
 test('moduloPorDefecto no incluye opciones deshabilitadas', () => {
@@ -167,15 +172,22 @@ test('una opción deshabilitada que trae valor es inválida', () => {
   assert.match(errores(sinCupulaConPuertas)[0], /solo van en bateas con cúpula/);
 });
 
-test('color: "negro" no existe en la epoxi, y con inox no se admite color', () => {
-  assert.match(errores(config({ linea: { material: 'galvanizada_pintada', color: 'negro' } }))[0], /paleta/);
-  const inoxConColor = config({ linea: { material: 'inox', color: 'plata' } });
-  delete inoxConColor.linea.tina;
-  delete inoxConColor.linea.zonaColor;
+test('colores: "negro" no existe en la epoxi, con inox no se admite color y los dos son obligatorios', () => {
+  assert.match(errores(config({ linea: { material: 'galvanizada_pintada', colorFaldon: 'negro' } }))[0], /paleta/);
+  assert.match(errores(config({ linea: { material: 'galvanizada_pintada', colorZocalo: 'negro' } }))[0], /paleta/);
+  const inoxConColor = { ...lineaInox(), linea: { ...lineaInox().linea, colorZocalo: 'plata' } };
   assert.deepEqual(errores(inoxConColor), ['El acero inoxidable no se pinta.']);
-  const sinColor = config();
-  delete sinColor.linea.color;
-  assert.match(errores(sinColor)[0], /paleta/);
+  for (const id of ['colorFaldon', 'colorZocalo']) {
+    const sinColor = config();
+    delete sinColor.linea[id];
+    assert.match(errores(sinColor)[0], /paleta/, id);
+  }
+});
+
+test('colores: faldón y zócalo de colores distintos, o "sin color" (chapa blanca)', () => {
+  assert.deepEqual(errores(config({ linea: { colorFaldon: 'rojo', colorZocalo: 'azul' } })), []);
+  assert.deepEqual(errores(config({ linea: { colorFaldon: 'sin_color', colorZocalo: 'verde_ral' } })), []);
+  assert.deepEqual(errores(config({ linea: { colorFaldon: 'sin_color', colorZocalo: 'sin_color' } })), []);
 });
 
 test('estructura inválida: sin remates, bateas seguidas, 4 bateas', () => {
@@ -228,32 +240,13 @@ test('una esquina nueva copia la estructura de la batea anterior', () => {
 // ---------------------------------------------------------------- tina (v4 de la especificación)
 test('tina: chapa blanca o acero con cuerpo de chapa; con inox no se elige', () => {
   assert.deepEqual(errores(config({ linea: { tina: 'inox' } })), []);
-  assert.deepEqual(errores(config({ linea: { material: 'galvanizada_prepintada', color: 'negro', tina: 'chapa_blanca' } })), []);
-  const inox = config({ linea: { material: 'inox' } });
-  delete inox.linea.color;
-  delete inox.linea.tina;
-  delete inox.linea.zonaColor;
+  assert.deepEqual(errores(config({ linea: { material: 'galvanizada_prepintada', colorFaldon: 'negro', colorZocalo: 'negro', tina: 'chapa_blanca' } })), []);
+  const inox = lineaInox();
   assert.deepEqual(errores(inox), []);
   assert.deepEqual(errores({ ...inox, linea: { ...inox.linea, tina: 'chapa_blanca' } }), ['Con cuerpo de acero inoxidable, la tina también es de acero.']);
   const sinTina = config();
   delete sinTina.linea.tina;
   assert.deepEqual(errores(sinTina), ['Falta elegir "tina".']);
-});
-
-// ---------------------------------------------------------------- dónde va el color (v4)
-test('zonaColor: faldón, zócalo o los dos con chapa; con inox no se elige', () => {
-  for (const zona of ['faldon_y_zocalo', 'faldon', 'zocalo']) {
-    assert.deepEqual(errores(config({ linea: { zonaColor: zona } })), [], zona);
-  }
-  assert.match(errores(config({ linea: { zonaColor: 'laterales' } }))[0], /zonaColor/);
-  const sinZona = config();
-  delete sinZona.linea.zonaColor;
-  assert.deepEqual(errores(sinZona), ['Falta elegir "zonaColor".']);
-
-  const inox = config({ linea: { material: 'inox' } });
-  delete inox.linea.color;
-  delete inox.linea.tina;
-  assert.deepEqual(errores(inox), ['El acero inoxidable no se pinta.']); // queda zonaColor con inox
 });
 
 // ---------------------------------------------------------------- uniones: mostrador intermedio y directa

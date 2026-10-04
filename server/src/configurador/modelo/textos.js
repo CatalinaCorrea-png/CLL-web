@@ -1,7 +1,7 @@
 // Textos para mostrar valores y módulos en lenguaje claro ("Cúpula curva", "2,00 m", "Batea 2").
 // JS puro (sin React ni three). Lo usan el panel, el resumen del pedido y los mails del server
 // (se comparte con el server: npm run sync-modelo).
-import { opcionesDeshabilitadas, paletaDeColor } from './reglas.js';
+import { opcionesDeshabilitadas, paletaDeColor, SIN_COLOR } from './reglas.js';
 
 /** @typedef {import('./reglas.js').Catalogo} Catalogo */
 /** @typedef {import('./reglas.js').ConfigParcial} ConfigParcial */
@@ -110,6 +110,7 @@ const recorrer = (config, catalogo) => {
 const textoResumen = (opcion, valor, catalogo, linea) => {
   if (opcion.tipo === 'bool') return valor ? 'Sí' : 'No';
   if (opcion.tipo === 'color') {
+    if (valor === SIN_COLOR) return 'Sin color (chapa blanca)';
     const color = paletaDeColor(catalogo, linea.material)?.colores.find((c) => c.id === valor);
     return color?.nombre ?? String(valor);
   }
@@ -161,7 +162,7 @@ const fraseDe = (opcion, valor, catalogo, linea) => {
 
 /**
  * La configuración en frases, para el resumen antes de pedir presupuesto. Ej.:
- *   linea: "chapa galvanizada pintada, color rojo, color en faldón y zócalo, tina de chapa blanca, …"
+ *   linea: "chapa galvanizada pintada, faldón rojo, zócalo sin color (chapa blanca), tina de chapa blanca, …"
  *   modulos: [{ nombre: "Batea 1", texto: "2,40 m, sin cúpula con iluminación, estructura curva (arcos), con depósito" },
  *             { nombre: "Esquina 1", texto: "esquinero, tipo mostrador" }, …]
  * @param {ConfigParcial} config

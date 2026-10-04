@@ -24,6 +24,7 @@
  * Opción del catálogo vista de forma genérica (el JSON tiene formas distintas por opción).
  * @typedef {object} OpcionCatalogo
  * @property {string} id
+ * @property {string} [tipo]                   'select' | 'bool' | 'color'
  * @property {Record<string, unknown>} [soloSi]  { campo: valor } o { campo: [valores] }
  * @property {string} [motivo]
  */
@@ -46,14 +47,30 @@ const cumple = (soloSi, objeto) =>
  * @returns {{ default: string, colores: Array<{ id: string, nombre: string, hex: string }> } | null}
  */
 export const paletaDeColor = (catalogo, material) => {
+  // Todas las opciones de color (faldón y zócalo) usan la misma paleta según el material
   const opcionColor = /** @type {{ paletaSegun?: Record<string, string | null> } | undefined} */ (
-    catalogo.opcionesLinea.find((o) => o.id === 'color')
+    catalogo.opcionesLinea.find((o) => o.tipo === 'color')
   );
   const nombre = opcionColor?.paletaSegun?.[String(material)];
   if (!nombre) return null;
   /** @type {Record<string, { default: string, colores: Array<{ id: string, nombre: string, hex: string }> }>} */
   const paletas = catalogo.paletas;
   return paletas[nombre] ?? null;
+};
+
+/** Valor de un color para "sin pintar": esa parte queda de chapa blanca. */
+export const SIN_COLOR = 'sin_color';
+
+/**
+ * Valores posibles de una opción de color: "sin color" primero y después los ids de la paleta del
+ * material. Sin paleta (inox) no hay ninguno: la opción queda deshabilitada.
+ * @param {Catalogo} catalogo
+ * @param {unknown} material
+ * @returns {string[]}
+ */
+export const coloresDe = (catalogo, material) => {
+  const paleta = paletaDeColor(catalogo, material);
+  return paleta ? [SIN_COLOR, ...paleta.colores.map((c) => c.id)] : [];
 };
 
 /**
@@ -72,7 +89,7 @@ export const opcionesDeshabilitadas = (config, catalogo) => {
     if (o.soloSi && !cumple(o.soloSi, config.linea)) {
       deshabilitadas.push({ ambito: 'linea', opcion: o.id, motivo: o.motivo ?? '' });
     }
-    if (o.id === 'color' && !paletaDeColor(catalogo, config.linea.material)) {
+    if (o.tipo === 'color' && !paletaDeColor(catalogo, config.linea.material)) {
       deshabilitadas.push({ ambito: 'linea', opcion: o.id, motivo: o.motivoSinPaleta ?? '' });
     }
   }

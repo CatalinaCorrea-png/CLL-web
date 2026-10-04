@@ -7,7 +7,7 @@ export const LINKS_NAVEGACION = [
   { to: '/fabricacion', label: 'Fabricación' },
   { to: '/reparacion', label: 'Reparación' },
   { to: '/servicios', label: 'Servicios' },
-  { to: '/planificacion', label: 'Planificación' },
+  { to: '/planificacion', label: 'Cotización' },
 ];
 
 export const MAIL_CONTACTO = 'walterdcorrea@gmail.com';

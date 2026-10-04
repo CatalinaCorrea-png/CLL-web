@@ -14,8 +14,8 @@ const idaYVuelta = (c) => deserializar(serializar(c, catalogo), catalogo);
 test('la configuración por defecto va y vuelve igual', () => {
   const c = configuracionPorDefecto(catalogo);
   const params = serializar(c, catalogo);
-  assert.equal(params.v, '5');
-  assert.equal(params.l, '0000010010');
+  assert.equal(params.v, '6');
+  assert.equal(params.l, '0110010010'); // material 0 · faldón 1 (blanco) · zócalo 1 (blanco) · …
   assert.equal(params.m, 'r0.b22-00.r0'); // el "-" es la estructura, que no aplica con cúpula curva
   assert.deepEqual(idaYVuelta(c), c);
 });
@@ -23,7 +23,7 @@ test('la configuración por defecto va y vuelve igual', () => {
 test('una U de 3 bateas con opciones variadas va y vuelve igual, y el link es corto', () => {
   let c = agregarBatea(agregarBatea(configuracionPorDefecto(catalogo), catalogo), catalogo);
   c = normalizar({
-    linea: { ...c.linea, material: 'galvanizada_prepintada', color: 'negro', frio: 'estatico', equipamiento: 'semi' },
+    linea: { ...c.linea, material: 'galvanizada_prepintada', colorFaldon: 'negro', colorZocalo: 'sin_color', frio: 'estatico', equipamiento: 'semi' },
     modulos: c.modulos.map((m, i) => {
       if (i === 0) return { ...m, valor: 'mostrador' };
       if (i === 2) return { ...m, forma: 'rinconero', version: 'mostrador' };
@@ -41,28 +41,28 @@ test('una U de 3 bateas con opciones variadas va y vuelve igual, y el link es co
 test('inox (sin color) va y vuelve igual', () => {
   const base = configuracionPorDefecto(catalogo);
   const inox = normalizar({ ...base, linea: { ...base.linea, material: 'inox' } }, catalogo);
-  assert.equal(serializar(inox, catalogo).l[1], '-');
+  assert.equal(serializar(inox, catalogo).l.slice(1, 3), '--');
   assert.deepEqual(idaYVuelta(inox), inox);
 });
 
 test('parámetros rotos o de una versión que no existe devuelven null', () => {
   const { l, m } = serializar(configuracionPorDefecto(catalogo), catalogo);
-  assert.equal(deserializar({ v: '6', l, m }, catalogo), null);          // versión futura
+  assert.equal(deserializar({ v: '7', l, m }, catalogo), null);          // versión futura
   assert.equal(deserializar({ v: '0', l, m }, catalogo), null);          // versión inexistente
   assert.equal(deserializar({ v: 'x', l, m }, catalogo), null);
-  assert.equal(deserializar({ v: '5', l: null, m }, catalogo), null);    // falta la línea
-  assert.equal(deserializar({ v: '5', l: l + '0', m }, catalogo), null); // largo incorrecto
-  assert.equal(deserializar({ v: '5', l, m: 'basura' }, catalogo), null);
-  assert.equal(deserializar({ v: '5', l, m: 'r0.bz-200.r0' }, catalogo), null); // índice fuera de rango
-  assert.equal(deserializar({ v: '5', l, m: 'r0.b22-x0.r0' }, catalogo), null); // bool inválido
-  assert.equal(deserializar({ v: '5', l, m: 'x0.b22-00.r0' }, catalogo), null); // tipo de módulo inexistente
-  assert.equal(deserializar({ v: '5', l, m: 'r0.b2200.r0' }, catalogo), null);  // módulo con formato v1 declarado como actual
+  assert.equal(deserializar({ v: '6', l: null, m }, catalogo), null);    // falta la línea
+  assert.equal(deserializar({ v: '6', l: l + '0', m }, catalogo), null); // largo incorrecto
+  assert.equal(deserializar({ v: '6', l, m: 'basura' }, catalogo), null);
+  assert.equal(deserializar({ v: '6', l, m: 'r0.bz-200.r0' }, catalogo), null); // índice fuera de rango
+  assert.equal(deserializar({ v: '6', l, m: 'r0.b22-x0.r0' }, catalogo), null); // bool inválido
+  assert.equal(deserializar({ v: '6', l, m: 'x0.b22-00.r0' }, catalogo), null); // tipo de módulo inexistente
+  assert.equal(deserializar({ v: '6', l, m: 'r0.b2200.r0' }, catalogo), null);  // módulo con formato v1 declarado como actual
 });
 
 test('una URL bien formada pero que rompe las reglas la rechaza el esquema', () => {
   // Estructura inválida: dos bateas seguidas, sin esquina
   const { l } = serializar(configuracionPorDefecto(catalogo), catalogo);
-  const c = deserializar({ v: '5', l, m: 'r0.b22-00.b22-00.r0' }, catalogo);
+  const c = deserializar({ v: '6', l, m: 'r0.b22-00.b22-00.r0' }, catalogo);
   assert.ok(c);
   assert.equal(esquema.safeParse(c).success, false);
 });
@@ -76,7 +76,7 @@ test('estructura recta va y vuelve igual', () => {
   assert.deepEqual(idaYVuelta(c), c);
 });
 
-test('un link compartido con la versión 1 sigue abriendo (v1 → … → v5), con la estructura en su default', () => {
+test('un link compartido con la versión 1 sigue abriendo (v1 → … → v6), con la estructura en su default', () => {
   // Link v1 real: batea con cúpula curva, esquina con frío y una batea sin cúpula con iluminación
   // (en v1 no existía la estructura).
   const linkV1 = { v: '1', l: '000010100', m: 'r0.b2200.e0120.b210-.r0' };
@@ -92,12 +92,12 @@ test('un link compartido con la versión 1 sigue abriendo (v1 → … → v5), c
   ]);
   // Al volver a serializarlo, queda como link de la versión actual
   const nuevo = serializar(config, catalogo);
-  assert.equal(nuevo.v, '5');
+  assert.equal(nuevo.v, '6');
   assert.equal(nuevo.m, 'r0.b22-00.e012-0.b2100-.r0');
 });
 
 test('configDesdeLink: link inválido → configuración por defecto', () => {
-  const { config, desdeLink } = configDesdeLink({ v: '5', l: '0000010010', m: 'basura' }, catalogo);
+  const { config, desdeLink } = configDesdeLink({ v: '6', l: '0110010010', m: 'basura' }, catalogo);
   assert.equal(desdeLink, false);
   assert.deepEqual(config, configuracionPorDefecto(catalogo));
 });
@@ -109,7 +109,7 @@ test('un link de la versión 2 con lateral curvo abre sin lateral y con la tina 
   assert.ok(!('lateral' in config.linea));
   assert.equal(config.linea.tina, 'chapa_blanca');
   assert.ok(esquema.safeParse(config).success);
-  assert.equal(serializar(config, catalogo).l, '0000010010');
+  assert.equal(serializar(config, catalogo).l, '0110010010');
 });
 
 test('un link de la versión 2 con inox abre sin tina (la tina es de acero)', () => {
@@ -121,7 +121,7 @@ test('un link de la versión 2 con inox abre sin tina (la tina es de acero)', ()
 
 test('tina de acero con cuerpo de chapa va y vuelve igual', () => {
   const base = configuracionPorDefecto(catalogo);
-  const c = normalizar({ ...base, linea: { ...base.linea, tina: 'inox', color: 'rojo' } }, catalogo);
+  const c = normalizar({ ...base, linea: { ...base.linea, tina: 'inox', colorFaldon: 'rojo' } }, catalogo);
   assert.equal(serializar(c, catalogo).l[3], '1'); // posición 3 = tina
   assert.deepEqual(idaYVuelta(c), c);
 });
@@ -131,18 +131,45 @@ test('un link de la versión 3 abre con el color en faldón y zócalo, y se rees
   // v3: material, color, tina, producto, … (sin zonaColor)
   const { config, desdeLink } = configDesdeLink({ v: '3', l: '070010100', m: 'r0.b22-00.r0' }, catalogo);
   assert.equal(desdeLink, true);
-  assert.equal(config.linea.color, 'rojo');
-  assert.equal(config.linea.zonaColor, 'faldon_y_zocalo');
+  assert.equal(config.linea.colorFaldon, 'rojo');
+  assert.equal(config.linea.colorZocalo, 'rojo');
   assert.equal(config.linea.tina, 'chapa_blanca');
   assert.ok(esquema.safeParse(config).success);
-  assert.deepEqual(serializar(config, catalogo), { v: '5', l: '0700010010', m: 'r0.b22-00.r0' });
+  // rojo es el 7 de la epoxi: en v6 es el 8, porque el 0 es "sin color"
+  assert.deepEqual(serializar(config, catalogo), { v: '6', l: '0880010010', m: 'r0.b22-00.r0' });
 });
 
-test('color solo en el zócalo va y vuelve igual', () => {
+test('faldón y zócalo de colores distintos, o sin color, van y vuelven igual', () => {
   const base = configuracionPorDefecto(catalogo);
-  const c = normalizar({ ...base, linea: { ...base.linea, color: 'azul', zonaColor: 'zocalo' } }, catalogo);
-  assert.equal(serializar(c, catalogo).l[2], '2');
-  assert.deepEqual(idaYVuelta(c), c);
+  for (const [colorFaldon, colorZocalo] of [['rojo', 'azul'], ['sin_color', 'verde_ral'], ['sin_color', 'sin_color']]) {
+    const c = normalizar({ ...base, linea: { ...base.linea, colorFaldon, colorZocalo } }, catalogo);
+    assert.equal(c.linea.colorFaldon, colorFaldon);
+    assert.deepEqual(idaYVuelta(c), c);
+  }
+});
+
+// ---------------------------------------------------------------- dos colores (v6)
+test('links de la versión 5: cada "dónde va el color" abre con los mismos colores en faldón y zócalo', () => {
+  // v5: material, color, zonaColor, tina, producto, frío, bandeja, rejilla, equipamiento, ubicación.
+  // Color 7 = rojo (epoxi). zonaColor: 0 faldón y zócalo · 1 solo faldón · 2 solo zócalo.
+  const casos = [
+    ['0', 'rojo', 'rojo'],
+    ['1', 'rojo', 'sin_color'],
+    ['2', 'sin_color', 'rojo'],
+  ];
+  for (const [zona, faldon, zocalo] of casos) {
+    const { config, desdeLink } = configDesdeLink({ v: '5', l: '07' + zona + '0010010', m: 'r0.b22-00.r0' }, catalogo);
+    assert.equal(desdeLink, true, zona);
+    assert.equal(config.linea.colorFaldon, faldon, `zona ${zona}: faldón`);
+    assert.equal(config.linea.colorZocalo, zocalo, `zona ${zona}: zócalo`);
+    assert.ok(!('color' in config.linea) && !('zonaColor' in config.linea));
+    assert.ok(esquema.safeParse(config).success, zona);
+  }
+  // Inox (sin color ni zona) sigue abriendo
+  const inox = configDesdeLink({ v: '5', l: '2--1010010', m: 'r0.b22-00.r0' }, catalogo);
+  assert.equal(inox.desdeLink, true);
+  assert.equal(inox.config.linea.material, 'inox');
+  assert.ok(!('colorFaldon' in inox.config.linea) && !('colorZocalo' in inox.config.linea));
 });
 
 // ---------------------------------------------------------------- orden nuevo de las opciones (v5)
@@ -151,16 +178,16 @@ test('un link de la versión 4 (frío estático, semi-equipada) abre igual con e
   //      0         3      1     1     1         0 (semi)      - (no aplica) 0 (estático) -  -
   const { config, desdeLink } = configDesdeLink({ v: '4', l: '03111' + '0-0--', m: 'r0.b22-00.r0' }, catalogo);
   assert.equal(desdeLink, true);
-  assert.equal(config.linea.color, 'amarillo');
-  assert.equal(config.linea.zonaColor, 'faldon');
+  assert.equal(config.linea.colorFaldon, 'amarillo'); // v4 tenía el color solo en el faldón
+  assert.equal(config.linea.colorZocalo, 'sin_color');
   assert.equal(config.linea.tina, 'inox');
   assert.equal(config.linea.producto, 'carnes');
   assert.equal(config.linea.equipamiento, 'semi');
   assert.equal(config.linea.frio, 'estatico');
   assert.ok(!('ubicacionEquipo' in config.linea) && !('bandeja' in config.linea));
   assert.ok(esquema.safeParse(config).success);
-  // v5: material, color, zona, tina, producto, frío, bandeja, rejilla, equipamiento, ubicación
-  assert.deepEqual(serializar(config, catalogo), { v: '5', l: '031110--0-', m: 'r0.b22-00.r0' });
+  // v6: material, faldón (amarillo = 4), zócalo (sin color = 0), tina, producto, frío, bandeja, rejilla, equipamiento, ubicación
+  assert.deepEqual(serializar(config, catalogo), { v: '6', l: '040110--0-', m: 'r0.b22-00.r0' });
 });
 
 // ---------------------------------------------------------------- uniones en la URL

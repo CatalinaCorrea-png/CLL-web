@@ -49,7 +49,9 @@ test('resumen de la configuración: opciones generales y cada módulo, en lengua
   const r = resumenConfiguracion(c, catalogo);
   const material = r.linea.find((f) => f.nombre === 'Material del cuerpo');
   assert.equal(material?.valor, 'Chapa galvanizada pintada');
-  assert.equal(r.linea.find((f) => f.nombre === 'Color')?.valor, 'Blanco'); // nombre de la paleta, no el id
+  assert.equal(r.linea.find((f) => f.nombre === 'Color del faldón')?.valor, 'Blanco'); // nombre de la paleta, no el id
+  const sinColor = resumenConfiguracion({ ...c, linea: { ...c.linea, colorZocalo: 'sin_color' } }, catalogo);
+  assert.equal(sinColor.linea.find((f) => f.nombre === 'Color del zócalo')?.valor, 'Sin color (chapa blanca)');
   // Los remates "ninguno" no aparecen; el mostrador intermedio sí
   assert.deepEqual(r.modulos.map((m) => m.nombre), ['Batea 1', 'Mostrador 1', 'Batea 2']);
   const batea = r.modulos[0].filas;
@@ -63,8 +65,8 @@ test('resumen: deja afuera lo que no aplica', () => {
   const base = configuracionPorDefecto(catalogo);
   const inox = { ...base, linea: { ...base.linea, material: 'inox' } };
   const r = resumenConfiguracion(inox, catalogo);
-  assert.equal(r.linea.find((f) => f.nombre === 'Color'), undefined); // el inox no se pinta
-  assert.equal(r.linea.find((f) => f.nombre === 'Dónde va el color'), undefined);
+  assert.equal(r.linea.find((f) => f.nombre === 'Color del faldón'), undefined); // el inox no se pinta
+  assert.equal(r.linea.find((f) => f.nombre === 'Color del zócalo'), undefined);
   // La estructura solo aparece en sin cúpula con iluminación
   const filas = r.modulos[0].filas.map((f) => f.nombre);
   assert.ok(!filas.includes('Estructura'));
@@ -87,7 +89,7 @@ test('frases: cada módulo en una oración, como en el ejemplo del pedido', () =
   assert.deepEqual(f.modulos.map((m) => m.nombre), ['Batea 1', 'Esquina 1', 'Batea 2']);
   assert.equal(f.modulos[0].texto, '2,40 m, sin cúpula con iluminación, estructura curva (arcos), con depósito');
   assert.equal(f.modulos[1].texto, 'esquinero, tipo mostrador'); // la cúpula no aplica en la esquina mostrador
-  assert.match(f.linea, /^chapa galvanizada pintada, color blanco, color en faldón y zócalo, tina de chapa blanca, para fiambres \/ lácteos, frío por aire forzado, bandejas de chapa prepintada/);
+  assert.match(f.linea, /^chapa galvanizada pintada, faldón blanco, zócalo blanco, tina de chapa blanca, para fiambres \/ lácteos, frío por aire forzado, bandejas de chapa prepintada/);
   assert.ok(!f.linea.includes('rejilla')); // "ninguna" no se menciona
   assert.ok(!JSON.stringify(f).includes('_')); // nunca ids internos (sin_cupula, galvanizada_pintada…)
 });

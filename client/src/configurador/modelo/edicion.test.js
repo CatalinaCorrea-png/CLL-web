@@ -32,25 +32,24 @@ test('normalizar: frío estático saca bandeja y rejilla; volver a forzado las r
   assert.ok(esValida(forzado));
 });
 
-test('normalizar: material y color', () => {
+test('normalizar: material y colores de faldón y zócalo', () => {
   const inox = conLinea({ material: 'inox' });
-  assert.ok(!('color' in inox.linea));
+  assert.ok(!('colorFaldon' in inox.linea) && !('colorZocalo' in inox.linea));
   assert.ok(esValida(inox));
-
   assert.ok(!('tina' in inox.linea)); // con inox la tina es de acero, no se elige
-  assert.ok(!('zonaColor' in inox.linea));
 
-  // Volver a pintada pone el color por defecto (blanco) y la tina en chapa blanca
+  // Volver a pintada pone los dos colores por defecto (blanco) y la tina en chapa blanca
   const pintada = normalizar({ ...inox, linea: { ...inox.linea, material: 'galvanizada_pintada' } }, catalogo);
-  assert.equal(pintada.linea.color, 'blanco');
+  assert.equal(pintada.linea.colorFaldon, 'blanco');
+  assert.equal(pintada.linea.colorZocalo, 'blanco');
   assert.equal(pintada.linea.tina, 'chapa_blanca');
-  assert.equal(pintada.linea.zonaColor, 'faldon_y_zocalo');
 
   // Un color de la epoxi que no existe en la prepintada se corrige al default de la prepintada
-  const prepintada = conLinea({ color: 'plata', material: 'galvanizada_prepintada' });
-  assert.equal(prepintada.linea.color, 'blanco');
-  // Uno que existe en las dos paletas se mantiene
-  assert.equal(conLinea({ color: 'azul', material: 'galvanizada_prepintada' }).linea.color, 'azul');
+  const prepintada = conLinea({ colorFaldon: 'plata', colorZocalo: 'azul', material: 'galvanizada_prepintada' });
+  assert.equal(prepintada.linea.colorFaldon, 'blanco');
+  // Uno que existe en las dos paletas se mantiene, y "sin color" vale con cualquier paleta
+  assert.equal(prepintada.linea.colorZocalo, 'azul');
+  assert.equal(conLinea({ colorZocalo: 'sin_color', material: 'galvanizada_prepintada' }).linea.colorZocalo, 'sin_color');
 });
 
 test('normalizar: semi-equipada saca la ubicación del equipo', () => {

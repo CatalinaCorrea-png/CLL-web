@@ -54,6 +54,17 @@ const ConfiguradorBatea = () => {
     setPresupuestoAbierto(true);
   };
   const barra = useRef(/** @type {HTMLDivElement | null} */ (null));
+  const visor = useRef(/** @type {HTMLDivElement | null} */ (null));
+
+  // Mobile: la hoja de opciones ocupa la parte de abajo de la pantalla; antes de abrirla se desplaza
+  // la página para que el 3D quede arriba (justo debajo del navbar) y se vea mientras se eligen opciones.
+  const abrirOpciones = () => {
+    if (visor.current) {
+      const alturaNavbar = document.querySelector('.navbar-container')?.getBoundingClientRect().height ?? 64;
+      window.scrollTo({ top: visor.current.getBoundingClientRect().top + window.scrollY - alturaNavbar - 8, behavior: 'smooth' });
+    }
+    setPanelAbierto(true);
+  };
   const listo = config !== null;
 
   // Desde md, al abrir el configurador se lo encuadra: la barra arriba (debajo del navbar) y el panel
@@ -83,7 +94,7 @@ const ConfiguradorBatea = () => {
           <i className="fa-solid fa-arrow-left"></i> Cambiar producto
         </Link>
         <div className="cfg-barra-acciones">
-          <button type="button" className="btn-ice cfg-accion d-md-none" onClick={() => setPanelAbierto(true)}>
+          <button type="button" className="btn-ice cfg-accion d-md-none" onClick={abrirOpciones}>
             <i className="fa-solid fa-sliders"></i> Opciones
           </button>
           <BotonCopiarLink />
@@ -95,7 +106,7 @@ const ConfiguradorBatea = () => {
 
       <div className="cfg-layout">
         <PanelOpciones mostrar={panelAbierto} onCerrar={() => setPanelAbierto(false)} />
-        <div className={`cfg-visor ${con3D ? '' : 'cfg-visor-sin3d'}`}>
+        <div ref={visor} className={`cfg-visor ${con3D ? '' : 'cfg-visor-sin3d'}`}>
           {con3D ? (
             <>
               <LimiteError3D alFallar={() => setCon3D(false)}>

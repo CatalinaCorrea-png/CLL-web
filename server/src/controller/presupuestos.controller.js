@@ -11,12 +11,20 @@ const { armarMails } = require('../presupuestos/mails');
 const { enviar, proveedor } = require('../presupuestos/transportes');
 
 const PRODUCTO = 'bateas';
-const DIAS_REPETIDO = 7; // mismo email + misma configuración (sin contar el color) en este plazo = repetido
+const DIAS_REPETIDO = 7; // mismo email + misma configuración (sin contar los colores) en este plazo = repetido
 
-/** Nombre del color de la línea en su paleta ("Rojo"), nunca el id. */
-const nombreColor = async (linea) => {
-  const { paletaDeColor } = await import('../configurador/modelo/reglas.js');
-  return paletaDeColor(catalogo, linea.material)?.colores.find((c) => c.id === linea.color)?.nombre ?? null;
+/** Nombre de un color de la paleta ("Rojo") o "sin color", nunca el id. */
+const nombreColor = async (material, id) => {
+  const { paletaDeColor, SIN_COLOR } = await import('../configurador/modelo/reglas.js');
+  if (id === SIN_COLOR) return 'sin color';
+  return paletaDeColor(catalogo, material)?.colores.find((c) => c.id === id)?.nombre?.toLowerCase() ?? null;
+};
+
+/** "faldón rojo y zócalo azul", para el mensaje de un pedido repetido con otros colores. */
+const textoColores = async (linea) => {
+  const faldon = await nombreColor(linea.material, linea.colorFaldon);
+  const zocalo = await nombreColor(linea.material, linea.colorZocalo);
+  return faldon && zocalo ? `faldón ${faldon} y zócalo ${zocalo}` : null;
 };
 
 const destinos = () => ({
@@ -53,19 +61,20 @@ const crearPresupuesto = async (req, res) => {
   }
 
   try {
-    // 3. ¿Ya lo pidió? (mismo email y misma configuración en los últimos días; el color no cuenta)
+    // 3. ¿Ya lo pidió? (mismo email y misma configuración en los últimos días; los colores no cuentan)
     const configHash = hashConfig(config);
     const repetido = await presupuestosModel.buscarRepetido(contacto.email, configHash, DIAS_REPETIDO);
     if (repetido) {
-      const colorDistinto = (repetido.color ?? null) !== (config.linea.color ?? null);
-      const color = colorDistinto ? await nombreColor(config.linea) : null;
+      const colorDistinto = (repetido.colorFaldon ?? null) !== (config.linea.colorFaldon ?? null)
+        || (repetido.colorZocalo ?? null) !== (config.linea.colorZocalo ?? null);
+      const colores = colorDistinto ? await textoColores(config.linea) : null;
       return res.status(200).json({
         ref: repetido.ref,
         repetido: true,
         ...(colorDistinto ? { colorDistinto: true } : {}),
         message: colorDistinto
-          ? `Ya recibimos este pedido (${repetido.ref}) con otro color. El color no cambia el presupuesto: `
-            + `si preferís ${color ? `el ${color.toLowerCase()}` : 'este color'}, respondé el mail de confirmación o escribinos por WhatsApp.`
+          ? `Ya recibimos este pedido (${repetido.ref}) con otros colores. Los colores no cambian el presupuesto: `
+            + `si preferís ${colores ?? 'estos colores'}, respondé el mail de confirmación o escribinos por WhatsApp.`
           : `Ya recibimos este pedido (${repetido.ref}). Te respondemos en ${destinos().tiempoRespuesta}.`,
       });
     }

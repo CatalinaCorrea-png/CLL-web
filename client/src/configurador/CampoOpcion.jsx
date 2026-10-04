@@ -1,6 +1,7 @@
 import Form from 'react-bootstrap/Form';
 import ConMotivo from './ConMotivo';
 import { textoValor } from './modelo/textos.js';
+import { SIN_COLOR } from './modelo/reglas.js';
 
 // Hasta este largo de etiqueta, los valores se muestran como botones; si alguna es más larga, como radios.
 const LARGO_MAX_BOTON = 10;
@@ -50,7 +51,7 @@ const CampoOpcion = ({ opcion, valor, onCambio, motivo, paleta, idBase }) => {
       />
     );
   } else if (opcion.tipo === 'color') {
-    control = <MuestrasColor paleta={paleta ?? null} valor={valor} onCambio={onCambio} deshabilitada={deshabilitada} />;
+    control = <MuestrasColor nombre={opcion.nombre} paleta={paleta ?? null} valor={valor} onCambio={onCambio} deshabilitada={deshabilitada} />;
   } else {
     const valores = opcion.valores ?? [];
     const cortas = valores.every((v) => textoValor(opcion, v).length <= LARGO_MAX_BOTON);
@@ -99,15 +100,19 @@ const CampoOpcion = ({ opcion, valor, onCambio, motivo, paleta, idBase }) => {
   );
 };
 
+const TEXTO_SIN_COLOR = 'Sin color (chapa blanca)';
+
 /**
- * Muestras de color de la paleta del material. Sin paleta (inox), una muestra de acero deshabilitada.
+ * Muestras de color de la paleta del material, con "sin color" primero (esa parte queda de chapa
+ * blanca). Sin paleta (inox), una muestra de acero deshabilitada.
  * @param {object} props
+ * @param {string} props.nombre  nombre de la opción (para lectores de pantalla)
  * @param {Paleta | null} props.paleta
  * @param {unknown} props.valor
  * @param {(valor: unknown) => void} props.onCambio
  * @param {boolean} props.deshabilitada
  */
-const MuestrasColor = ({ paleta, valor, onCambio, deshabilitada }) => {
+const MuestrasColor = ({ nombre, paleta, valor, onCambio, deshabilitada }) => {
   if (!paleta) {
     return (
       <div className="cfg-colores">
@@ -116,10 +121,20 @@ const MuestrasColor = ({ paleta, valor, onCambio, deshabilitada }) => {
       </div>
     );
   }
-  const elegido = paleta.colores.find((c) => c.id === valor);
+  const elegido = valor === SIN_COLOR ? { nombre: TEXTO_SIN_COLOR } : paleta.colores.find((c) => c.id === valor);
   return (
     <div>
-      <div className="cfg-colores" role="radiogroup" aria-label="Color">
+      <div className="cfg-colores" role="radiogroup" aria-label={nombre}>
+        <button
+          type="button"
+          role="radio"
+          aria-checked={valor === SIN_COLOR}
+          aria-label={TEXTO_SIN_COLOR}
+          title={TEXTO_SIN_COLOR}
+          className={`cfg-color cfg-color-sin ${valor === SIN_COLOR ? 'activo' : ''}`}
+          disabled={deshabilitada}
+          onClick={() => onCambio(SIN_COLOR)}
+        />
         {paleta.colores.map((c) => (
           <button
             key={c.id}

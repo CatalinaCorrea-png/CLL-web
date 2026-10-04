@@ -1,10 +1,10 @@
 // Serialización compacta de una configuración de línea para la URL (links compartibles).
 // JS puro (sin React ni three). Solo lo usa el client; no se copia al server.
 //
-// Formato:  ?producto=bateas&v=5&l=0000010010&m=r0.b22-00.r0
+// Formato:  ?producto=bateas&v=6&l=0110010010&m=r0.b22-00.r0
 //   v  versión del catálogo.
 //   l  un carácter por opción general, en el orden del catálogo: índice del valor en `valores`
-//      en base 36 (para `color`, índice en la paleta del material), o "-" si no aplica.
+//      en base 36 (para los colores, índice en ["sin color", ...paleta del material]), o "-" si no aplica.
 //   m  módulos separados por ".": letra del tipo (r remate, b batea, e esquina, o mostrador intermedio,
 //      u unión directa, que no lleva opciones) + un carácter
 //      por opción del módulo, igual que en `l`. Los bool son 0/1.
@@ -13,7 +13,7 @@
 // opciones en el medio, se reordenan o se sacan valores, hay que subir `version` en catalogo.json
 // y sumar abajo, en MIGRACIONES, cómo pasar un link de la versión anterior a la nueva (con su test),
 // para que los links que ya se compartieron sigan abriendo.
-import { paletaDeColor } from './reglas.js';
+import { coloresDe } from './reglas.js';
 import { crearEsquema, configuracionPorDefecto } from './esquema.js';
 import { normalizar } from './edicion.js';
 
@@ -44,6 +44,24 @@ const MIGRACIONES = {
   // equipamiento y ubicación del equipo. v4: material, color, zona, tina, producto, equipamiento (5),
   // ubicación (6), frío (7), bandeja (8), rejilla (9).
   4: ({ l, m }) => ({ l: l.slice(0, 5) + l[7] + l[8] + l[9] + l[5] + l[6], m }),
+  // v5 → v6: `color` (1) + `zonaColor` (2) pasaron a ser `colorFaldon` (1) + `colorZocalo` (2), y los
+  // colores suman "sin color" como primer valor (el índice de la paleta se corre uno).
+  5: ({ l, m }) => ({ l: l[0] + coloresDesdeZona(l[1], l[2]) + l.slice(3), m }),
+};
+
+/**
+ * v5 → v6: un color de la paleta y dónde iba (0 faldón y zócalo, 1 solo faldón, 2 solo zócalo)
+ * → color del faldón y color del zócalo. La parte sin color queda "sin color" (índice 0).
+ * @param {string | undefined} color  carácter del color en v5 ("-" sin color: inox)
+ * @param {string | undefined} zona   carácter de zonaColor en v5
+ */
+const coloresDesdeZona = (color, zona) => {
+  if (!color || color === '-') return '--';
+  const conColor = (parseInt(color, 36) + 1).toString(36);
+  const sinColor = '0';
+  if (zona === '1') return conColor + sinColor;   // solo faldón
+  if (zona === '2') return sinColor + conColor;   // solo zócalo
+  return conColor + conColor;                     // faldón y zócalo (o sin dato)
 };
 
 /** @typedef {import('./reglas.js').Catalogo} Catalogo */
@@ -70,9 +88,7 @@ const SIN_VALOR = '-';
  * @returns {Array<string | number>}
  */
 const valoresDe = (opcion, catalogo, linea) =>
-  opcion.tipo === 'color'
-    ? (paletaDeColor(catalogo, linea.material)?.colores.map((c) => c.id) ?? [])
-    : (opcion.valores ?? []);
+  opcion.tipo === 'color' ? coloresDe(catalogo, linea.material) : (opcion.valores ?? []);
 
 /**
  * @param {Opcion} opcion

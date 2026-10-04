@@ -92,11 +92,11 @@ const ordenar = (v) =>
 
 /**
  * Huella de la configuración (SHA-256), para detectar pedidos repetidos.
- * No incluye el color: no cambia el presupuesto, así que el mismo pedido con otro color es el mismo
- * pedido. Sí cuentan el material y dónde va el color (faldón, zócalo o los dos).
+ * No incluye los colores (faldón y zócalo): no cambian el presupuesto, así que el mismo pedido con
+ * otros colores es el mismo pedido. Sí cuenta el material.
  */
 const hashConfig = (config) => {
-  const { color, ...linea } = config.linea ?? {}; // eslint-disable-line no-unused-vars
+  const { colorFaldon, colorZocalo, ...linea } = config.linea ?? {}; // eslint-disable-line no-unused-vars
   return crypto.createHash('sha256').update(JSON.stringify(ordenar({ ...config, linea }))).digest('hex');
 };
 

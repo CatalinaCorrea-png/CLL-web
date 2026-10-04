@@ -71,11 +71,11 @@ test('la huella de la configuración no depende del orden de las claves', async 
   assert.equal(hashConfig(c), hashConfig(desordenada));
 });
 
-test('la huella no cuenta el color (no cambia el presupuesto), pero sí el resto', async () => {
+test('la huella no cuenta los colores (no cambian el presupuesto), pero sí el resto', async () => {
   const c = await configPorDefecto();
   const conLinea = (cambios) => ({ ...c, linea: { ...c.linea, ...cambios } });
-  assert.equal(hashConfig(c), hashConfig(conLinea({ color: 'rojo' })));
-  assert.notEqual(hashConfig(c), hashConfig(conLinea({ zonaColor: 'faldon' })));
+  assert.equal(hashConfig(c), hashConfig(conLinea({ colorFaldon: 'rojo' })));
+  assert.equal(hashConfig(c), hashConfig(conLinea({ colorFaldon: 'sin_color', colorZocalo: 'azul' })));
   assert.notEqual(hashConfig(c), hashConfig(conLinea({ material: 'galvanizada_prepintada' })));
   assert.notEqual(hashConfig(c), hashConfig(conLinea({ frio: c.linea.frio === 'forzado' ? 'estatico' : 'forzado' })));
   const otroLargo = { ...c, modulos: c.modulos.map((m) => (m.tipo === 'batea' ? { ...m, largo: 2400 } : m)) };

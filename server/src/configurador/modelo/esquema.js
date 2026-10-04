@@ -5,10 +5,10 @@
 // Una línea es: remate – batea – [unión – batea] × 0..2 – remate, donde la unión es una esquina,
 // un mostrador intermedio o una unión directa (catalogo.uniones).
 // Formato:
-//   { linea: { material, color, frio, ... },
+//   { linea: { material, colorFaldon, colorZocalo, frio, ... },
 //     modulos: [ { tipo: 'remate', valor }, { tipo: 'batea', largo, cupula, ... }, { tipo: 'esquina', forma, version }, ... ] }
 import { z } from 'zod';
-import { opcionesDeshabilitadas, paletaDeColor } from './reglas.js';
+import { opcionesDeshabilitadas, paletaDeColor, coloresDe } from './reglas.js';
 
 /** @typedef {import('./reglas.js').Catalogo} Catalogo */
 
@@ -139,14 +139,19 @@ export const crearEsquema = (catalogo) => {
         for (const o of opcionesPorModulo[String(m.tipo)] ?? []) exigir(o, m, ['modulos', i], i);
       });
 
-      // 3) Color: obligatorio y de la paleta del material (el inox ya quedó cubierto en el paso 2)
-      const paleta = paletaDeColor(catalogo, linea.material);
-      if (paleta && !paleta.colores.some((c) => c.id === linea.color)) {
-        ctx.addIssue({
-          code: 'custom',
-          path: ['linea', 'color'],
-          message: `Elegí un color de la paleta: ${paleta.colores.map((c) => c.id).join(', ')}.`,
-        });
+      // 3) Colores (faldón y zócalo): obligatorios, de la paleta del material o "sin color"
+      //    (el inox ya quedó cubierto en el paso 2: ahí no llevan color)
+      const colores = coloresDe(catalogo, linea.material);
+      if (colores.length) {
+        for (const o of /** @type {Opcion[]} */ (catalogo.opcionesLinea)) {
+          if (o.tipo === 'color' && !colores.includes(String(linea[o.id]))) {
+            ctx.addIssue({
+              code: 'custom',
+              path: ['linea', o.id],
+              message: `Elegí un color de la paleta: ${colores.join(', ')}.`,
+            });
+          }
+        }
       }
     });
 };
@@ -187,7 +192,10 @@ export const configuracionPorDefecto = (catalogo) => {
   for (const o of /** @type {Opcion[]} */ (catalogo.opcionesLinea)) {
     if (o.tipo !== 'color') linea[o.id] = o.default;
   }
-  linea.color = paletaDeColor(catalogo, linea.material)?.default;
+  // Faldón y zócalo arrancan con el color por defecto de la paleta del material
+  for (const o of /** @type {Opcion[]} */ (catalogo.opcionesLinea)) {
+    if (o.tipo === 'color') linea[o.id] = paletaDeColor(catalogo, linea.material)?.default;
+  }
 
   const modulos = [
     moduloPorDefecto(catalogo, 'remate'),

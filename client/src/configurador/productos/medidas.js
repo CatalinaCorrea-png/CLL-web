@@ -6,13 +6,13 @@ export const MEDIDAS = {
   altoMesada: 0.90,            // especificación
   profundidad: 1.10,           // especificación
   altoPatas: 0.07,             // PROVISORIO: foto de frente
-  altoZocalo: 0.30,            // PROVISORIO: tope del zócalo
+  altoZocalo: 0.40,            // PROVISORIO: tope del zócalo (04/10: de 300 a 400 mm para el depósito; lo confirma CLL)
   retiroZocaloFrente: 0.10,    // PROVISORIO: el zócalo queda metido hacia adentro
   retiroZocaloCostado: 0.06,   // PROVISORIO
-  altoFranja: 0.42,            // PROVISORIO: tope de la franja pintada del frente
-  altoRiel: 0.55,              // PROVISORIO: tope del riel frontal (~550 mm en la foto de frente, parece bajo)
+  altoFranja: 0.52,            // PROVISORIO: tope del faldón (sube con el zócalo: 120 mm de franja)
+  altoRiel: 0.65,              // PROVISORIO: tope del riel frontal (sube con el zócalo; el vidrio del frente queda más corto)
   salienteRiel: 0.02,          // PROVISORIO: cuánto sobresale el riel del frente
-  pisoExhibicion: 0.48,        // PROVISORIO: 7 cm por debajo del borde del riel
+  pisoExhibicion: 0.58,        // PROVISORIO: 7 cm por debajo del borde del riel (respaldo interior: 320 mm hasta la mesada)
   anchoMesada: 0.30,           // PROVISORIO: franja angosta del lado del vendedor
   espesorMesada: 0.02,         // PROVISORIO
   espesorLateral: 0.05,        // PROVISORIO
@@ -34,8 +34,8 @@ export const MEDIDAS = {
   anchoEquipo: 0.55,           // PROVISORIO: lugar para el equipo incorporado, en el costado derecho (+X)
   margenDeposito: 0.06,        // PROVISORIO: separación del depósito con el lateral y con el lugar del equipo
   anchoPuertaDeposito: 0.5,    // PROVISORIO: ancho aproximado de cada puerta batiente del depósito
-  bajoDeposito: 0.04,          // PROVISORIO: las puertas arrancan esto por encima del zócalo…
-  topeDeposito: 0.07,          // PROVISORIO: …y terminan esto por debajo de la mesada
+  bajoDeposito: 0.02,          // PROVISORIO: las puertas del depósito (en el zócalo) arrancan esto por encima de las patas…
+  topeDeposito: 0.02,          // PROVISORIO: …y terminan esto por debajo del tope del zócalo
   espesorPuerta: 0.012,        // PROVISORIO: cuánto sobresalen las puertas del respaldo trasero
   espesorAcrilico: 0.006,      // PROVISORIO: puertas traseras de acrílico
 
