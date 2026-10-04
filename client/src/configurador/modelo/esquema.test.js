@@ -10,7 +10,7 @@ const REMATE = { tipo: 'remate', valor: 'ninguno' };
 const MOSTRADOR = { tipo: 'remate', valor: 'mostrador' };
 const BATEA = { tipo: 'batea', largo: 2000, cupula: 'cupula_curva', deposito: false, puertasTraseras: false };
 const ESQUINERO = { tipo: 'esquina', forma: 'esquinero', version: 'frio', cupula: 'cupula_curva' };
-const RINCONERO = { tipo: 'esquina', forma: 'rinconero', version: 'frio', cupula: 'cupula_recta', puertasTraseras: true };
+const RINCONERO = { tipo: 'esquina', forma: 'rinconero', version: 'frio', cupula: 'cupula_recta' };
 
 /**
  * Línea por defecto con cambios en las opciones generales y/o en los módulos.
@@ -35,7 +35,7 @@ test('catálogo: 15 colores epoxi (con blanco por defecto) y los 6 largos de la 
   assert.equal(catalogo.paletas.epoxi.colores.length, 15);
   assert.equal(catalogo.paletas.epoxi.default, 'blanco');
   assert.equal(catalogo.linea.mostradorRemate.alto, 900);
-  assert.equal(catalogo.version, 6);
+  assert.equal(catalogo.version, 7);
   // Orden del panel: frío, bandejas y rejilla antes de equipamiento
   const orden = catalogo.opcionesLinea.map((o) => o.id);
   assert.ok(orden.indexOf('rejillaSobreBandeja') < orden.indexOf('equipamiento'));
@@ -121,7 +121,7 @@ test('inox sin color y prepintada con su paleta son válidas', () => {
 
 test('moduloPorDefecto no incluye opciones deshabilitadas', () => {
   assert.deepEqual(moduloPorDefecto(catalogo, 'esquina'), {
-    tipo: 'esquina', forma: 'esquinero', version: 'frio', cupula: 'cupula_curva', puertasTraseras: false,
+    tipo: 'esquina', forma: 'esquinero', version: 'frio', cupula: 'cupula_curva',
   });
   assert.ok('puertasTraseras' in moduloPorDefecto(catalogo, 'batea')); // default es cúpula curva
 });
@@ -130,14 +130,18 @@ test('una esquina nueva copia la cúpula de la batea anterior', () => {
   const bateaRecta = { ...BATEA, cupula: 'cupula_recta' };
   assert.equal(moduloPorDefecto(catalogo, 'esquina', bateaRecta).cupula, 'cupula_recta');
 
-  // Si la batea anterior no tiene cúpula, la esquina tampoco lleva puertas traseras
   const esquina = moduloPorDefecto(catalogo, 'esquina', { ...BATEA, cupula: 'sin_cupula' });
   assert.equal(esquina.cupula, 'sin_cupula');
-  assert.ok(!('puertasTraseras' in esquina));
   assert.deepEqual(errores(config({ modulos: [REMATE, BATEA, esquina, BATEA, REMATE] })), []);
 });
 
-test('esquina mostrador: sin cúpula ni puertas traseras', () => {
+test('las esquinas no llevan puertas traseras de acrílico: si vienen, la configuración es inválida', () => {
+  assert.ok(!catalogo.modulos.esquina.some((o) => o.id === 'puertasTraseras'));
+  const conPuertas = { ...ESQUINERO, puertasTraseras: true };
+  assert.ok(errores(config({ modulos: [REMATE, BATEA, conPuertas, BATEA, REMATE] })).length > 0);
+});
+
+test('esquina mostrador: sin cúpula', () => {
   const mostrador = { tipo: 'esquina', forma: 'esquinero', version: 'mostrador' };
   assert.deepEqual(errores(config({ modulos: [REMATE, BATEA, mostrador, BATEA, REMATE] })), []);
   const conCupula = { ...mostrador, cupula: 'cupula_curva' };

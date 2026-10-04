@@ -67,7 +67,7 @@ test('normalizar: esquina mostrador ↔ con frío (la cúpula vuelve copiando la
 
   const frio = normalizar({ ...mostrador, modulos: mostrador.modulos.map((m, i) => (i === 2 ? { ...m, version: 'frio' } : m)) }, catalogo);
   assert.equal(frio.modulos[2].cupula, 'cupula_recta');
-  assert.equal(frio.modulos[2].puertasTraseras, false);
+  assert.ok(!('puertasTraseras' in frio.modulos[2])); // las esquinas no llevan puertas traseras
   assert.ok(esValida(frio));
 });
 
@@ -205,9 +205,10 @@ test('borde: batea con puertas traseras que pasa a sin cúpula o sin cúpula con
   }
 });
 
-test('borde: esquina con frío y puertas traseras que pasa a mostrador pierde cúpula, estructura y puertas', () => {
+test('borde: esquina con frío que pasa a mostrador pierde cúpula y estructura', () => {
   let c = agregarBatea(base(), catalogo);
-  c = cambiarModulo(c, 2, { puertasTraseras: true });
+  c = cambiarModulo(c, 2, { cupula: 'sin_cupula_iluminacion' });
+  assert.equal(c.modulos[2].estructura, 'curva');
   c = cambiarModulo(c, 2, { version: 'mostrador' });
   assert.deepEqual(Object.keys(c.modulos[2]).sort(), ['forma', 'tipo', 'version']);
   assert.ok(esValida(c));

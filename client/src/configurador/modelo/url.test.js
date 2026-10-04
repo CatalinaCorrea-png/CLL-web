@@ -14,7 +14,7 @@ const idaYVuelta = (c) => deserializar(serializar(c, catalogo), catalogo);
 test('la configuración por defecto va y vuelve igual', () => {
   const c = configuracionPorDefecto(catalogo);
   const params = serializar(c, catalogo);
-  assert.equal(params.v, '6');
+  assert.equal(params.v, '7');
   assert.equal(params.l, '0110010010'); // material 0 · faldón 1 (blanco) · zócalo 1 (blanco) · …
   assert.equal(params.m, 'r0.b22-00.r0'); // el "-" es la estructura, que no aplica con cúpula curva
   assert.deepEqual(idaYVuelta(c), c);
@@ -47,22 +47,22 @@ test('inox (sin color) va y vuelve igual', () => {
 
 test('parámetros rotos o de una versión que no existe devuelven null', () => {
   const { l, m } = serializar(configuracionPorDefecto(catalogo), catalogo);
-  assert.equal(deserializar({ v: '7', l, m }, catalogo), null);          // versión futura
+  assert.equal(deserializar({ v: '8', l, m }, catalogo), null);          // versión futura
   assert.equal(deserializar({ v: '0', l, m }, catalogo), null);          // versión inexistente
   assert.equal(deserializar({ v: 'x', l, m }, catalogo), null);
-  assert.equal(deserializar({ v: '6', l: null, m }, catalogo), null);    // falta la línea
-  assert.equal(deserializar({ v: '6', l: l + '0', m }, catalogo), null); // largo incorrecto
-  assert.equal(deserializar({ v: '6', l, m: 'basura' }, catalogo), null);
-  assert.equal(deserializar({ v: '6', l, m: 'r0.bz-200.r0' }, catalogo), null); // índice fuera de rango
-  assert.equal(deserializar({ v: '6', l, m: 'r0.b22-x0.r0' }, catalogo), null); // bool inválido
-  assert.equal(deserializar({ v: '6', l, m: 'x0.b22-00.r0' }, catalogo), null); // tipo de módulo inexistente
-  assert.equal(deserializar({ v: '6', l, m: 'r0.b2200.r0' }, catalogo), null);  // módulo con formato v1 declarado como actual
+  assert.equal(deserializar({ v: '7', l: null, m }, catalogo), null);    // falta la línea
+  assert.equal(deserializar({ v: '7', l: l + '0', m }, catalogo), null); // largo incorrecto
+  assert.equal(deserializar({ v: '7', l, m: 'basura' }, catalogo), null);
+  assert.equal(deserializar({ v: '7', l, m: 'r0.bz-200.r0' }, catalogo), null); // índice fuera de rango
+  assert.equal(deserializar({ v: '7', l, m: 'r0.b22-x0.r0' }, catalogo), null); // bool inválido
+  assert.equal(deserializar({ v: '7', l, m: 'x0.b22-00.r0' }, catalogo), null); // tipo de módulo inexistente
+  assert.equal(deserializar({ v: '7', l, m: 'r0.b2200.r0' }, catalogo), null);  // módulo con formato v1 declarado como actual
 });
 
 test('una URL bien formada pero que rompe las reglas la rechaza el esquema', () => {
   // Estructura inválida: dos bateas seguidas, sin esquina
   const { l } = serializar(configuracionPorDefecto(catalogo), catalogo);
-  const c = deserializar({ v: '6', l, m: 'r0.b22-00.b22-00.r0' }, catalogo);
+  const c = deserializar({ v: '7', l, m: 'r0.b22-00.b22-00.r0' }, catalogo);
   assert.ok(c);
   assert.equal(esquema.safeParse(c).success, false);
 });
@@ -76,7 +76,7 @@ test('estructura recta va y vuelve igual', () => {
   assert.deepEqual(idaYVuelta(c), c);
 });
 
-test('un link compartido con la versión 1 sigue abriendo (v1 → … → v6), con la estructura en su default', () => {
+test('un link compartido con la versión 1 sigue abriendo (v1 → … → v7), con la estructura en su default', () => {
   // Link v1 real: batea con cúpula curva, esquina con frío y una batea sin cúpula con iluminación
   // (en v1 no existía la estructura).
   const linkV1 = { v: '1', l: '000010100', m: 'r0.b2200.e0120.b210-.r0' };
@@ -92,12 +92,24 @@ test('un link compartido con la versión 1 sigue abriendo (v1 → … → v6), c
   ]);
   // Al volver a serializarlo, queda como link de la versión actual
   const nuevo = serializar(config, catalogo);
-  assert.equal(nuevo.v, '6');
-  assert.equal(nuevo.m, 'r0.b22-00.e012-0.b2100-.r0');
+  assert.equal(nuevo.v, '7');
+  assert.equal(nuevo.m, 'r0.b22-00.e012-.b2100-.r0');
+});
+
+test('un link de la versión 6 con puertas traseras en la esquina abre sin ellas (la batea conserva las suyas)', () => {
+  // v6: esquina = forma · versión · cúpula · estructura · puertas (1 = sí); batea con puertas (último 1)
+  const linkV6 = { v: '6', l: '0110010010', m: 'r0.b22-01.e012-1.b22-01.r0' };
+  const { config, desdeLink } = configDesdeLink(linkV6, catalogo);
+  assert.equal(desdeLink, true);
+  assert.ok(esquema.safeParse(config).success);
+  assert.ok(!('puertasTraseras' in config.modulos[2]));
+  assert.equal(config.modulos[1].puertasTraseras, true);
+  assert.equal(config.modulos[3].puertasTraseras, true);
+  assert.equal(serializar(config, catalogo).m, 'r0.b22-01.e012-.b22-01.r0');
 });
 
 test('configDesdeLink: link inválido → configuración por defecto', () => {
-  const { config, desdeLink } = configDesdeLink({ v: '6', l: '0110010010', m: 'basura' }, catalogo);
+  const { config, desdeLink } = configDesdeLink({ v: '7', l: '0110010010', m: 'basura' }, catalogo);
   assert.equal(desdeLink, false);
   assert.deepEqual(config, configuracionPorDefecto(catalogo));
 });
@@ -136,7 +148,7 @@ test('un link de la versión 3 abre con el color en faldón y zócalo, y se rees
   assert.equal(config.linea.tina, 'chapa_blanca');
   assert.ok(esquema.safeParse(config).success);
   // rojo es el 7 de la epoxi: en v6 es el 8, porque el 0 es "sin color"
-  assert.deepEqual(serializar(config, catalogo), { v: '6', l: '0880010010', m: 'r0.b22-00.r0' });
+  assert.deepEqual(serializar(config, catalogo), { v: '7', l: '0880010010', m: 'r0.b22-00.r0' });
 });
 
 test('faldón y zócalo de colores distintos, o sin color, van y vuelven igual', () => {
@@ -187,7 +199,7 @@ test('un link de la versión 4 (frío estático, semi-equipada) abre igual con e
   assert.ok(!('ubicacionEquipo' in config.linea) && !('bandeja' in config.linea));
   assert.ok(esquema.safeParse(config).success);
   // v6: material, faldón (amarillo = 4), zócalo (sin color = 0), tina, producto, frío, bandeja, rejilla, equipamiento, ubicación
-  assert.deepEqual(serializar(config, catalogo), { v: '6', l: '040110--0-', m: 'r0.b22-00.r0' });
+  assert.deepEqual(serializar(config, catalogo), { v: '7', l: '040110--0-', m: 'r0.b22-00.r0' });
 });
 
 // ---------------------------------------------------------------- uniones en la URL

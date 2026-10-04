@@ -1,5 +1,5 @@
 {
-  "version": 6,
+  "version": 7,
   "provisorio": [
     "paletas.prepintada: los hex (salvo el blanco) son aproximados, falta la carta de colores real",
     "modulos.mostrador.largo: largos del mostrador intermedio supuestos (600 · 900 · 1200 · 1500 mm)"
@@ -107,11 +107,7 @@
         "copiarDelAnterior": true,
         "soloSi": { "version": "frio", "cupula": ["sin_cupula_iluminacion"] }, "ocultarSiNoAplica": true,
         "motivo": "La estructura solo se elige en esquinas con frío sin cúpula con iluminación.",
-        "etiquetas": { "curva": "Curva (arcos)", "recta": "Recta (marco)" } },
-      { "id": "puertasTraseras", "nombre": "Puertas traseras de acrílico", "frase": "con puertas traseras de acrílico", "tipo": "bool", "default": false,
-        "soloSi": { "version": "frio", "cupula": ["cupula_curva", "cupula_recta"] },
-        "motivo": "Las puertas traseras de acrílico solo van en esquinas con frío y cúpula (curva o recta).",
-        "ayuda": "Adicional: cierran la cúpula del lado del vendedor." }
+        "etiquetas": { "curva": "Curva (arcos)", "recta": "Recta (marco)" } }
     ],
     "mostrador": [
       { "id": "largo", "nombre": "Largo", "tipo": "select", "unidad": "mm", "default": 900, "valores": [600, 900, 1200, 1500],

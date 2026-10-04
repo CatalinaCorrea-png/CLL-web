@@ -27,6 +27,15 @@ const insertarSinValor = (m, letra, posicion) =>
   m.split('.').map((t) => (t[0] === letra ? t.slice(0, posicion) + '-' + t.slice(posicion) : t)).join('.');
 
 /**
+ * Saca el carácter de una posición en los módulos de cierto tipo (lo inverso de insertarSinValor).
+ * @param {string} m        parámetro `m` del link
+ * @param {string} letra    tipo de módulo ('b' batea, 'e' esquina, 'r' remate)
+ * @param {number} posicion índice del carácter a sacar dentro del módulo (la letra es la posición 0)
+ */
+const quitarPosicion = (m, letra, posicion) =>
+  m.split('.').map((t) => (t[0] === letra ? t.slice(0, posicion) + t.slice(posicion + 1) : t)).join('.');
+
+/**
  * Migraciones de links: MIGRACIONES[n] convierte los parámetros de la versión n a la n + 1.
  * @type {Record<number, (p: { l: string, m: string }) => { l: string, m: string }>}
  */
@@ -47,6 +56,9 @@ const MIGRACIONES = {
   // v5 → v6: `color` (1) + `zonaColor` (2) pasaron a ser `colorFaldon` (1) + `colorZocalo` (2), y los
   // colores suman "sin color" como primer valor (el índice de la paleta se corre uno).
   5: ({ l, m }) => ({ l: l[0] + coloresDesdeZona(l[1], l[2]) + l.slice(3), m }),
+  // v6 → v7: las esquinas ya no llevan `puertasTraseras` (era la última opción, posición 5 de la esquina).
+  // Se descarta: los esquineros y rinconeros no pueden tener puertas traseras de acrílico.
+  6: ({ l, m }) => ({ l, m: quitarPosicion(m, 'e', 5) }),
 };
 
 /**

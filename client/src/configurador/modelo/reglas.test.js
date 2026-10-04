@@ -90,7 +90,7 @@ test('puertas traseras: deshabilitadas solo en las bateas sin cúpula, por índi
   assert.match(d[0].motivo, /solo van en bateas con cúpula/);
 });
 
-test('esquinas: la mostrador no lleva cúpula ni puertas; la con frío, puertas solo con cúpula', () => {
+test('esquinas: la mostrador no lleva cúpula; la estructura solo sin cúpula con iluminación', () => {
   const linea = configuracionPorDefecto(catalogo).linea;
   const batea = { tipo: 'batea', largo: 2000, cupula: 'cupula_curva', deposito: false };
   /** @param {Record<string, unknown>} esquina */
@@ -99,11 +99,11 @@ test('esquinas: la mostrador no lleva cúpula ni puertas; la con frío, puertas 
       .filter((d) => d.indice === 2)
       .map((d) => d.opcion);
 
-  assert.deepEqual(deshabilitadasEsquina({ tipo: 'esquina', forma: 'esquinero', version: 'mostrador' }), ['cupula', 'estructura', 'puertasTraseras']);
-  assert.deepEqual(deshabilitadasEsquina({ tipo: 'esquina', forma: 'esquinero', version: 'frio', cupula: 'sin_cupula' }), ['estructura', 'puertasTraseras']);
+  assert.deepEqual(deshabilitadasEsquina({ tipo: 'esquina', forma: 'esquinero', version: 'mostrador' }), ['cupula', 'estructura']);
+  assert.deepEqual(deshabilitadasEsquina({ tipo: 'esquina', forma: 'esquinero', version: 'frio', cupula: 'sin_cupula' }), ['estructura']);
   assert.deepEqual(deshabilitadasEsquina({ tipo: 'esquina', forma: 'rinconero', version: 'frio', cupula: 'cupula_recta' }), ['estructura']);
-  // Sin cúpula con iluminación: se habilita la estructura y se deshabilitan las puertas
-  assert.deepEqual(deshabilitadasEsquina({ tipo: 'esquina', forma: 'rinconero', version: 'frio', cupula: 'sin_cupula_iluminacion' }), ['puertasTraseras']);
+  // Sin cúpula con iluminación: se habilita la estructura
+  assert.deepEqual(deshabilitadasEsquina({ tipo: 'esquina', forma: 'rinconero', version: 'frio', cupula: 'sin_cupula_iluminacion' }), []);
 });
 
 test('depósito con equipo incorporado y carnes con cualquier frío o cúpula: nada deshabilitado', () => {
