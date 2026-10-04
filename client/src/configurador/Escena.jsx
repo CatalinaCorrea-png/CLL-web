@@ -46,8 +46,9 @@ const Reencuadre = ({ clave }) => {
 const DIRECCION_VISTA = /** @type {Record<string, [number, number, number]>} */ ({
   frente: [0, 1.2, 5],             // de frente, del lado del cliente
   vendedor: [0, 1.2, -5],          // desde atrás: mesada, depósito y puertas traseras
-  costado: [-5, 1.2, 0.3],         // desde la punta izquierda, del lado de la silueta
-  perspectiva: [-1.8, 1.7, 4.5],   // tres cuartos, del lado de la silueta (la vista inicial)
+  costado: [5, 1.2, 0.3],          // desde la punta derecha: la silueta queda al fondo y no tapa la batea
+  perspectiva: [-2.2, 3.4, 4.5],   // tres cuartos y de arriba (~33°), del lado de la silueta: la vista inicial y
+                                   // la de la captura del presupuesto (se ve la tina y cómo dobla la línea)
   arriba: [0, 8, 0.01],            // planta (el 0.01 evita la cámara exactamente vertical)
 });
 
@@ -122,6 +123,46 @@ const ContarCuadros = ({ cuadros }) => {
   return null;
 };
 
+// Desplazamiento (pan): hasta dónde puede ir el centro de la vista. No baja del piso ni sube más que la
+// batea, y no se aleja de la línea más que esto (m), así no se "pierde" el equipo.
+const ALTO_MAXIMO_CENTRO = 1.6;
+const LIMITE_HORIZONTAL = 14;
+
+/**
+ * Configura los controles de la cámara para desplazar la vista: flechas del teclado cuando el foco está
+ * en el 3D (se puede enfocar con un clic o con Tab) y límites para el centro de la vista.
+ */
+const ControlesDeDesplazamiento = () => {
+  const controles = /** @type {any} */ (useThree((s) => s.controls)); // OrbitControls (makeDefault)
+  const gl = useThree((s) => s.gl);
+  useEffect(() => {
+    if (!controles) return;
+    const lienzo = gl.domElement;
+    lienzo.tabIndex = 0; // así las flechas solo mueven la vista cuando el foco está en el 3D, no en el panel
+    controles.listenToKeyEvents?.(lienzo);
+    const limitar = () => {
+      const t = controles.target;
+      const y = Math.min(Math.max(t.y, 0), ALTO_MAXIMO_CENTRO);
+      const x = Math.min(Math.max(t.x, -LIMITE_HORIZONTAL), LIMITE_HORIZONTAL);
+      const z = Math.min(Math.max(t.z, -LIMITE_HORIZONTAL), LIMITE_HORIZONTAL);
+      if (x !== t.x || y !== t.y || z !== t.z) {
+        // Se corren juntos el centro y la cámara, para no cambiar el ángulo de la vista
+        const dx = x - t.x, dy = y - t.y, dz = z - t.z;
+        t.set(x, y, z);
+        controles.object.position.x += dx;
+        controles.object.position.y += dy;
+        controles.object.position.z += dz;
+      }
+    };
+    controles.addEventListener('change', limitar);
+    return () => {
+      controles.removeEventListener('change', limitar);
+      controles.stopListenToKeyEvents?.();
+    };
+  }, [controles, gl]);
+  return null;
+};
+
 /** Solo en desarrollo: deja el renderer a mano para medir fugas (gl.info) desde la consola o un script. */
 const ExponerRenderer = () => {
   const gl = useThree((s) => s.gl);
@@ -161,6 +202,8 @@ const Escena = ({ vista, config, cotas, capturador }) => {
     };
   }, []);
   const bajarCalidad = () => setCalidad('baja');
+  // Ayuda táctil: se ve hasta el primer toque en el 3D (en desktop la ayuda queda fija y no la afecta)
+  const [tocado, setTocado] = useState(false);
   const alta = calidad === 'alta';
 
   return (
@@ -169,6 +212,7 @@ const Escena = ({ vista, config, cotas, capturador }) => {
         role="img"
         aria-label="Vista 3D de la línea configurada. Se puede girar arrastrando; las opciones están en el panel."
         frameloop={midiendo ? 'always' : 'demand'}
+        onPointerDown={() => setTocado(true)}
         dpr={alta ? [1, 1.75] : 1}
         gl={{ preserveDrawingBuffer: true }} // necesario para sacar la captura del canvas más adelante
         camera={{ position: DIRECCION_VISTA.perspectiva, fov: 40 }} // del lado de la silueta, para que no quede tapada
@@ -224,15 +268,23 @@ const Escena = ({ vista, config, cotas, capturador }) => {
         )}
 
         {/* Ángulo polar limitado: la cámara no puede bajar del piso */}
+        {/* Girar (arrastrar), zoom (rueda o pellizco) y desplazar la vista: clic derecho o Ctrl/Shift +
+            arrastrar en la compu, dos dedos en el celular, flechas con el foco en el 3D.
+            Ángulo polar limitado: la cámara no puede bajar del piso. */}
         <OrbitControls
           makeDefault
-          enablePan={false}
+          enablePan
+          screenSpacePanning
+          keyPanSpeed={20}
           maxPolarAngle={Math.PI / 2 - 0.05}
           minDistance={1.5}
           maxDistance={25} // una línea larga vista desde arriba necesita alejarse
         />
+        <ControlesDeDesplazamiento />
       </Canvas>
       {!alta && <p className="cfg-calidad">Calidad reducida para este equipo</p>}
+      <p className="cfg-ayuda-controles">Arrastrá para girar · clic derecho para mover · rueda para zoom</p>
+      {!tocado && <p className="cfg-ayuda-tactil">1 dedo: girar · 2 dedos: mover y zoom</p>}
     </>
   );
 };

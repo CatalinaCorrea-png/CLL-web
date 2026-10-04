@@ -114,6 +114,36 @@
   pointer-events: none;
 }
 
+/* Ayuda de los controles del 3D (solo desktop: en el celular los gestos son los habituales) */
+.cfg-ayuda-controles,
+.cfg-ayuda-tactil {
+  display: none;
+  position: absolute;
+  right: .6rem;
+  bottom: .6rem;
+  margin: 0;
+  padding: .2em .7em;
+  font-size: .72rem;
+  color: var(--text-soft);
+  background: rgba(255, 255, 255, .75);
+  border-radius: var(--r-pill);
+  pointer-events: none;
+}
+@media (min-width: 768px) and (hover: hover) {
+  .cfg-ayuda-controles { display: block; }
+}
+/* En pantallas táctiles: centrada abajo, hasta el primer toque en el 3D */
+@media (hover: none) and (pointer: coarse) {
+  .cfg-ayuda-tactil {
+    display: block;
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+    white-space: nowrap;
+  }
+}
+.cfg-visor canvas:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+
 /* Sin WebGL: imágenes de referencia en lugar del 3D */
 .cfg-visor-sin3d {
   touch-action: auto;
